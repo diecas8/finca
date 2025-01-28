@@ -1,220 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Geoportal Mejorado</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-measure/3.1.0/leaflet-measure.css" />
-    <style>
-        /* Estilos personalizados */
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            display: flex;
-            font-family: Arial, sans-serif;
-        }
-        #map { height: 100vh; width: 75%; float: right; }
-        .sidebar {
-            width: 25%;
-            padding: 10px;
-            background-color: #f8f9fa;
-            box-sizing: border-box;
-            height: 100vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-right: 2px solid #ddd;
-        }
-        .logo { width: 80%; margin-bottom: 15px; }
-        .filter, .summary, .chart-container, .guide {
-            background: white;
-            padding: 15px;
-            color: #333;
-            font-size: 14px;
-            margin-top: 10px;
-            line-height: 1.5;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            width: 90%;
-            max-width: 300px;
-        }
-        .chart-container { height: 200px; }
-        .credits {
-            text-align: center;
-            margin-top: auto;
-            font-size: 12px;
-            color: #555;
-        }
-        .guide-toggle {
-            cursor: pointer;
-            text-align: center;
-            color: #007bff;
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
-    <div class="sidebar">
-        <img src="CBS.png" class="logo" alt="Logo">
-        <div class="filter">
-            <strong>Filtrar por Código de Finca</strong><br>
-            <input type="text" id="codigoFinca" placeholder="Ingrese código de finca" onkeypress="if(event.key === 'Enter') filtrarPorFinca()" />
-            <button onclick="filtrarPorFinca()">Filtrar</button>
-        </div>
-        <div id="summary" class="summary"></div>
-        <div class="chart-container">
-            <canvas id="chart"></canvas>
-        </div>
-        <div class="guide">
-            <strong>Guía de Uso:</strong>
-            <p>1. Selecciona una capa del mapa en el control de la esquina superior derecha.</p>
-            <p>2. Usa el filtro para buscar una finca específica por su código.</p>
-            <p>3. Haz clic en el mapa para ver información detallada de una parcela.</p>
-            <p>4. Usa la herramienta de medición para calcular distancias y áreas.</p>
-            <div class="guide-toggle" onclick="toggleGuide()">Ver/Ocultar Guía</div>
-        </div>
-        <div class="credits">
-            <strong>Creado por:</strong> Diego Castaño P.
-        </div>
-    </div>
-    <div id="map"></div>
+<template>
+  <div id="map"></div>
+  <form @submit.prevent="addFeature">
+    </form>
+</template>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-measure/3.1.0/leaflet-measure.min.js"></script>
-    <script>
-        // Crear el mapa con un mapa base predeterminado
-        var map = L.map('map').setView([5.347, -73.371], 6);
+<script>
+import L from 'leaflet';
 
-        // Agregar diferentes opciones de mapas base
-        var osmBase = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+export default {
+  mounted() {
+    this.map = L.map('map').setView([-33.49, -70.65], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(this.map);
 
-        var satelliteBase = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-            maxZoom: 20,
-            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            attribution: 'Imágenes © Google'
+    // Crear capas para puntos, líneas y polígonos
+    this.pointsLayer = L.layerGroup().addTo(this.map);
+    this.linesLayer = L.layerGroup().addTo(this.map);
+    this.polygonsLayer = L.layerGroup().addTo(this.map);
+  },
+  methods: {
+    addFeature() {
+      // Obtener datos del formulario
+      const featureType = /* ... */; // Determinar si es punto, línea o polígono
+      const geometry = /* ... */; // Crear objeto GeoJSON
+      const properties = /* ... */; // Asignar propiedades
+
+      // Crear una capa y agregarla al mapa
+      const layer = L.geoJSON(geometry, { properties }).addTo(this[`${featureType}Layer`]);
+
+      // Enviar los datos al servidor para guardar en la base de datos
+      this.saveFeature(layer);
+    },
+    saveFeature(feature) {
+      // Hacer una petición HTTP al servidor para guardar los datos
+      // Ejemplo con axios:
+      axios.post('/api/features', feature.toGeoJSON())
+        .then(response => {
+          console.log('Feature saved successfully');
+        })
+        .catch(error => {
+          console.error('Error saving feature:', error);
         });
-
-        var topoBase = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            maxZoom: 17,
-            attribution: 'Map data © OpenTopoMap contributors'
-        });
-
-        var reliefBase = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_relief/{z}/{x}/{y}{r}.png', {
-            maxZoom: 20,
-            attribution: 'Map data © Stadia Maps, OpenMapTiles, OpenStreetMap contributors'
-        });
-
-        var baseMaps = {
-            "OpenStreetMap": osmBase,
-            "Satélite": satelliteBase,
-            "Topográfico": topoBase,
-            "Relieve": reliefBase
-        };
-
-        // Añadir el control de capas de mapas base
-        L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
-
-        var bounds = L.latLngBounds();
-        var usosLayer, fincasLayer, rutasLayer;
-        var layerControl = L.control.layers(null, null, { collapsed: false }).addTo(map);
-        var chart;
-
-        // Control de medición
-        var measureControl = new L.Control.Measure({
-            position: 'topright',
-            primaryLengthUnit: 'meters',
-            secondaryLengthUnit: 'kilometers',
-            primaryAreaUnit: 'sqmeters',
-            secondaryAreaUnit: 'hectares',
-            activeColor: '#FF0000',
-            completedColor: '#0066FF'
-        });
-        measureControl.addTo(map);
-
-        // Mapear colores para cada tipo de cultivo específico
-        const colorMap = {
-            'bosque de galería': '#006400',  // Verde oscuro
-            'arroz': '#FFD700',              // Amarillo
-            'río': '#0000FF',                // Azul
-            'lago': '#0000FF',               // Azul
-            'estero': '#0000FF',             // Azul
-            'humedales': '#0000FF',          // Azul
-            'pasto enmalezado': '#ADFF2F',   // Verde claro
-            'pasto limpio': '#D2B48C',       // Café claro
-            'pasto arbolado': '#FF6347',     // Rojo claro
-            'cacao': '#8B4513',              // Marrón oscuro
-            'algarrobo': '#A0522D',          // Sienna oscuro
-            'papaya': '#FFA500',             // Naranja
-            'maíz': '#FFD700',               // Amarillo dorado
-            'café': '#8B0000',               // Rojo oscuro
-            'otros': '#FF0000',              // Rojo
-            'palma aceite': '#CD853F'        // Café claro
-        };
-
-        // Asignar color basado en el tipo de cultivo
-        function estiloUsos(feature) {
-            const cultivo = feature.properties.cultivo ? feature.properties.cultivo.trim().toLowerCase() : "";
-            const color = colorMap[cultivo] || 'gray';
-            return {
-                color: color,
-                fillOpacity: 0.5,
-                weight: 1
-            };
-        }
-
-        // Cargar capas en el orden deseado
-        fetch("usos.geojson")
-            .then(response => response.json())
-            .then(data => {
-                usosLayer = L.geoJSON(data, {
-                    style: estiloUsos,
-                    onEachFeature: function(feature, layer) {
-                        const areaFormatted = parseFloat(feature.properties.has).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        layer.bindPopup(`Cultivo: ${feature.properties.cultivo}<br>Área: ${areaFormatted} ha`);
-                    }
-                });
-                usosLayer.addTo(map);
-                layerControl.addOverlay(usosLayer, "Usos");
-                bounds.extend(usosLayer.getBounds());
-            })
-            .catch(error => console.error("Error cargando usos.geojson:", error));
-
-        fetch("fincasssss.geojson")
-            .then(response => response.json())
-            .then(data => {
-                fincasLayer = L.geoJSON(data, { style: { color: '#000', weight: 2, fillOpacity: 0 } });
-                fincasLayer.addTo(map);
-                layerControl.addOverlay(fincasLayer, "Fincas");
-                bounds.extend(fincasLayer.getBounds());
-            })
-            .catch(error => console.error("Error cargando fincasssss.geojson:", error));
-
-        fetch("Rutas.geojson")
-            .then(response => response.json())
-            .then(data => {
-                rutasLayer = L.geoJSON(data, { style: { color: '#FFA500', weight: 2 } });
-                rutasLayer.addTo(map);
-                layerControl.addOverlay(rutasLayer, "Rutas");
-                bounds.extend(rutasLayer.getBounds());
-            })
-            .catch(error => console.error("Error cargando Rutas.geojson:", error));
-
-        setTimeout(() => map.fitBounds(bounds), 500);
-
-        // Filtrar por código de finca y mostrar el resumen de cultivos
-        function filtrarPorFinca() { /* Implementación del filtro */ }
-
-        // Función para mostrar/ocultar la guía
-        function toggleGuide() {
-            var guide = document.querySelector('.guide');
-            guide.style.display = guide.style.display === 'none' ? 'block' : 'none';
-        }
-    </script>
-</body>
-</html>
+    }
+  }
+}
+</script>
