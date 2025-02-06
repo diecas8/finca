@@ -3,311 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor Costos Cafeteros</title>
+    <title>Gestor Cafetero Integral</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .section {
-            padding: 20px;
-            margin-bottom: 30px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .chart-container {
-            max-width: 600px;
-            margin: auto;
-        }
-        .nav-tabs {
-            margin-bottom: 15px;
-        }
+        .section-form { display: none; }
+        .section-form.active { display: block; }
+        .nav-formas button { margin: 5px; }
+        .list-group-item { transition: all 0.3s; }
+        .badge-movimiento { font-size: 0.8em; }
+        .total-display { background-color: #e9ecef; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <div class="container">
-            <a class="navbar-brand" href="#">CaféCostos</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="#actividades">Actividades</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#insumos">Insumos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#bodega">Bodega</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#costos">Costos</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
     <div class="container mt-4">
-        <!-- Sección Actividades -->
-        <section id="actividades" class="section">
-            <h3>Registro de Actividades</h3>
-            <form id="formActividad">
+        <!-- Menú de formularios -->
+        <div class="nav-formas mb-4">
+            <button class="btn btn-primary" onclick="mostrarFormulario('compras')">Compras</button>
+            <button class="btn btn-success" onclick="mostrarFormulario('salidas')">Salidas</button>
+            <button class="btn btn-info" onclick="mostrarFormulario('lotes')">Lotes</button>
+            <button class="btn btn-warning" onclick="mostrarFormulario('mano-obra')">Mano de Obra</button>
+        </div>
+
+        <!-- Formulario de Compras -->
+        <section id="form-compras" class="section-form active">
+            <!-- ... (mantener mismo código de compras) ... -->
+        </section>
+
+        <!-- Formulario de Salidas -->
+        <section id="form-salidas" class="section-form">
+            <!-- ... (mantener mismo código de salidas) ... -->
+        </section>
+
+        <!-- Formulario de Lotes -->
+        <section id="form-lotes" class="section-form">
+            <!-- ... (mantener mismo código de lotes) ... -->
+        </section>
+
+        <!-- Nuevo Formulario de Mano de Obra -->
+        <section id="form-mano-obra" class="section-form">
+            <h3>👷 Registro de Mano de Obra</h3>
+            <form id="formManoObra">
                 <div class="row g-3 mb-3">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" placeholder="Nombre actividad" required>
+                    <div class="col-md-3">
+                        <select class="form-select" required id="loteObra">
+                            <option value="">Seleccionar Lote</option>
+                        </select>
                     </div>
                     <div class="col-md-3">
-                        <input type="number" class="form-control" placeholder="Costo unitario" step="0.01" required>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="number" class="form-control" placeholder="N° de lotes" required>
+                        <select class="form-select" required id="actividad">
+                            <option value="">Actividad</option>
+                            <option value="Adecuacion del terreno">Adecuación del terreno</option>
+                            <option value="Trazado">Trazado</option>
+                            <option value="Ahoyado">Ahoyado</option>
+                            <option value="Siembra">Siembra</option>
+                            <option value="Fertilizacion">Fertilización</option>
+                            <option value="Control de arvenses">Control de arvenses</option>
+                            <option value="Control de plagas">Control de plagas</option>
+                            <option value="Control de enfermedades">Control de enfermedades</option>
+                            <option value="Zoqueo">Zoqueo</option>
+                            <option value="Resiembra">Resiembra</option>
+                            <option value="Plateo">Plateo</option>
+                            <option value="Deschupona">Deschupona</option>
+                            <option value="Global">Global</option>
+                            <option value="Recoleccion">Recolección</option>
+                            <option value="Beneficio">Beneficio</option>
+                            <option value="Secado">Secado</option>
+                        </select>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Agregar</button>
+                        <input type="number" step="0.5" class="form-control" placeholder="Jornales" required id="jornales">
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" required id="tipoPago">
+                            <option value="Dia">Día</option>
+                            <option value="Contrato">Contrato</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" step="1000" class="form-control" placeholder="Valor Unitario" required id="valorUnitario">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="total-display">
+                            Total: $<span id="totalObra">0</span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-warning w-100">💼 Registrar Mano de Obra</button>
                     </div>
                 </div>
             </form>
-            <div id="listaActividades"></div>
-        </section>
-
-        <!-- Sección Insumos -->
-        <section id="insumos" class="section">
-            <h3>Gestión de Insumos</h3>
-            <ul class="nav nav-tabs">
-                <li class="nav-item"><a class="nav-link active" href="#compras">Compras</a></li>
-                <li class="nav-item"><a class="nav-link" href="#uso">Uso en Lotes</a></li>
-            </ul>
             
-            <div class="tab-content">
-                <!-- Subsección Compras -->
-                <div class="tab-pane fade show active" id="compras">
-                    <form id="formCompra">
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <input type="text" class="form-control" placeholder="Nombre insumo" required>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="number" class="form-control" placeholder="Cantidad" required>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="number" class="form-control" placeholder="Costo unitario" step="0.01" required>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="date" class="form-control" required>
-                            </div>
-                            <div class="col-md-1">
-                                <button type="submit" class="btn btn-primary w-100">+</button>
-                            </div>
-                        </div>
-                    </form>
-                    <div id="listaCompras"></div>
-                </div>
+            <h4 class="mt-4">📋 Registros de Mano de Obra</h4>
+            <div class="list-group" id="listaManoObra"></div>
+        </section>
 
-                <!-- Subsección Uso -->
-                <div class="tab-pane fade" id="uso">
-                    <form id="formUso">
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <select class="form-select" required>
-                                    <option value="">Seleccionar insumo</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="number" class="form-control" placeholder="Cantidad" required>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="number" class="form-control" placeholder="N° Lote" required>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="date" class="form-control" required>
-                            </div>
-                            <div class="col-md-1">
-                                <button type="submit" class="btn btn-primary w-100">-</button>
-                            </div>
-                        </div>
-                    </form>
-                    <div id="listaUsos"></div>
-                </div>
+        <!-- Sección de Listados -->
+        <div class="row mt-4">
+            <!-- ... (mantener mismos listados anteriores) ... -->
+            <div class="col-md-4">
+                <h4>👷 Mano de Obra</h4>
+                <div class="list-group" id="listaResumenObra"></div>
             </div>
-        </section>
-
-        <!-- Sección Bodega -->
-        <section id="bodega" class="section bg-light">
-            <h3>Inventario de Bodega</h3>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Insumo</th>
-                        <th>Disponible</th>
-                        <th>Último Movimiento</th>
-                    </tr>
-                </thead>
-                <tbody id="inventarioBodega">
-                    <!-- Datos dinámicos -->
-                </tbody>
-            </table>
-        </section>
-
-        <!-- Sección Costos -->
-        <section id="costos" class="section">
-            <h3>Análisis de Costos</h3>
-            <button onclick="calcularCostos()" class="btn btn-success mb-3">Calcular Costos</button>
-            <div class="chart-container">
-                <canvas id="costosChart"></canvas>
-            </div>
-            <div id="resultados" class="mt-3"></div>
-        </section>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Base de datos
+        // Base de datos actualizada
         let db = {
-            actividades: JSON.parse(localStorage.getItem('actividades')) || [],
             compras: JSON.parse(localStorage.getItem('compras')) || [],
-            usos: JSON.parse(localStorage.getItem('usos')) || [],
+            salidas: JSON.parse(localStorage.getItem('salidas')) || [],
+            lotes: JSON.parse(localStorage.getItem('lotes')) || [],
+            manoObra: JSON.parse(localStorage.getItem('manoObra')) || [],
             bodega: JSON.parse(localStorage.getItem('bodega')) || []
         };
 
-        // Funciones de almacenamiento
-        function guardarDB() {
-            localStorage.setItem('actividades', JSON.stringify(db.actividades));
-            localStorage.setItem('compras', JSON.stringify(db.compras));
-            localStorage.setItem('usos', JSON.stringify(db.usos));
-            localStorage.setItem('bodega', JSON.stringify(db.bodega));
-            actualizarSelectInsumos();
-            actualizarBodegaUI();
+        // Funciones de UI actualizadas
+        function actualizarUI() {
+            // ... (mantener actualizaciones anteriores) ...
+            actualizarSelectLotes();
+            actualizarListaManoObra();
+            actualizarResumenObra();
+            localStorage.setItem('manoObra', JSON.stringify(db.manoObra));
         }
 
-        // Actualizar inventario
-        function actualizarBodega(nombre, cantidad, fecha, tipo) {
-            const insumo = db.bodega.find(item => item.nombre === nombre);
-            
-            if (insumo) {
-                insumo.cantidad += tipo === 'entrada' ? cantidad : -cantidad;
-                insumo.ultimaActualizacion = fecha;
-            } else {
-                db.bodega.push({
-                    nombre: nombre,
-                    cantidad: cantidad,
-                    ultimaActualizacion: fecha
-                });
-            }
-            
-            guardarDB();
-        }
-
-        // Actualizar UI Bodega
-        function actualizarBodegaUI() {
-            const tbody = document.getElementById('inventarioBodega');
-            tbody.innerHTML = db.bodega.map(insumo => `
-                <tr>
-                    <td>${insumo.nombre}</td>
-                    <td>${insumo.cantidad}</td>
-                    <td>${new Date(insumo.ultimaActualizacion).toLocaleDateString()}</td>
-                </tr>
-            `).join('');
-        }
-
-        // Actualizar selector de insumos
-        function actualizarSelectInsumos() {
-            const select = document.querySelector('#formUso select');
-            select.innerHTML = '<option value="">Seleccionar insumo</option>' + 
-                db.bodega.map(insumo => `
-                    <option value="${insumo.nombre}">${insumo.nombre} (${insumo.cantidad})</option>
+        function actualizarSelectLotes() {
+            const select = document.getElementById('loteObra');
+            select.innerHTML = '<option value="">Seleccionar Lote</option>' + 
+                db.lotes.map(lote => `
+                    <option value="${lote.numero}">Lote #${lote.numero} - ${lote.variedad}</option>
                 `).join('');
         }
 
-        // Eventos
-        document.getElementById('formActividad').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const inputs = this.querySelectorAll('input');
-            
-            db.actividades.push({
-                nombre: inputs[0].value,
-                costoUnitario: parseFloat(inputs[1].value),
-                lotes: parseInt(inputs[2].value),
-                fecha: new Date().toISOString()
-            });
-            
-            guardarDB();
-            this.reset();
-        });
-
-        document.getElementById('formCompra').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const inputs = this.querySelectorAll('input');
-            
-            const compra = {
-                nombre: inputs[0].value,
-                cantidad: parseInt(inputs[1].value),
-                costoUnitario: parseFloat(inputs[2].value),
-                fecha: inputs[3].value
-            };
-            
-            actualizarBodega(compra.nombre, compra.cantidad, compra.fecha, 'entrada');
-            db.compras.push(compra);
-            guardarDB();
-            this.reset();
-        });
-
-        document.getElementById('formUso').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const inputs = this.querySelectorAll('input, select');
-            const insumo = db.bodega.find(item => item.nombre === inputs[0].value);
-            
-            if (!insumo || insumo.cantidad < parseInt(inputs[1].value)) {
-                alert('Stock insuficiente');
-                return;
-            }
-            
-            actualizarBodega(inputs[0].value, parseInt(inputs[1].value), inputs[3].value, 'salida');
-            
-            db.usos.push({
-                insumo: inputs[0].value,
-                cantidad: parseInt(inputs[1].value),
-                lote: parseInt(inputs[2].value),
-                fecha: inputs[3].value
-            });
-            
-            guardarDB();
-            this.reset();
-        });
-
-        // Cálculos y gráficos
-        let costosChart = null;
-
-        function calcularCostos() {
-            const costos = {
-                actividades: db.actividades.reduce((sum, a) => sum + (a.costoUnitario * a.lotes), 0),
-                insumos: db.usos.reduce((sum, u) => {
-                    const compra = db.compras.find(c => c.nombre === u.insumo);
-                    return sum + (compra ? compra.costoUnitario * u.cantidad : 0);
-                }, 0)
-            };
-
-            costos.total = costos.actividades + costos.insumos;
-
-            // Actualizar gráfico
-            if (costosChart) costosChart.destroy();
-            
-            const ctx = document.getElementById('costosChart').getContext('2d');
-            costosChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Actividades', 'Insumos', 'Total'],
-                    datasets: [{
-                        label: 'Costos ($)',
-                        data: [costos.actividades, costos.insumos, costos.total],
-                        backgroundColor: ['#4CAF50', '#2196F3', '#FF9800']
-                    }]
-                }
-            });
-
-            // Mostrar resultados
-            document.getElementById('resultados').innerHTML = `
-                <h5>Costos Totales</h5>
-                <p>Actividades: $${costos.actividades.toLocaleString()}</p>
-                <p>Insumos: $${costos.insumos.toLocaleString()}</p>
-                <p><strong>Total: $${costos.total.toLocaleString()}</strong></p>
-            `;
+        function actualizarListaManoObra() {
+            const contenedor = document.getElementById('listaManoObra');
+            contenedor.innerHTML = db.manoObra.map((obra, index) => `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${obra.actividad}</strong><br>
+                            <small>Lote #${obra.lote} - ${obra.jornales} jornales</small>
+                        </div>
+                        <div class="text-end">
+                            <div>$${obra.total.toLocaleString()}</div>
+                            <button class="btn btn-sm btn-danger mt-1" onclick="eliminarManoObra(${index})">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', () => {
-            actualizarBodegaUI();
-            actualizarSelectInsumos();
+        function actualizarResumenObra() {
+            const contenedor = document.getElementById('listaResumenObra');
+            const resumen = db.manoObra.slice(-5).reverse().map(obra => `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <small>${obra.actividad}</small><br>
+                            <small class="text-muted">Lote ${obra.lote}</small>
+                        </div>
+                        <small>$${obra.total.toLocaleString()}</small>
+                    </div>
+                </div>
+            `).join('');
+            contenedor.innerHTML = resumen || '<div class="list-group-item">No hay registros</div>';
+        }
+
+        // Funciones para mano de obra
+        function calcularTotalObra() {
+            const jornales = parseFloat(document.getElementById('jornales').value) || 0;
+            const valor = parseFloat(document.getElementById('valorUnitario').value) || 0;
+            document.getElementById('totalObra').textContent = (jornales * valor).toLocaleString();
+        }
+
+        function eliminarManoObra(index) {
+            if (confirm('¿Eliminar este registro?')) {
+                db.manoObra.splice(index, 1);
+                actualizarUI();
+            }
+        }
+
+        // Eventos actualizados
+        document.getElementById('formManoObra').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nuevaObra = {
+                lote: document.getElementById('loteObra').value,
+                actividad: document.getElementById('actividad').value,
+                jornales: parseFloat(document.getElementById('jornales').value),
+                tipoPago: document.getElementById('tipoPago').value,
+                valorUnitario: parseFloat(document.getElementById('valorUnitario').value),
+                total: parseFloat(document.getElementById('totalObra').textContent.replace(/,/g, '')),
+                fecha: new Date().toISOString()
+            };
+
+            if (!db.lotes.some(l => l.numero == nuevaObra.lote)) {
+                alert("¡El lote seleccionado no existe!");
+                return;
+            }
+
+            db.manoObra.push(nuevaObra);
+            this.reset();
+            document.getElementById('totalObra').textContent = '0';
+            actualizarUI();
         });
+
+        document.getElementById('jornales').addEventListener('input', calcularTotalObra);
+        document.getElementById('valorUnitario').addEventListener('input', calcularTotalObra);
+
+        // Inicialización
+        actualizarUI();
     </script>
 </body>
 </html>
