@@ -1,47 +1,145 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor Cafetero Integral</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .section-form { display: none; }
-        .section-form.active { display: block; }
-        .nav-formas button { margin: 5px; }
-        .list-group-item { transition: all 0.3s; }
-        .badge-movimiento { font-size: 0.8em; }
-        .total-display { background-color: #e9ecef; padding: 10px; border-radius: 5px; }
+        .section-form {
+            display: none;
+        }
+
+        .section-form.active {
+            display: block;
+        }
+
+        .nav-formas button {
+            margin: 5px;
+        }
+
+        .list-group-item {
+            transition: all 0.3s;
+        }
+
+        .total-display {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #tabla-resumen-bodega {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #tabla-resumen-bodega th,
+        #tabla-resumen-bodega td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #tabla-resumen-bodega th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
+
 <body>
     <div class="container mt-4">
-        <!-- Menú de formularios -->
         <div class="nav-formas mb-4">
             <button class="btn btn-primary" onclick="mostrarFormulario('compras')">Compras</button>
             <button class="btn btn-success" onclick="mostrarFormulario('salidas')">Salidas</button>
             <button class="btn btn-info" onclick="mostrarFormulario('lotes')">Lotes</button>
             <button class="btn btn-warning" onclick="mostrarFormulario('mano-obra')">Mano de Obra</button>
+            <button class="btn btn-secondary" onclick="mostrarFormulario('bodega')">Bodega</button>
         </div>
 
-        <!-- Formulario de Compras -->
         <section id="form-compras" class="section-form active">
-            <!-- ... (mantener mismo código de compras) ... -->
+            <h3> Registro de Compras</h3>
+            <form id="formCompra">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Insumo" required id="insumoCompra">
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" required id="unidadMedida">
+                            <option value="">Unidad</option>
+                            <option value="kg">Kilogramos</option>
+                            <option value="L">Litros</option>
+                            <option value="bulto">Bulto</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" step="0.01" class="form-control" placeholder="Cantidad" required
+                            id="cantidadCompra">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" step="0.01" class="form-control" placeholder="Precio $" required
+                            id="precioCompra">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">➕ Agregar</button>
+                    </div>
+                </div>
+            </form>
+            <div class="list-group" id="listaCompras"></div>
         </section>
 
-        <!-- Formulario de Salidas -->
         <section id="form-salidas" class="section-form">
-            <!-- ... (mantener mismo código de salidas) ... -->
+            <h3> Registro de Salidas</h3>
+            <form id="formSalida">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <select class="form-select" required id="insumoSalida">
+                            <option value="">Seleccionar insumo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" step="0.01" class="form-control" placeholder="Cantidad" required
+                            id="cantidadSalida">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="N° Lote" required id="loteSalida">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success w-100">➖ Registrar</button>
+                    </div>
+                </div>
+            </form>
+            <div class="list-group" id="listaSalidas"></div>
         </section>
 
-        <!-- Formulario de Lotes -->
         <section id="form-lotes" class="section-form">
-            <!-- ... (mantener mismo código de lotes) ... -->
+            <h3> Registro de Lotes</h3>
+            <form id="formLote">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="N° Lote" required id="numeroLote">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" required id="variedad">
+                            <option value="">Variedad</option>
+                            <option value="Caturra">Caturra</option>
+                            <option value="Castillo">Castillo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" required id="fechaLabor">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-info w-100"> Registrar</button>
+                    </div>
+                </div>
+            </form>
+            <div class="list-group" id="listaLotes"></div>
         </section>
 
-        <!-- Nuevo Formulario de Mano de Obra -->
         <section id="form-mano-obra" class="section-form">
-            <h3>👷 Registro de Mano de Obra</h3>
+            <h3> Mano de Obra</h3>
             <form id="formManoObra">
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
@@ -52,35 +150,16 @@
                     <div class="col-md-3">
                         <select class="form-select" required id="actividad">
                             <option value="">Actividad</option>
-                            <option value="Adecuacion del terreno">Adecuación del terreno</option>
-                            <option value="Trazado">Trazado</option>
-                            <option value="Ahoyado">Ahoyado</option>
                             <option value="Siembra">Siembra</option>
-                            <option value="Fertilizacion">Fertilización</option>
-                            <option value="Control de arvenses">Control de arvenses</option>
-                            <option value="Control de plagas">Control de plagas</option>
-                            <option value="Control de enfermedades">Control de enfermedades</option>
-                            <option value="Zoqueo">Zoqueo</option>
-                            <option value="Resiembra">Resiembra</option>
-                            <option value="Plateo">Plateo</option>
-                            <option value="Deschupona">Deschupona</option>
-                            <option value="Global">Global</option>
-                            <option value="Recoleccion">Recolección</option>
-                            <option value="Beneficio">Beneficio</option>
-                            <option value="Secado">Secado</option>
+                            <option value="Fertilización">Fertilización</option>
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <input type="number" step="0.5" class="form-control" placeholder="Jornales" required id="jornales">
+                        <input type="number" step="0.5" class="form-control" placeholder="Jornales" required
+                            id="jornales">
                     </div>
                     <div class="col-md-2">
-                        <select class="form-select" required id="tipoPago">
-                            <option value="Dia">Día</option>
-                            <option value="Contrato">Contrato</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number" step="1000" class="form-control" placeholder="Valor Unitario" required id="valorUnitario">
+                        <input type="number" class="form-control" placeholder="Valor $" required id="valorObra">
                     </div>
                     <div class="col-md-2">
                         <div class="total-display">
@@ -88,131 +167,34 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-warning w-100">💼 Registrar Mano de Obra</button>
+                        <button type="submit" class="btn btn-warning w-100"> Registrar</button>
                     </div>
                 </div>
             </form>
-            
-            <h4 class="mt-4">📋 Registros de Mano de Obra</h4>
-            <div class="list-group" id="listaManoObra"></div>
+            <div class="list-group mt-3" id="listaManoObra"></div>
         </section>
 
-        <!-- Sección de Listados -->
-        <div class="row mt-4">
-            <!-- ... (mantener mismos listados anteriores) ... -->
-            <div class="col-md-4">
-                <h4>👷 Mano de Obra</h4>
-                <div class="list-group" id="listaResumenObra"></div>
-            </div>
-        </div>
+        <section id="form-bodega" class="section-form">
+            <h3> Resumen de Bodega</h3>
+            <table id="tabla-resumen-bodega" class="table">
+                <thead>
+                    <tr>
+                        <th>Insumo</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                    </tr>
+                </thead>
+                <tbody id="listaBodega">
+                </tbody>
+            </table>
+        </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Base de datos actualizada
+        // Base de datos
         let db = {
             compras: JSON.parse(localStorage.getItem('compras')) || [],
             salidas: JSON.parse(localStorage.getItem('salidas')) || [],
             lotes: JSON.parse(localStorage.getItem('lotes')) || [],
-            manoObra: JSON.parse(localStorage.getItem('manoObra')) || [],
-            bodega: JSON.parse(localStorage.getItem('bodega')) || []
-        };
-
-        // Funciones de UI actualizadas
-        function actualizarUI() {
-            // ... (mantener actualizaciones anteriores) ...
-            actualizarSelectLotes();
-            actualizarListaManoObra();
-            actualizarResumenObra();
-            localStorage.setItem('manoObra', JSON.stringify(db.manoObra));
-        }
-
-        function actualizarSelectLotes() {
-            const select = document.getElementById('loteObra');
-            select.innerHTML = '<option value="">Seleccionar Lote</option>' + 
-                db.lotes.map(lote => `
-                    <option value="${lote.numero}">Lote #${lote.numero} - ${lote.variedad}</option>
-                `).join('');
-        }
-
-        function actualizarListaManoObra() {
-            const contenedor = document.getElementById('listaManoObra');
-            contenedor.innerHTML = db.manoObra.map((obra, index) => `
-                <div class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>${obra.actividad}</strong><br>
-                            <small>Lote #${obra.lote} - ${obra.jornales} jornales</small>
-                        </div>
-                        <div class="text-end">
-                            <div>$${obra.total.toLocaleString()}</div>
-                            <button class="btn btn-sm btn-danger mt-1" onclick="eliminarManoObra(${index})">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function actualizarResumenObra() {
-            const contenedor = document.getElementById('listaResumenObra');
-            const resumen = db.manoObra.slice(-5).reverse().map(obra => `
-                <div class="list-group-item">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <small>${obra.actividad}</small><br>
-                            <small class="text-muted">Lote ${obra.lote}</small>
-                        </div>
-                        <small>$${obra.total.toLocaleString()}</small>
-                    </div>
-                </div>
-            `).join('');
-            contenedor.innerHTML = resumen || '<div class="list-group-item">No hay registros</div>';
-        }
-
-        // Funciones para mano de obra
-        function calcularTotalObra() {
-            const jornales = parseFloat(document.getElementById('jornales').value) || 0;
-            const valor = parseFloat(document.getElementById('valorUnitario').value) || 0;
-            document.getElementById('totalObra').textContent = (jornales * valor).toLocaleString();
-        }
-
-        function eliminarManoObra(index) {
-            if (confirm('¿Eliminar este registro?')) {
-                db.manoObra.splice(index, 1);
-                actualizarUI();
-            }
-        }
-
-        // Eventos actualizados
-        document.getElementById('formManoObra').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nuevaObra = {
-                lote: document.getElementById('loteObra').value,
-                actividad: document.getElementById('actividad').value,
-                jornales: parseFloat(document.getElementById('jornales').value),
-                tipoPago: document.getElementById('tipoPago').value,
-                valorUnitario: parseFloat(document.getElementById('valorUnitario').value),
-                total: parseFloat(document.getElementById('totalObra').textContent.replace(/,/g, '')),
-                fecha: new Date().toISOString()
-            };
-
-            if (!db.lotes.some(l => l.numero == nuevaObra.lote)) {
-                alert("¡El lote seleccionado no existe!");
-                return;
-            }
-
-            db.manoObra.push(nuevaObra);
-            this.reset();
-            document.getElementById('totalObra').textContent = '0';
-            actualizarUI();
-        });
-
-        document.getElementById('jornales').addEventListener('input', calcularTotalObra);
-        document.getElementById('valorUnitario').addEventListener('input', calcularTotalObra);
-
-        // Inicialización
-        actualizarUI();
-    </script>
-</body>
-</html>
+            manoObra: JSON.parse(localStorage
