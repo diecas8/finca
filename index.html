@@ -6,9 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor Cafetero Integral</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://awesomplete.io/css/awesomplete.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
     <style>
-        /* Estilos CSS */
+        .section-form {
+            display: none;
+        }
+
+        .section-form.active {
+            display: block;
+        }
+
+        .nav-formas button {
+            margin: 5px;
+        }
+
+        .total-display {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .inventario-bodega {
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 
@@ -26,32 +47,106 @@
             <h3> Registro de Compras</h3>
             <form id="formCompras">
                 <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" required id="fechaCompra">
                     </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Insumo" required id="insumoCompra">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="Cantidad" required id="cantidadCompra">
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" required id="unidadCompra">
+                            <option value="">Unidad</option>
+                            <option value="kg">kg</option>
+                            <option value="lb">lb</option>
+                            <option value="qq">qq</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-info w-100"> Registrar</button>
+                    </div>
+                </div>
             </form>
+            <div class="list-group mt-3" id="listaCompras"></div>
         </section>
 
         <section id="form-salidas" class="section-form">
             <h3> Registro de Salidas</h3>
             <form id="formSalidas">
                 <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" required id="fechaSalida">
                     </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Insumo" required id="insumoSalida">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="Cantidad" required id="cantidadSalida">
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" required id="unidadSalida">
+                            <option value="">Unidad</option>
+                            <option value="kg">kg</option>
+                            <option value="lb">lb</option>
+                            <option value="qq">qq</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-info w-100"> Registrar</button>
+                    </div>
+                </div>
             </form>
+            <div class="list-group mt-3" id="listaSalidas"></div>
         </section>
 
-        <section id="form-lotes" class="section-form">
+        <section id="form-lotes" class="section-form active">
             <h3> Registro de Lotes</h3>
             <form id="formLote">
                 <div class="row g-3 mb-3">
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="N° Lote" required id="numeroLote">
                     </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" placeholder="Variedad" required id="variedad">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" required id="fechaLabor">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" step="0.01" class="form-control" placeholder="Hectáreas" required id="hectareas">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-info w-100"> Registrar</button>
+                    </div>
+                </div>
             </form>
+            <div class="list-group mt-3" id="listaLotes"></div>
         </section>
 
         <section id="form-mano-obra" class="section-form">
             <h3> Registro de Mano de Obra</h3>
             <form id="formManoObra">
                 <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" required id="fechaManoObra">
                     </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Trabajador" required id="trabajadorManoObra">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="Horas" required id="horasManoObra">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="Tarifa" required id="tarifaManoObra">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-info w-100"> Registrar</button>
+                    </div>
+                </div>
             </form>
+            <div class="list-group mt-3" id="listaManoObra"></div>
         </section>
 
         <section id="form-bodega" class="section-form">
@@ -74,7 +169,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://awesomplete.io/js/awesomplete.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
     <script>
         let db = {
             compras: JSON.parse(localStorage.getItem('compras')) || [],
@@ -84,23 +179,4 @@
             bodega: JSON.parse(localStorage.getItem('bodega')) || []
         };
 
-        // ... (código para autocompletado de variedades)
-
-        function mostrarFormulario(formId) {
-            document.querySelectorAll('.section-form').forEach(form => form.classList.remove('active'));
-            document.getElementById(`form-${formId}`).classList.add('active');
-        }
-
-        function actualizarUI() {
-            // ... (código para actualizar la interfaz)
-        }
-
-        // ... (código para enviar el formulario de lotes)
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // ... (código para inicializar la base de datos y mostrar el formulario de lotes)
-        });
-    </script>
-</body>
-
-</html>
+        const variedades = ["Caturra", "Castillo", "Típica", "Colombia",
