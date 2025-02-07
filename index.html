@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor Cafetero Integral</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://awesomplete.io/css/awesomplete.css" />
     <style>
-        .section-form { display: none; }
-        .section-form.active { display: block; }
-        .nav-formas button { margin: 5px; }
-        .total-display { background: #f8f9fa; padding: 10px; border-radius: 5px; }
-        .inventario-bodega { max-height: 400px; overflow-y: auto; }
+        .section-form {
+            display: none;
+        }
+
+        .section-form.active {
+            display: block;
+        }
+
+        .nav-formas button {
+            margin: 5px;
+        }
+
+        .total-display {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .inventario-bodega {
+            max-height: 400px;
+            overflow-y: auto;
+        }
     </style>
 </head>
+
 <body>
     <div class="container mt-4">
-        <!-- Menú de formularios -->
         <div class="nav-formas mb-4">
             <button class="btn btn-primary" onclick="mostrarFormulario('compras')">Compras</button>
             <button class="btn btn-success" onclick="mostrarFormulario('salidas')">Salidas</button>
@@ -24,57 +43,32 @@
             <button class="btn btn-secondary" onclick="mostrarFormulario('bodega')">Bodega</button>
         </div>
 
-        <!-- Formulario de Lotes (completo) -->
-        <section id="form-lotes" class="section-form">
-            <h3>🌱 Registro de Lotes</h3>
+        <section id="form-lotes" class="section-form active">
+            <h3> Registro de Lotes</h3>
             <form id="formLote">
                 <div class="row g-3 mb-3">
                     <div class="col-md-2">
                         <input type="number" class="form-control" placeholder="N° Lote" required id="numeroLote">
                     </div>
                     <div class="col-md-2">
-                        <select class="form-select" required id="variedad">
-                            <option value="">Variedad</option>
-                            <option value="Caturra">Caturra</option>
-                            <option value="Castillo">Castillo</option>
-                            <option value="Bourbon">Bourbon</option>
-                        </select>
+                        <input type="text" class="form-control" placeholder="Variedad" required id="variedad">
                     </div>
                     <div class="col-md-3">
-                        <select class="form-select" required id="tipoLabor">
-                            <option value="">Tipo de Labor</option>
-                            <option value="Siembra">Siembra</option>
-                            <option value="Poda">Poda</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
                         <input type="date" class="form-control" required id="fechaLabor">
                     </div>
                     <div class="col-md-3">
                         <input type="number" step="0.01" class="form-control" placeholder="Hectáreas" required id="hectareas">
                     </div>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-3">
-                        <input type="number" step="0.1" class="form-control" placeholder="Distancia entre calles (m)" required id="distanciaCalle">
-                    </div>
-                    <div class="col-md-3">
-                        <input type="number" step="0.1" class="form-control" placeholder="Distancia entre plantas (m)" required id="distanciaPlanta">
-                    </div>
-                    <div class="col-md-3">
-                        <input type="number" class="form-control" placeholder="N° de plantas" required id="numeroPlantas">
-                    </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-info w-100">🌿 Registrar Lote</button>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-info w-100"> Registrar</button>
                     </div>
                 </div>
             </form>
             <div class="list-group mt-3" id="listaLotes"></div>
         </section>
 
-        <!-- Sección de Bodega -->
         <section id="form-bodega" class="section-form">
-            <h3>📦 Inventario de Bodega</h3>
+            <h3> Inventario de Bodega</h3>
             <div class="inventario-bodega">
                 <table class="table table-hover">
                     <thead>
@@ -86,18 +80,15 @@
                         </tr>
                     </thead>
                     <tbody id="tablaBodega">
-                        <!-- Datos dinámicos -->
                     </tbody>
                 </table>
             </div>
         </section>
-
-        <!-- Resto de formularios... -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://awesomplete.io/js/awesomplete.min.js"></script>
     <script>
-        // Base de datos actualizada
         let db = {
             compras: JSON.parse(localStorage.getItem('compras')) || [],
             salidas: JSON.parse(localStorage.getItem('salidas')) || [],
@@ -106,16 +97,28 @@
             bodega: JSON.parse(localStorage.getItem('bodega')) || []
         };
 
-        // Función para mostrar formularios
+        const variedades = ["Caturra", "Castillo", "Típica", "Colombia", "Geisha"];
+        const inputVariedad = document.getElementById('variedad');
+        new Awesomplete(inputVariedad, {
+            list: variedades
+        });
+
         function mostrarFormulario(formId) {
             document.querySelectorAll('.section-form').forEach(form => form.classList.remove('active'));
             document.getElementById(`form-${formId}`).classList.add('active');
         }
 
-        // Función para actualizar la bodega
-        function actualizarBodegaUI() {
-            const tbody = document.getElementById('tablaBodega');
-            tbody.innerHTML = db.bodega.map(insumo => `
+        function actualizarUI() {
+            const listaLotes = document.getElementById('listaLotes');
+            listaLotes.innerHTML = db.lotes.map(lote => `
+                <div class="list-group-item">
+                    <strong>Lote #${lote.numero}</strong><br>
+                    <small>${lote.variedad} - ${lote.hectareas} ha</small>
+                </div>
+            `).join('');
+
+            const tablaBodega = document.getElementById('tablaBodega');
+            tablaBodega.innerHTML = db.bodega.map(insumo => `
                 <tr>
                     <td>${insumo.nombre}</td>
                     <td>${insumo.cantidad}</td>
@@ -123,57 +126,54 @@
                     <td>${new Date(insumo.ultimaActualizacion).toLocaleDateString()}</td>
                 </tr>
             `).join('');
-        }
 
-        // Función para registrar lotes (con todos los campos)
-        document.getElementById('formLote').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const nuevoLote = {
-                id: Date.now(),
-                numero: document.getElementById('numeroLote').value,
-                variedad: document.getElementById('variedad').value,
-                tipoLabor: document.getElementById('tipoLabor').value,
-                fecha: document.getElementById('fechaLabor').value,
-                hectareas: parseFloat(document.getElementById('hectareas').value),
-                distanciaCalle: parseFloat(document.getElementById('distanciaCalle').value),
-                distanciaPlanta: parseFloat(document.getElementById('distanciaPlanta').value),
-                numeroPlantas: parseInt(document.getElementById('numeroPlantas').value)
-            };
-            
-            if (db.lotes.some(l => l.numero === nuevoLote.numero)) {
-                alert("¡El número de lote ya existe!");
-                return;
-            }
-            
-            db.lotes.push(nuevoLote);
-            localStorage.setItem('lotes', JSON.stringify(db.lotes));
-            this.reset();
-            actualizarUI();
-        });
-
-        // Función principal de actualización
-        function actualizarUI() {
-            // Actualizar lotes
-            document.getElementById('listaLotes').innerHTML = db.lotes.map(lote => `
-                <div class="list-group-item">
-                    <strong>Lote #${lote.numero}</strong><br>
-                    <small>${lote.variedad} | ${lote.hectareas} ha | ${lote.numeroPlantas} plantas</small>
-                </div>
-            `).join('');
-            
-            // Actualizar bodega
-            actualizarBodegaUI();
-            
-            // Guardar en localStorage
             localStorage.setItem('lotes', JSON.stringify(db.lotes));
             localStorage.setItem('bodega', JSON.stringify(db.bodega));
         }
 
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('formLote').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const numeroLote = document.getElementById('numeroLote').value;
+            const hectareas = parseFloat(document.getElementById('hectareas').value);
+
+            if (db.lotes.some(l => l.numero === numeroLote)) {
+                alert("¡El número de lote ya existe!");
+                return;
+            }
+
+            if (isNaN(hectareas) || hectareas <= 0) {
+                alert("¡Las hectáreas deben ser un número positivo!");
+                return;
+            }
+
+            const ultimoLote = db.lotes.length > 0 ? db.lotes[db.lotes.length - 1].numero : 0;
+            const nuevoNumeroLote = parseInt(ultimoLote) + 1;
+
+            const nuevoLote = {
+                numero: nuevoNumeroLote,
+                variedad: document.getElementById('variedad').value,
+                fecha: document.getElementById('fechaLabor').value,
+                hectareas: hectareas
+            };
+
+            db.lotes.push(nuevoLote);
             actualizarUI();
-            mostrarFormulario('compras');
+            this.reset();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!Array.isArray(db.lotes)) {
+                db.lotes = [];
+            }
+            if (!Array.isArray(db.bodega)) {
+                db.bodega = [];
+            }
+
+            actualizarUI();
+            mostrarFormulario('lotes');
         });
     </script>
 </body>
+
 </html>
