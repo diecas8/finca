@@ -1,248 +1,140 @@
-// Función para manejar la lógica de la aplicación
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Lotes y Actividades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Sección para Registrar Lote -->
+        <section id="registroLote">
+            <h2>Registrar Lote</h2>
+            <form id="formLote">
+                <div class="form-group">
+                    <label for="numeroLote">Número de Lote</label>
+                    <input type="text" class="form-control" id="numeroLote" required>
+                </div>
+                <div class="form-group">
+                    <label for="variedad">Variedad</label>
+                    <input type="text" class="form-control" id="variedad" required>
+                </div>
+                <div class="form-group">
+                    <label for="areaLote">Área (en hectáreas)</label>
+                    <input type="number" class="form-control" id="areaLote" required>
+                </div>
+                <div class="form-group">
+                    <label for="distanciaCalle">Distancia entre Calles (en metros)</label>
+                    <input type="number" class="form-control" id="distanciaCalle" required>
+                </div>
+                <div class="form-group">
+                    <label for="distanciaPlantas">Distancia entre Plantas (en metros)</label>
+                    <input type="number" class="form-control" id="distanciaPlantas" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar Lote</button>
+            </form>
+            <div id="lotesRegistrados">
+                <!-- Los lotes registrados aparecerán aquí -->
+            </div>
+        </section>
 
-// Registrar Lote
-document.getElementById("formLote").addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    let numeroLote = document.getElementById("numeroLote").value;
-    let variedad = document.getElementById("variedad").value;
-    let areaLote = document.getElementById("areaLote").value;
-    let distanciaCalle = document.getElementById("distanciaCalle").value;
-    let distanciaPlantas = document.getElementById("distanciaPlantas").value;
-    
-    let numeroPlantas = (areaLote / (distanciaCalle * distanciaPlantas)).toFixed(0);
-    
-    let loteHTML = `
-        <div class="alert alert-info">
-            <h5>Lote ${numeroLote}</h5>
-            <p>Variedad: ${variedad}</p>
-            <p>Área: ${areaLote} ha</p>
-            <p>Distancia entre calles: ${distanciaCalle} m</p>
-            <p>Distancia entre plantas: ${distanciaPlantas} m</p>
-            <p>Número de plantas: ${numeroPlantas}</p>
-        </div>
-    `;
-    
-    document.getElementById("lotesRegistrados").innerHTML += loteHTML;
-});
-<!-- Costos de Actividades -->
-<section id="costos-actividades">
-    <h2 class="mt-4">Registrar Costos de Actividades</h2>
-    <form id="formCostos" class="mb-4">
-        <div class="mb-3">
-            <label for="actividad" class="form-label">Actividad</label>
-            <select class="form-control" id="actividad">
-                <option value="Siembra">Siembra</option>
-                <option value="Control de Arvenses">Control de Arvenses</option>
-                <option value="Control de Plagas">Control de Plagas</option>
-                <option value="Control de Enfermedades">Control de Enfermedades</option>
-                <option value="Fertilización">Fertilización</option>
-                <option value="Zoqueo">Zoqueo</option>
-                <option value="Recolección">Recolección</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="subactividad" class="form-label">Subactividad</label>
-            <input type="text" class="form-control" id="subactividad" required>
-        </div>
-        <div class="mb-3">
-            <label for="numJornales" class="form-label">Número de Jornales</label>
-            <input type="number" class="form-control" id="numJornales" required>
-        </div>
-        <div class="mb-3">
-            <label for="valorJornal" class="form-label">Valor Unitario del Jornal</label>
-            <input type="number" class="form-control" id="valorJornal" required>
-        </div>
-        <div class="mb-3">
-            <label for="fechaLabor" class="form-label">Fecha de la Labor</label>
-            <input type="date" class="form-control" id="fechaLabor" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar Actividad</button>
-    </form>
-    <div id="costosRegistrados">
-        <!-- Los costos de actividades registrados aparecerán aquí -->
+        <!-- Sección para Registrar Costos de Actividades -->
+        <section id="registroCostos" class="mt-4">
+            <h2>Registrar Costos de Actividades</h2>
+            <form id="formCostos">
+                <div class="form-group">
+                    <label for="actividad">Actividad</label>
+                    <select class="form-control" id="actividad" required>
+                        <option value="Siembra">Siembra</option>
+                        <option value="Control de Plagas">Control de Plagas</option>
+                        <option value="Recolección">Recolección</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="subactividad">Subactividad</label>
+                    <input type="text" class="form-control" id="subactividad" required>
+                </div>
+                <div class="form-group">
+                    <label for="numJornales">Número de Jornales</label>
+                    <input type="number" class="form-control" id="numJornales" required>
+                </div>
+                <div class="form-group">
+                    <label for="valorJornal">Valor Unitario del Jornal</label>
+                    <input type="number" class="form-control" id="valorJornal" required>
+                </div>
+                <div class="form-group">
+                    <label for="fechaLabor">Fecha de la Labor</label>
+                    <input type="date" class="form-control" id="fechaLabor" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar Actividad</button>
+            </form>
+            <div id="costosRegistrados">
+                <!-- Los costos de actividades registrados aparecerán aquí -->
+            </div>
+        </section>
     </div>
-</section>
-// Registrar Costos de Actividades
-document.getElementById("formCostos").addEventListener("submit", function(e) {
-    e.preventDefault();
-    
-    let actividad = document.getElementById("actividad").value;
-    let subactividad = document.getElementById("subactividad").value;
-    let numJornales = parseInt(document.getElementById("numJornales").value);
-    let valorJornal = parseFloat(document.getElementById("valorJornal").value);
-    let fechaLabor = document.getElementById("fechaLabor").value;
-    
-    let valorTotal = numJornales * valorJornal;
-    
-    let actividadHTML = `
-        <div class="alert alert-info">
-            <h5>Actividad: ${actividad}</h5>
-            <p>Subactividad: ${subactividad}</p>
-            <p>Número de Jornales: ${numJornales}</p>
-            <p>Valor Unitario del Jornal: ${valorJornal} </p>
-            <p>Valor Total: ${valorTotal} </p>
-            <p>Fecha de la Labor: ${fechaLabor}</p>
-        </div>
-    `;
-    
-    document.getElementById("costosRegistrados").innerHTML += actividadHTML;
-});
-<!-- Compra de Insumos -->
-<section id="insumos">
-    <h2 class="mt-4">Registrar Compra de Insumos</h2>
-    <form id="formCompraInsumo" class="mb-4">
-        <div class="mb-3">
-            <label for="nombreInsumo" class="form-label">Nombre del Insumo</label>
-            <input type="text" class="form-control" id="nombreInsumo" required>
-        </div>
-        <div class="mb-3">
-            <label for="tipoUnidad" class="form-label">Tipo de Unidad</label>
-            <select class="form-control" id="tipoUnidad">
-                <option value="Bulto">Bulto</option>
-                <option value="Litro">Litro</option>
-                <option value="Kilo">Kilo</option>
-                <option value="Rollo">Rollo</option>
-                <option value="Unidad">Unidad</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="cantidadComprada" class="form-label">Cantidad Comprada</label>
-            <input type="number" class="form-control" id="cantidadComprada" required>
-        </div>
-        <div class="mb-3">
-            <label for="costoUnitario" class="form-label">Costo Unitario</label>
-            <input type="number" class="form-control" id="costoUnitario" required>
-        </div>
-        <div class="mb-3">
-            <label for="fechaCompra" class="form-label">Fecha de Compra</label>
-            <input type="date" class="form-control" id="fechaCompra" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar Insumo</button>
-    </form>
-    <div id="insumosRegistrados">
-        <!-- Los insumos registrados aparecerán aquí -->
-    </div>
-</section>
-// Registrar Compra de Insumos
-document.getElementById("formCompraInsumo").addEventListener("submit", function(e) {
-    e.preventDefault();
 
-    let nombreInsumo = document.getElementById("nombreInsumo").value;
-    let tipoUnidad = document.getElementById("tipoUnidad").value;
-    let cantidadComprada = parseFloat(document.getElementById("cantidadComprada").value);
-    let costoUnitario = parseFloat(document.getElementById("costoUnitario").value);
-    let fechaCompra = document.getElementById("fechaCompra").value;
+    <script>
+        // Registrar Lote
+        document.getElementById("formLote").addEventListener("submit", function(e) {
+            e.preventDefault(); // Evita la recarga de la página
 
-    let valorTotal = cantidadComprada * costoUnitario;
+            // Obtener los valores del formulario
+            let numeroLote = document.getElementById("numeroLote").value;
+            let variedad = document.getElementById("variedad").value;
+            let areaLote = document.getElementById("areaLote").value;
+            let distanciaCalle = document.getElementById("distanciaCalle").value;
+            let distanciaPlantas = document.getElementById("distanciaPlantas").value;
 
-    let insumoHTML = `
-        <div class="alert alert-success">
-            <h5>Insumo: ${nombreInsumo}</h5>
-            <p>Tipo de Unidad: ${tipoUnidad}</p>
-            <p>Cantidad Comprada: ${cantidadComprada} ${tipoUnidad}</p>
-            <p>Costo Unitario: ${costoUnitario} </p>
-            <p>Valor Total: ${valorTotal} </p>
-            <p>Fecha de Compra: ${fechaCompra}</p>
-        </div>
-    `;
+            // Calcular el número de plantas
+            let numeroPlantas = (areaLote / (distanciaCalle * distanciaPlantas)).toFixed(0);
 
-    document.getElementById("insumosRegistrados").innerHTML += insumoHTML;
-});
-<!-- Uso de Insumos por Lotes -->
-<section id="uso-insumos">
-    <h2 class="mt-4">Registrar Uso de Insumos por Lotes</h2>
-    <form id="formUsoInsumos" class="mb-4">
-        <div class="mb-3">
-            <label for="insumo" class="form-label">Insumo</label>
-            <select class="form-control" id="insumo">
-                <option value="Fertilizante A">Fertilizante A</option>
-                <option value="Pesticida B">Pesticida B</option>
-                <option value="Herramienta C">Herramienta C</option>
-                <!-- Aquí puedes agregar más insumos dinámicamente -->
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="cantidadUsada" class="form-label">Cantidad Usada</label>
-            <input type="number" class="form-control" id="cantidadUsada" required>
-        </div>
-        <div class="mb-3">
-            <label for="loteAplicado" class="form-label">Lote Aplicado</label>
-            <input type="text" class="form-control" id="loteAplicado" required>
-        </div>
-        <div class="mb-3">
-            <label for="fechaUso" class="form-label">Fecha de Uso</label>
-            <input type="date" class="form-control" id="fechaUso" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar Uso de Insumo</button>
-    </form>
-    <div id="usoInsumosRegistrados">
-        <!-- Los registros de uso de insumos aparecerán aquí -->
-    </div>
-</section>
-// Registrar Uso de Insumos
-document.getElementById("formUsoInsumos").addEventListener("submit", function(e) {
-    e.preventDefault();
+            // Crear el HTML para mostrar el lote
+            let loteHTML = `
+                <div class="alert alert-info">
+                    <h5>Lote ${numeroLote}</h5>
+                    <p>Variedad: ${variedad}</p>
+                    <p>Área: ${areaLote} ha</p>
+                    <p>Distancia entre calles: ${distanciaCalle} m</p>
+                    <p>Distancia entre plantas: ${distanciaPlantas} m</p>
+                    <p>Número de plantas: ${numeroPlantas}</p>
+                </div>
+            `;
 
-    let insumo = document.getElementById("insumo").value;
-    let cantidadUsada = parseFloat(document.getElementById("cantidadUsada").value);
-    let loteAplicado = document.getElementById("loteAplicado").value;
-    let fechaUso = document.getElementById("fechaUso").value;
+            // Mostrar el lote registrado
+            document.getElementById("lotesRegistrados").innerHTML += loteHTML;
+        });
 
-    let usoInsumoHTML = `
-        <div class="alert alert-warning">
-            <h5>Insumo Usado: ${insumo}</h5>
-            <p>Cantidad Usada: ${cantidadUsada}</p>
-            <p>Lote Aplicado: ${loteAplicado}</p>
-            <p>Fecha de Uso: ${fechaUso}</p>
-        </div>
-    `;
+        // Registrar Costos de Actividades
+        document.getElementById("formCostos").addEventListener("submit", function(e) {
+            e.preventDefault(); // Evita la recarga de la página
 
-    document.getElementById("usoInsumosRegistrados").innerHTML += usoInsumoHTML;
-<!-- Recolección de Café -->
-<section id="recoleccion">
-    <h2 class="mt-4">Registrar Recolección de Café</h2>
-    <form id="formRecoleccion" class="mb-4">
-        <div class="mb-3">
-            <label for="fechaRecoleccion" class="form-label">Fecha de Recolección</label>
-            <input type="date" class="form-control" id="fechaRecoleccion" required>
-        </div>
-        <div class="mb-3">
-            <label for="loteRecoleccion" class="form-label">Lote</label>
-            <input type="text" class="form-control" id="loteRecoleccion" required>
-        </div>
-        <div class="mb-3">
-            <label for="kilosRecoleccion" class="form-label">Kilos de Café Cereza</label>
-            <input type="number" class="form-control" id="kilosRecoleccion" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar Recolección</button>
-    </form>
-    <div id="recoleccionRegistrada">
-        <!-- Los registros de recolección aparecerán aquí -->
-    </div>
-</section>
-// Registrar Recolección de Café
-document.getElementById("formRecoleccion").addEventListener("submit", function(e) {
-    e.preventDefault();
+            // Obtener los valores del formulario
+            let actividad = document.getElementById("actividad").value;
+            let subactividad = document.getElementById("subactividad").value;
+            let numJornales = parseInt(document.getElementById("numJornales").value);
+            let valorJornal = parseFloat(document.getElementById("valorJornal").value);
+            let fechaLabor = document.getElementById("fechaLabor").value;
 
-    let fechaRecoleccion = document.getElementById("fechaRecoleccion").value;
-    let loteRecoleccion = document.getElementById("loteRecoleccion").value;
-    let kilosRecoleccion = parseFloat(document.getElementById("kilosRecoleccion").value);
+            // Calcular el valor total de la actividad
+            let valorTotal = numJornales * valorJornal;
 
-    let recoleccionHTML = `
-        <div class="alert alert-success">
-            <h5>Recolección en Lote: ${loteRecoleccion}</h5>
-            <p>Kilos de Café Cereza: ${kilosRecoleccion}</p>
-            <p>Fecha de Recolección: ${fechaRecoleccion}</p>
-        </div>
-    `;
+            // Crear el HTML para mostrar los costos de la actividad
+            let actividadHTML = `
+                <div class="alert alert-success">
+                    <h5>Actividad: ${actividad}</h5>
+                    <p>Subactividad: ${subactividad}</p>
+                    <p>Número de Jornales: ${numJornales}</p>
+                    <p>Valor Unitario del Jornal: ${valorJornal}</p>
+                    <p>Valor Total: ${valorTotal}</p>
+                    <p>Fecha de la Labor: ${fechaLabor}</p>
+                </div>
+            `;
 
-    document.getElementById("recoleccionRegistrada").innerHTML += recoleccionHTML;
-});
-<!-- Cálculo de Costos Totales -->
-<section id="resultados">
-    <h2 class="mt-4">Resumen de Costos</h2>
-    <div id="resumenCostos">
-        <!-- Aquí aparecerá el resumen de costos por lote -->
-    </div>
-</section>
+            // Mostrar los costos registrados
+            document.getElementById("costosRegistrados").innerHTML += actividadHTML;
+        });
+    </script>
+</body>
+</html>
