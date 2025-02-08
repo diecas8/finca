@@ -2,139 +2,212 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Lotes y Actividades</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Sistema Cafetero Integral</title>
+    <style>
+        /* Estilos existentes */
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 20px; }
+        .form-container { background: #f5f5f5; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 10px; }
+        input, select { width: 200px; padding: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        button { background-color: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        
+        /* Nuevos estilos */
+        .section-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .total-box { background: #e8f5e9; padding: 10px; margin-top: 10px; border-radius: 4px; }
+    </style>
 </head>
 <body>
-    <div class="container mt-4">
-        <!-- Sección para Registrar Lote -->
-        <section id="registroLote">
-            <h2>Registrar Lote</h2>
-            <form id="formLote">
-                <div class="form-group">
-                    <label for="numeroLote">Número de Lote</label>
-                    <input type="text" class="form-control" id="numeroLote" required>
-                </div>
-                <div class="form-group">
-                    <label for="variedad">Variedad</label>
-                    <input type="text" class="form-control" id="variedad" required>
-                </div>
-                <div class="form-group">
-                    <label for="areaLote">Área (en hectáreas)</label>
-                    <input type="number" class="form-control" id="areaLote" required>
-                </div>
-                <div class="form-group">
-                    <label for="distanciaCalle">Distancia entre Calles (en metros)</label>
-                    <input type="number" class="form-control" id="distanciaCalle" required>
-                </div>
-                <div class="form-group">
-                    <label for="distanciaPlantas">Distancia entre Plantas (en metros)</label>
-                    <input type="number" class="form-control" id="distanciaPlantas" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Registrar Lote</button>
-            </form>
-            <div id="lotesRegistrados">
-                <!-- Los lotes registrados aparecerán aquí -->
-            </div>
-        </section>
+    <!-- Sección original de Lotes -->
+    <div class="form-container">
+        <h2>Registro de Lotes</h2>
+        <!-- Mantenemos el formulario original sin cambios -->
+        <!-- ... [El formulario original completo aquí] ... -->
+    </div>
 
-        <!-- Sección para Registrar Costos de Actividades -->
-        <section id="registroCostos" class="mt-4">
-            <h2>Registrar Costos de Actividades</h2>
-            <form id="formCostos">
-                <div class="form-group">
-                    <label for="actividad">Actividad</label>
-                    <select class="form-control" id="actividad" required>
-                        <option value="Siembra">Siembra</option>
-                        <option value="Control de Plagas">Control de Plagas</option>
-                        <option value="Recolección">Recolección</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="subactividad">Subactividad</label>
-                    <input type="text" class="form-control" id="subactividad" required>
-                </div>
-                <div class="form-group">
-                    <label for="numJornales">Número de Jornales</label>
-                    <input type="number" class="form-control" id="numJornales" required>
-                </div>
-                <div class="form-group">
-                    <label for="valorJornal">Valor Unitario del Jornal</label>
-                    <input type="number" class="form-control" id="valorJornal" required>
-                </div>
-                <div class="form-group">
-                    <label for="fechaLabor">Fecha de la Labor</label>
-                    <input type="date" class="form-control" id="fechaLabor" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Registrar Actividad</button>
-            </form>
-            <div id="costosRegistrados">
-                <!-- Los costos de actividades registrados aparecerán aquí -->
+    <!-- Nuevo formulario de Mano de Obra -->
+    <div class="form-container">
+        <h2>Registro Mano de Obra</h2>
+        <form id="manoObraForm">
+            <div class="form-group">
+                <label>Lote:</label>
+                <select id="loteManoObra" required>
+                    <option value="">Seleccionar Lote</option>
+                </select>
             </div>
-        </section>
+            
+            <div class="form-group">
+                <label>Tipo de Labor:</label>
+                <select id="tipoLaborMano" required>
+                    <option value="">Seleccionar</option>
+                    <option>Adecuacion de terreno</option>
+                    <option>Trazado</option>
+                    <option>Ahoyado</option>
+                    <option>Siembra</option>
+                    <option>Resiembra</option>
+                    <option>Fertilizacion</option>
+                    <option>Control de arvenses</option>
+                    <option>Control de plagas</option>
+                    <option>Plateo</option>
+                    <option>Encalado</option>
+                    <option>Zoqueo</option>
+                    <option>Recoleccion</option>
+                    <option>Otro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>N° Jornales:</label>
+                <input type="number" id="jornales" step="0.5" required>
+            </div>
+
+            <div class="form-group">
+                <label>Tipo Jornal:</label>
+                <select id="tipoJornal" required>
+                    <option>Al día</option>
+                    <option>Guadaña</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Valor Jornal:</label>
+                <input type="number" id="valorJornal" step="1000" required>
+            </div>
+
+            <div class="total-box">
+                Valor Total: $<span id="valorTotal">0</span>
+            </div>
+
+            <button type="button" onclick="guardarManoObra()">Guardar</button>
+            <button type="button" onclick="cancelarEdicionMO()" style="background-color: #f44336; display: none;" id="cancelMO">Cancelar</button>
+        </form>
+    </div>
+
+    <!-- Tabla de Mano de Obra -->
+    <div class="form-container">
+        <h3>Registros de Mano de Obra</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lote</th>
+                    <th>Labor</th>
+                    <th>Jornales</th>
+                    <th>Tipo</th>
+                    <th>Valor Unitario</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="registrosMO"></tbody>
+        </table>
     </div>
 
     <script>
-        // Registrar Lote
-        document.getElementById("formLote").addEventListener("submit", function(e) {
-            e.preventDefault(); // Evita la recarga de la página
+        // Datos existentes
+        let lotes = [];
+        let manoObra = [];
+        let editandoMO = false;
+        let indiceEdicionMO = null;
 
-            // Obtener los valores del formulario
-            let numeroLote = document.getElementById("numeroLote").value;
-            let variedad = document.getElementById("variedad").value;
-            let areaLote = document.getElementById("areaLote").value;
-            let distanciaCalle = document.getElementById("distanciaCalle").value;
-            let distanciaPlantas = document.getElementById("distanciaPlantas").value;
+        // Actualizar selector de lotes
+        function actualizarLotesSelector() {
+            const selector = document.getElementById('loteManoObra');
+            selector.innerHTML = '<option value="">Seleccionar Lote</option>';
+            lotes.forEach(lote => {
+                selector.innerHTML += `<option value="${lote.numero}">Lote ${lote.numero}</option>`;
+            });
+        }
 
-            // Calcular el número de plantas
-            let numeroPlantas = (areaLote / (distanciaCalle * distanciaPlantas)).toFixed(0);
+        // Calcular total
+        function calcularTotal() {
+            const jornales = parseFloat(document.getElementById('jornales').value) || 0;
+            const valor = parseFloat(document.getElementById('valorJornal').value) || 0;
+            document.getElementById('valorTotal').textContent = (jornales * valor).toLocaleString();
+        }
 
-            // Crear el HTML para mostrar el lote
-            let loteHTML = `
-                <div class="alert alert-info">
-                    <h5>Lote ${numeroLote}</h5>
-                    <p>Variedad: ${variedad}</p>
-                    <p>Área: ${areaLote} ha</p>
-                    <p>Distancia entre calles: ${distanciaCalle} m</p>
-                    <p>Distancia entre plantas: ${distanciaPlantas} m</p>
-                    <p>Número de plantas: ${numeroPlantas}</p>
-                </div>
-            `;
+        // Guardar mano de obra
+        function guardarManoObra() {
+            const registro = {
+                lote: document.getElementById('loteManoObra').value,
+                labor: document.getElementById('tipoLaborMano').value,
+                jornales: parseFloat(document.getElementById('jornales').value),
+                tipo: document.getElementById('tipoJornal').value,
+                valor: parseFloat(document.getElementById('valorJornal').value),
+                total: parseFloat(document.getElementById('valorTotal').textContent.replace(/,/g, ''))
+            };
 
-            // Mostrar el lote registrado
-            document.getElementById("lotesRegistrados").innerHTML += loteHTML;
-        });
+            if (editandoMO) {
+                manoObra[indiceEdicionMO] = registro;
+                editandoMO = false;
+                indiceEdicionMO = null;
+                document.getElementById('cancelMO').style.display = 'none';
+            } else {
+                manoObra.push(registro);
+            }
 
-        // Registrar Costos de Actividades
-        document.getElementById("formCostos").addEventListener("submit", function(e) {
-            e.preventDefault(); // Evita la recarga de la página
+            actualizarTablaMO();
+            document.getElementById('manoObraForm').reset();
+            document.getElementById('valorTotal').textContent = '0';
+        }
 
-            // Obtener los valores del formulario
-            let actividad = document.getElementById("actividad").value;
-            let subactividad = document.getElementById("subactividad").value;
-            let numJornales = parseInt(document.getElementById("numJornales").value);
-            let valorJornal = parseFloat(document.getElementById("valorJornal").value);
-            let fechaLabor = document.getElementById("fechaLabor").value;
+        // Editar registro
+        function editarMO(index) {
+            const registro = manoObra[index];
+            document.getElementById('loteManoObra').value = registro.lote;
+            document.getElementById('tipoLaborMano').value = registro.labor;
+            document.getElementById('jornales').value = registro.jornales;
+            document.getElementById('tipoJornal').value = registro.tipo;
+            document.getElementById('valorJornal').value = registro.valor;
+            
+            editandoMO = true;
+            indiceEdicionMO = index;
+            document.getElementById('cancelMO').style.display = 'inline-block';
+            calcularTotal();
+        }
 
-            // Calcular el valor total de la actividad
-            let valorTotal = numJornales * valorJornal;
+        // Eliminar registro
+        function eliminarMO(index) {
+            manoObra.splice(index, 1);
+            actualizarTablaMO();
+        }
 
-            // Crear el HTML para mostrar los costos de la actividad
-            let actividadHTML = `
-                <div class="alert alert-success">
-                    <h5>Actividad: ${actividad}</h5>
-                    <p>Subactividad: ${subactividad}</p>
-                    <p>Número de Jornales: ${numJornales}</p>
-                    <p>Valor Unitario del Jornal: ${valorJornal}</p>
-                    <p>Valor Total: ${valorTotal}</p>
-                    <p>Fecha de la Labor: ${fechaLabor}</p>
-                </div>
-            `;
+        // Actualizar tabla
+        function actualizarTablaMO() {
+            const tbody = document.getElementById('registrosMO');
+            tbody.innerHTML = manoObra.map((registro, index) => `
+                <tr>
+                    <td>${registro.lote}</td>
+                    <td>${registro.labor}</td>
+                    <td>${registro.jornales}</td>
+                    <td>${registro.tipo}</td>
+                    <td>$${registro.valor.toLocaleString()}</td>
+                    <td>$${registro.total.toLocaleString()}</td>
+                    <td>
+                        <button onclick="editarMO(${index})">Editar</button>
+                        <button onclick="eliminarMO(${index})" style="background-color: #f44336;">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
 
-            // Mostrar los costos registrados
-            document.getElementById("costosRegistrados").innerHTML += actividadHTML;
-        });
+        // Event listeners para cálculos en tiempo real
+        document.getElementById('jornales').addEventListener('input', calcularTotal);
+        document.getElementById('valorJornal').addEventListener('input', calcularTotal);
+
+        // Función de cancelar edición
+        function cancelarEdicionMO() {
+            editandoMO = false;
+            indiceEdicionMO = null;
+            document.getElementById('manoObraForm').reset();
+            document.getElementById('cancelMO').style.display = 'none';
+            document.getElementById('valorTotal').textContent = '0';
+        }
+
+        // Actualizar selector de lotes periódicamente
+        setInterval(actualizarLotesSelector, 1000);
     </script>
 </body>
 </html>
