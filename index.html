@@ -2,387 +2,253 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema Integral Cafetero</title>
+    <title>Sistema Integral de Cultivo de Café</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            max-width: 1200px; 
-            margin: 20px auto; 
-            padding: 20px; 
-            background-color: #f0f8ff;
-        }
-        .form-container { 
-            background: white; 
-            padding: 20px; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .form-group { 
-            margin-bottom: 15px; 
-            display: grid;
-            grid-template-columns: 120px 200px;
-            align-items: center;
-            gap: 10px;
-        }
-        input, select { 
-            padding: 8px; 
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px; 
-        }
-        th, td { 
-            border: 1px solid #ddd; 
-            padding: 10px; 
-            text-align: left; 
-        }
-        th { 
-            background-color: #2E8B57; 
-            color: white; 
-        }
-        button { 
-            background-color: #2E8B57; 
-            color: white; 
-            padding: 8px 15px; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            transition: background 0.3s;
-        }
-        button:hover { 
-            background-color: #3CB371; 
-        }
-        .section-title {
-            color: #2E8B57;
-            border-bottom: 2px solid #3CB371;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .total-box { 
-            background: #e8f5e9; 
-            padding: 15px; 
-            margin: 15px 0; 
-            border-radius: 4px; 
-            font-weight: bold;
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 30px;
-        }
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 20px; background: #f5f5f5; }
+        .form-container { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 10px; }
+        input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #2E8B57; color: white; }
+        button { background-color: #2E8B57; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background-color: #3CB371; }
+        .total-box { background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 4px; font-weight: bold; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
     </style>
 </head>
 <body>
-    <!-- SECCIÓN DE LOTES -->
-    <div class="form-container">
-        <h2 class="section-title">🏞️ Registro de Lotes Cafeteros</h2>
-        <form id="loteForm">
-            <div class="form-group">
-                <label>Número de Lote:</label>
-                <input type="number" id="numeroLote" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Variedad:</label>
-                <select id="variedad" required>
-                    <option value="">Seleccione variedad</option>
-                    <option>Castillo</option>
-                    <option>Cenicafe</option>
-                    <option>Colombia</option>
-                    <option>Geisha</option>
-                    <option>Borbon</option>
-                    <option>Caturra</option>
-                </select>
-            </div>
 
-            <div class="form-group">
-                <label>Área (ha):</label>
-                <input type="number" step="0.01" id="area" required>
-            </div>
-
-            <div class="form-group">
-                <label>Tipo de Labor:</label>
-                <select id="tipoLabor" required>
-                    <option value="">Seleccione labor</option>
-                    <option>Siembra nueva</option>
-                    <option>Renovacion siembra</option>
-                    <option>Renovacion zoca</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Fecha Labor:</label>
-                <input type="date" id="fechaLabor" required>
-            </div>
-
-            <div class="form-group">
-                <label>Distancia surco (m):</label>
-                <input type="number" step="0.01" id="distanciaSurco" required>
-            </div>
-
-            <div class="form-group">
-                <label>Distancia plantas (m):</label>
-                <input type="number" step="0.01" id="distanciaPlantas" required>
-            </div>
-
-            <div style="margin-top: 20px;">
-                <button type="button" onclick="guardarLote()">🌱 Guardar Lote</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- SECCIÓN DE MANO DE OBRA -->
-    <div class="form-container">
-        <h2 class="section-title">👷 Registro de Actividades</h2>
-        <form id="manoObraForm">
-            <div class="form-group">
-                <label>Lote:</label>
-                <select id="loteManoObra" required>
-                    <option value="">Seleccionar lote</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Tipo de Labor:</label>
-                <select id="tipoLaborMano" required>
-                    <option value="">Seleccionar actividad</option>
-                    <option>Adecuacion de terreno</option>
-                    <option>Trazado</option>
-                    <option>Ahoyado</option>
-                    <option>Siembra</option>
-                    <option>Resiembra</option>
-                    <option>Fertilizacion</option>
-                    <option>Control de arvenses</option>
-                    <option>Control de plagas</option>
-                    <option>Plateo</option>
-                    <option>Encalado</option>
-                    <option>Zoqueo</option>
-                    <option>Recoleccion</option>
-                    <option>Otro</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>N° Jornales:</label>
-                <input type="number" id="jornales" step="0.5" required>
-            </div>
-
-            <div class="form-group">
-                <label>Tipo Jornal:</label>
-                <select id="tipoJornal" required>
-                    <option>Al día</option>
-                    <option>Guadaña</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Valor Jornal:</label>
-                <input type="number" id="valorJornal" step="1000" required>
-            </div>
-
-            <div class="total-box">
-                💰 Valor Total: $<span id="valorTotal">0</span>
-            </div>
-
-            <div style="margin-top: 20px;">
-                <button type="button" onclick="guardarManoObra()">💾 Guardar Actividad</button>
-                <button type="button" onclick="cancelarEdicionMO()" style="background-color: #ff4444; display: none;" id="cancelMO">❌ Cancelar</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- TABLAS DE REGISTROS -->
-    <div class="grid-container">
-        <!-- Tabla de Lotes -->
-        <div class="form-container">
-            <h3>📋 Lotes Registrados</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lote</th>
-                        <th>Variedad</th>
-                        <th>Área</th>
-                        <th>Labor</th>
-                        <th>Densidad</th>
-                        <th>Plantas</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="registrosLotes"></tbody>
-            </table>
+<!-- Formulario de Lotes -->
+<div class="form-container">
+    <h2>🌱 Registro de Lotes</h2>
+    <form id="loteForm">
+        <div class="form-group">
+            <label>N° Lote:</label>
+            <input type="number" id="numeroLote" required>
         </div>
-
-        <!-- Tabla de Actividades -->
-        <div class="form-container">
-            <h3>📋 Actividades Registradas</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lote</th>
-                        <th>Actividad</th>
-                        <th>Jornales</th>
-                        <th>Tipo</th>
-                        <th>Valor Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="registrosMO"></tbody>
-            </table>
+        <div class="form-group">
+            <label>Variedad:</label>
+            <select id="variedad" required>
+                <option value="">Seleccione</option>
+                <option>Castillo</option><option>Cenicafe</option><option>Colombia</option>
+                <option>Geisha</option><option>Borbon</option><option>Caturra</option>
+            </select>
         </div>
+        <div class="form-group">
+            <label>Área (ha):</label>
+            <input type="number" step="0.01" id="area" required>
+        </div>
+        <div class="form-group">
+            <label>Tipo Labor:</label>
+            <select id="tipoLabor" required>
+                <option value="">Seleccione</option>
+                <option>Siembra nueva</option><option>Renovacion siembra</option><option>Renovacion zoca</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Fecha Labor:</label>
+            <input type="date" id="fechaLabor" required>
+        </div>
+        <div class="form-group">
+            <label>Surco (m):</label>
+            <input type="number" step="0.01" id="distanciaSurco" required>
+        </div>
+        <div class="form-group">
+            <label>Entre plantas (m):</label>
+            <input type="number" step="0.01" id="distanciaPlantas" required>
+        </div>
+        <button type="button" onclick="guardarLote()">Guardar Lote</button>
+    </form>
+</div>
+
+<!-- Formulario de Mano de Obra -->
+<div class="form-container">
+    <h2>👷 Registro de Actividades</h2>
+    <form id="manoObraForm">
+        <div class="form-group">
+            <label>Lote:</label>
+            <select id="loteManoObra" required></select>
+        </div>
+        <div class="form-group">
+            <label>Tipo de Labor:</label>
+            <select id="tipoLaborMano" required>
+                <option value="">Seleccione</option>
+                <option>Adecuacion de terreno</option><option>Trazado</option><option>Ahoyado</option>
+                <option>Siembra</option><option>Resiembra</option><option>Fertilizacion</option>
+                <option>Control de arvenses</option><option>Control de plagas</option><option>Plateo</option>
+                <option>Encalado</option><option>Zoqueo</option><option>Recoleccion</option><option>Otro</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>N° Jornales:</label>
+            <input type="number" id="jornales" step="0.5" required>
+        </div>
+        <div class="form-group">
+            <label>Tipo Jornal:</label>
+            <select id="tipoJornal" required>
+                <option>Al día</option><option>Guadaña</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Valor Jornal:</label>
+            <input type="number" id="valorJornal" step="1000" required>
+        </div>
+        <div class="total-box">
+            💰 Valor Total: $<span id="valorTotal">0</span>
+        </div>
+        <button type="button" onclick="guardarManoObra()">Guardar Actividad</button>
+    </form>
+</div>
+
+<!-- Tablas de Registros -->
+<div class="grid-container">
+    <div class="form-container">
+        <h3>📋 Lotes Registrados</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Lote</th><th>Variedad</th><th>Área</th><th>Labor</th><th>Densidad</th><th>Plantas</th><th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="registrosLotes"></tbody>
+        </table>
     </div>
 
-    <script>
-        // DATOS Y CONFIGURACIÓN
-        let lotes = [];
-        let manoObra = [];
-        let editandoMO = false;
-        let indiceEdicionMO = null;
-
-        // FUNCIONES PARA LOTES
-        function guardarLote() {
-            const lote = {
-                numero: document.getElementById('numeroLote').value,
-                variedad: document.getElementById('variedad').value,
-                area: parseFloat(document.getElementById('area').value),
-                labor: document.getElementById('tipoLabor').value,
-                fecha: document.getElementById('fechaLabor').value,
-                surco: parseFloat(document.getElementById('distanciaSurco').value),
-                plantas: parseFloat(document.getElementById('distanciaPlantas').value)
-            };
-
-            lote.densidad = 10000 / (lote.surco * lote.plantas);
-            lote.totalPlantas = Math.round(lote.densidad * lote.area);
-
-            const index = lotes.findIndex(l => l.numero === lote.numero);
-            if (index >= 0) {
-                lotes[index] = lote;
-            } else {
-                lotes.push(lote);
-            }
-
-            actualizarTablaLotes();
-            actualizarLotesSelector();
-            document.getElementById('loteForm').reset();
-        }
-
-        function actualizarTablaLotes() {
-            const tbody = document.getElementById('registrosLotes');
-            tbody.innerHTML = lotes.map(lote => `
+    <div class="form-container">
+        <h3>📋 Actividades Registradas</h3>
+        <table>
+            <thead>
                 <tr>
-                    <td>${lote.numero}</td>
-                    <td>${lote.variedad}</td>
-                    <td>${lote.area} ha</td>
-                    <td>${lote.labor}</td>
-                    <td>${lote.densidad.toFixed(2)}/ha</td>
-                    <td>${lote.totalPlantas.toLocaleString()}</td>
-                    <td>
-                        <button onclick="eliminarLote('${lote.numero}')">🗑️ Eliminar</button>
-                    </td>
+                    <th>Lote</th><th>Actividad</th><th>Jornales</th><th>Tipo</th><th>Valor Total</th><th>Acciones</th>
                 </tr>
-            `).join('');
-        }
+            </thead>
+            <tbody id="registrosMO"></tbody>
+        </table>
+    </div>
+</div>
 
-        function eliminarLote(numero) {
-            lotes = lotes.filter(l => l.numero !== numero);
-            actualizarTablaLotes();
-            actualizarLotesSelector();
-        }
+<script>
+    let lotes = [];
+    let manoObra = [];
 
-        // FUNCIONES PARA MANO DE OBRA
-        function actualizarLotesSelector() {
-            const selector = document.getElementById('loteManoObra');
-            selector.innerHTML = '<option value="">Seleccionar lote</option>';
-            lotes.forEach(lote => {
-                selector.innerHTML += `<option value="${lote.numero}">Lote ${lote.numero}</option>`;
-            });
-        }
+    // Funciones para Lotes
+    function guardarLote() {
+        const lote = {
+            numero: parseInt(document.getElementById('numeroLote').value),
+            variedad: document.getElementById('variedad').value,
+            area: parseFloat(document.getElementById('area').value),
+            labor: document.getElementById('tipoLabor').value,
+            fecha: document.getElementById('fechaLabor').value,
+            surco: parseFloat(document.getElementById('distanciaSurco').value),
+            plantas: parseFloat(document.getElementById('distanciaPlantas').value)
+        };
 
-        function calcularTotal() {
-            const jornales = parseFloat(document.getElementById('jornales').value) || 0;
-            const valor = parseFloat(document.getElementById('valorJornal').value) || 0;
-            document.getElementById('valorTotal').textContent = (jornales * valor).toLocaleString();
-        }
+        lote.densidad = 10000 / (lote.surco * lote.plantas);
+        lote.totalPlantas = Math.round(lote.densidad * lote.area);
 
-        function guardarManoObra() {
-            const registro = {
-                lote: document.getElementById('loteManoObra').value,
-                labor: document.getElementById('tipoLaborMano').value,
-                jornales: parseFloat(document.getElementById('jornales').value),
-                tipo: document.getElementById('tipoJornal').value,
-                valor: parseFloat(document.getElementById('valorJornal').value),
-                total: parseFloat(document.getElementById('valorTotal').textContent.replace(/,/g, ''))
-            };
+        const index = lotes.findIndex(l => l.numero === lote.numero);
+        if (index >= 0) lotes[index] = lote;
+        else lotes.push(lote);
 
-            if (editandoMO) {
-                manoObra[indiceEdicionMO] = registro;
-                editandoMO = false;
-                indiceEdicionMO = null;
-                document.getElementById('cancelMO').style.display = 'none';
-            } else {
-                manoObra.push(registro);
-            }
-
-            actualizarTablaMO();
-            document.getElementById('manoObraForm').reset();
-            document.getElementById('valorTotal').textContent = '0';
-        }
-
-        function editarMO(index) {
-            const registro = manoObra[index];
-            document.getElementById('loteManoObra').value = registro.lote;
-            document.getElementById('tipoLaborMano').value = registro.labor;
-            document.getElementById('jornales').value = registro.jornales;
-            document.getElementById('tipoJornal').value = registro.tipo;
-            document.getElementById('valorJornal').value = registro.valor;
-            
-            editandoMO = true;
-            indiceEdicionMO = index;
-            document.getElementById('cancelMO').style.display = 'inline-block';
-            calcularTotal();
-        }
-
-        function eliminarMO(index) {
-            manoObra.splice(index, 1);
-            actualizarTablaMO();
-        }
-
-        function actualizarTablaMO() {
-            const tbody = document.getElementById('registrosMO');
-            tbody.innerHTML = manoObra.map((registro, index) => `
-                <tr>
-                    <td>${registro.lote}</td>
-                    <td>${registro.labor}</td>
-                    <td>${registro.jornales}</td>
-                    <td>${registro.tipo}</td>
-                    <td>$${registro.total.toLocaleString()}</td>
-                    <td>
-                        <button onclick="editarMO(${index})">✏️ Editar</button>
-                        <button onclick="eliminarMO(${index})" style="background-color: #ff4444;">🗑️ Eliminar</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function cancelarEdicionMO() {
-            editandoMO = false;
-            indiceEdicionMO = null;
-            document.getElementById('manoObraForm').reset();
-            document.getElementById('cancelMO').style.display = 'none';
-            document.getElementById('valorTotal').textContent = '0';
-        }
-
-        // EVENT LISTENERS
-        document.getElementById('jornales').addEventListener('input', calcularTotal);
-        document.getElementById('valorJornal').addEventListener('input', calcularTotal);
-        setInterval(actualizarLotesSelector, 1000);
-
-        // INICIALIZACIÓN
+        actualizarTablaLotes();
         actualizarLotesSelector();
-    </script>
+        document.getElementById('loteForm').reset();
+    }
+
+    function actualizarTablaLotes() {
+        document.getElementById('registrosLotes').innerHTML = lotes.map(lote => `
+            <tr>
+                <td>${lote.numero}</td>
+                <td>${lote.variedad}</td>
+                <td>${lote.area} ha</td>
+                <td>${lote.labor}</td>
+                <td>${lote.densidad.toFixed(2)}/ha</td>
+                <td>${lote.totalPlantas.toLocaleString()}</td>
+                <td><button onclick="eliminarLote(${lote.numero})">Eliminar</button></td>
+            </tr>
+        `).join('');
+    }
+
+    function eliminarLote(numero) {
+        lotes = lotes.filter(l => l.numero !== numero);
+        manoObra = manoObra.filter(m => m.lote !== numero);
+        actualizarTablaLotes();
+        actualizarTablaMO();
+        actualizarLotesSelector();
+    }
+
+    // Funciones para Mano de Obra
+    function actualizarLotesSelector() {
+        const selector = document.getElementById('loteManoObra');
+        selector.innerHTML = '<option value="">Seleccionar Lote</option>';
+        lotes.forEach(lote => {
+            selector.innerHTML += `<option value="${lote.numero}">Lote ${lote.numero}</option>`;
+        });
+    }
+
+    function calcularTotal() {
+        const jornales = parseFloat(document.getElementById('jornales').value) || 0;
+        const valor = parseFloat(document.getElementById('valorJornal').value) || 0;
+        document.getElementById('valorTotal').textContent = (jornales * valor).toLocaleString();
+    }
+
+    function guardarManoObra() {
+        const registro = {
+            lote: parseInt(document.getElementById('loteManoObra').value),
+            labor: document.getElementById('tipoLaborMano').value,
+            jornales: parseFloat(document.getElementById('jornales').value),
+            tipo: document.getElementById('tipoJornal').value,
+            valor: parseFloat(document.getElementById('valorJornal').value),
+            total: parseFloat(document.getElementById('valorTotal').textContent.replace(/,/g, ''))
+        };
+
+        if (!lotes.some(l => l.numero === registro.lote)) {
+            alert('¡Primero debe registrar el lote!');
+            return;
+        }
+
+        manoObra.push(registro);
+        actualizarTablaMO();
+        document.getElementById('manoObraForm').reset();
+        document.getElementById('valorTotal').textContent = '0';
+    }
+
+    function actualizarTablaMO() {
+        document.getElementById('registrosMO').innerHTML = manoObra.map((registro, index) => `
+            <tr>
+                <td>${registro.lote}</td>
+                <td>${registro.labor}</td>
+                <td>${registro.jornales}</td>
+                <td>${registro.tipo}</td>
+                <td>$${registro.total.toLocaleString()}</td>
+                <td>
+                    <button onclick="editarMO(${index})">Editar</button>
+                    <button onclick="eliminarMO(${index})">Eliminar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function editarMO(index) {
+        const registro = manoObra[index];
+        document.getElementById('loteManoObra').value = registro.lote;
+        document.getElementById('tipoLaborMano').value = registro.labor;
+        document.getElementById('jornales').value = registro.jornales;
+        document.getElementById('tipoJornal').value = registro.tipo;
+        document.getElementById('valorJornal').value = registro.valor;
+        calcularTotal();
+    }
+
+    function eliminarMO(index) {
+        manoObra.splice(index, 1);
+        actualizarTablaMO();
+    }
+
+    // Event Listeners
+    document.getElementById('jornales').addEventListener('input', calcularTotal);
+    document.getElementById('valorJornal').addEventListener('input', calcularTotal);
+    setInterval(actualizarLotesSelector, 1000);
+</script>
 </body>
 </html>
