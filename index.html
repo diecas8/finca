@@ -424,4 +424,47 @@
     }
 
     function actualizarTablaInsumos() {
-        const tbody = document.getElementById('registrosInsum
+        const tbody = document.getElementById('registrosInsumos');
+        tbody.innerHTML = insumos.map((insumo, index) => `
+            <tr>
+                <td>${insumo.fecha}</td>
+                <td>${insumo.tipo}</td>
+                <td>${insumo.unidad}</td>
+                <td>${insumo.cantidad}</td>
+                <td>$${insumo.valor.toLocaleString()}</td>
+                <td>$${insumo.total.toLocaleString()}</td>
+                <td>
+                    <button onclick="editarInsumo(${index})">Editar</button>
+                    <button onclick="eliminarInsumo(${index})">Eliminar</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function editarInsumo(index) {
+        const insumo = insumos[index];
+        document.getElementById('fechaCompra').value = insumo.fecha;
+        document.getElementById('tipoInsumo').value = insumo.tipo;
+        document.getElementById('unidadMedida').value = insumo.unidad;
+        document.getElementById('cantidadInsumo').value = insumo.cantidad;
+        document.getElementById('valorUnitario').value = insumo.valor;
+        
+        editandoInsumo = true;
+        indiceEdicionInsumo = index;
+        calcularTotalInsumo();
+    }
+
+    function eliminarInsumo(index) {
+        insumos.splice(index, 1);
+        actualizarTablaInsumos();
+    }
+
+    // Event listeners
+    document.getElementById('jornales').addEventListener('input', calcularTotal);
+    document.getElementById('valorJornal').addEventListener('input', calcularTotal);
+    document.getElementById('cantidadInsumo').addEventListener('input', calcularTotalInsumo);
+    document.getElementById('valorUnitario').addEventListener('input', calcularTotalInsumo);
+    document.addEventListener('DOMContentLoaded', actualizarLotesSelector);
+</script>
+</body>
+</html>
