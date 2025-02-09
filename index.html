@@ -4,242 +4,224 @@
     <meta charset="UTF-8">
     <title>Sistema Integral de Gestión Cafetera</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 20px; background: #f5f5f5; }
-        .form-container { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .form-group { margin-bottom: 15px; display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 10px; }
-        input, select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #2E8B57; color: white; }
-        button { background-color: #2E8B57; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #3CB371; }
-        .total-box { background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 4px; font-weight: bold; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4; /* Light gray background */
+            color: #333; /* Darker text color for better contrast */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0; /* Remove default margins */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1; /* Allow container to grow and take available space */
+        }
+
+        h2, h3 {
+            color: #2E8B57; /* Green heading color */
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%; /* Make input and select fill their container */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to the table */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2E8B57;
+            color: white;
+            font-weight: bold;
+        }
+
+        button {
+            background-color: #2E8B57;
+            color: white;
+            padding: 10px 20px; /* Increased padding */
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        button:hover {
+            background-color: #3CB371;
+        }
+
+        .total-box {
+            background: #e8f5e9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: right; /* Align total value to the right */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); /* Responsive grid */
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        /* Styles for the "Add Insumo" button */
+        #nuevoInsumo {
+            flex-grow: 1; /* Allow input to expand */
+        }
+        .insumo-container {
+            display: flex;
+            gap: 5px;
+        }
+        .insumo-container button {
+            padding: 8px 12px; /* Smaller padding for plus button */
+        }
+
+        /* Style the delete buttons in the tables */
+        .delete-button {
+            background-color: #d9534f; /* Red color */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px; /* Add some space between the edit and delete buttons */
+        }
+
+        .delete-button:hover {
+            background-color: #c9302c;
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Sistema Integral de Gestión Cafetera</h1>
 
-<!-- Formulario de Lotes -->
-<div class="form-container">
-    <h2>🌱 Registro de Lotes</h2>
-    <form id="loteForm">
-        <div class="form-group">
-            <label>N° Lote:</label>
-            <input type="number" id="numeroLote" required>
-        </div>
-        <div class="form-group">
-            <label>Variedad:</label>
-            <select id="variedad" required>
-                <option value="">Seleccione</option>
-                <option>Castillo</option>
-                <option>Cenicafe</option>
-                <option>Colombia</option>
-                <option>Geisha</option>
-                <option>Borbon</option>
-                <option>Caturra</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Área (ha):</label>
-            <input type="number" step="0.01" id="area" required>
-        </div>
-        <div class="form-group">
-            <label>Tipo Labor:</label>
-            <select id="tipoLabor" required>
-                <option value="">Seleccione</option>
-                <option>Siembra nueva</option>
-                <option>Renovacion siembra</option>
-                <option>Renovacion zoca</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Fecha Labor:</label>
-            <input type="date" id="fechaLabor" required>
-        </div>
-        <div class="form-group">
-            <label>Surco (m):</label>
-            <input type="number" step="0.01" id="distanciaSurco" required>
-        </div>
-        <div class="form-group">
-            <label>Entre plantas (m):</label>
-            <input type="number" step="0.01" id="distanciaPlantas" required>
-        </div>
-        <button type="button" onclick="guardarLote()">Guardar Lote</button>
-    </form>
-</div>
+        <div class="grid-container">
+            <div class="form-container">
+                <h2>🌱 Registro de Lotes</h2>
+                <form id="loteForm">
+                    </form>
+            </div>
 
-<!-- Formulario de Actividades -->
-<div class="form-container">
-    <h2>👷 Registro de Actividades</h2>
-    <form id="manoObraForm">
-        <div class="form-group">
-            <label>Lote:</label>
-            <select id="loteManoObra" required></select>
-        </div>
-        <div class="form-group">
-            <label>Tipo de Labor:</label>
-            <select id="tipoLaborMano" required>
-                <option value="">Seleccione</option>
-                <option>Adecuacion de terreno</option>
-                <option>Trazado</option>
-                <option>Ahoyado</option>
-                <option>Siembra</option>
-                <option>Resiembra</option>
-                <option>Fertilizacion</option>
-                <option>Control de arvenses</option>
-                <option>Control de plagas</option>
-                <option>Plateo</option>
-                <option>Encalado</option>
-                <option>Zoqueo</option>
-                <option>Recoleccion</option>
-                <option>Otro</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>N° Jornales:</label>
-            <input type="number" id="jornales" step="0.5" required>
-        </div>
-        <div class="form-group">
-            <label>Tipo Jornal:</label>
-            <select id="tipoJornal" required>
-                <option>Al día</option>
-                <option>Guadaña</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Valor Jornal:</label>
-            <input type="number" id="valorJornal" step="1000" required>
-        </div>
-        <div class="total-box">
-            💰 Valor Total: $<span id="valorTotal">0</span>
-        </div>
-        <button type="button" onclick="guardarManoObra()">Guardar Actividad</button>
-    </form>
-</div>
+            <div class="form-container">
+                <h2>👷 Registro de Actividades</h2>
+                <form id="manoObraForm">
+                    </form>
+            </div>
 
-<!-- Formulario de Insumos -->
-<div class="form-container">
-    <h2>🛒 Registro de Insumos</h2>
-    <form id="insumosForm">
-        <div class="form-group">
-            <label>Fecha de Compra:</label>
-            <input type="date" id="fechaCompra" required>
-        </div>
-        <div class="form-group">
-            <label>Insumo:</label>
-            <div style="display: flex; gap: 5px;">
-                <select id="tipoInsumo" required>
-                    <option value="">Seleccionar</option>
-                    <option>Urea</option>
-                    <option>Dap</option>
-                    <option>KCL</option>
-                    <option>Cal dolomita</option>
-                    <option>Cal agricola</option>
-                    <option>Cal apagada</option>
-                    <option>Insecticida</option>
-                    <option>Fungicida</option>
-                    <option>Herbicida</option>
-                    <option>Alambre</option>
-                    <option>Grapas</option>
-                    <option>Puntilla</option>
-                    <option>Gasolina</option>
-                    <option>Aceite</option>
-                    <option>Coco Recolector</option>
-                    <option>Cuchilla Guadaña</option>
-                    <option>Lima</option>
-                    <option>Machete</option>
-                    <option>Palín</option>
-                    <option>Costales</option>
-                </select>
-                <input type="text" id="nuevoInsumo" placeholder="Nuevo insumo" style="flex: 1;">
-                <button type="button" onclick="agregarInsumo()">➕</button>
+            <div class="form-container">
+                <h2>🛒 Registro de Insumos</h2>
+                <form id="insumosForm">
+                    <div class="form-group">
+                        <label>Insumo:</label>
+                        <div class="insumo-container">
+                            <select id="tipoInsumo" required>
+                                </select>
+                            <input type="text" id="nuevoInsumo" placeholder="Nuevo insumo">
+                            <button type="button" onclick="agregarInsumo()">➕</button>
+                        </div>
+                    </div>
+                    </form>
             </div>
         </div>
-        <div class="form-group">
-            <label>Unidad de Medida:</label>
-            <select id="unidadMedida" required>
-                <option>Bulto</option>
-                <option>Kilo</option>
-                <option>Litro</option>
-                <option>Galón</option>
-                <option>Unidad</option>
-                <option>Cuarto</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Cantidad:</label>
-            <input type="number" step="0.01" id="cantidadInsumo" required>
-        </div>
-        <div class="form-group">
-            <label>Valor Unitario:</label>
-            <input type="number" id="valorUnitario" required>
-        </div>
-        <div class="total-box">
-            💰 Valor Total: $<span id="totalInsumo">0</span>
-        </div>
-        <button type="button" onclick="guardarInsumo()">Guardar Insumo</button>
-    </form>
-</div>
 
-<!-- Tablas de Registros -->
-<div class="grid-container">
-    <div class="form-container">
-        <h3>📋 Lotes Registrados</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Lote</th>
-                    <th>Variedad</th>
-                    <th>Área</th>
-                    <th>Labor</th>
-                    <th>Densidad</th>
-                    <th>Plantas</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="registrosLotes"></tbody>
-        </table>
+        <div class="grid-container">
+            <div class="form-container">
+                <h3>📋 Lotes Registrados</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Acciones</th> </tr>
+                    </thead>
+                    <tbody id="registrosLotes"></tbody>
+                </table>
+            </div>
+
+            <div class="form-container">
+                <h3>📋 Actividades Registradas</h3>
+                <table>
+                    <thead>
+                        <tr>
+                           <th>Acciones</th> </tr>
+                    </thead>
+                    <tbody id="registrosMO"></tbody>
+                </table>
+            </div>
+
+            <div class="form-container">
+                <h3>📋 Insumos Registrados</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Acciones</th> </tr>
+                    </thead>
+                    <tbody id="registrosInsumos"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="form-container">
-        <h3>📋 Actividades Registradas</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Lote</th>
-                    <th>Actividad</th>
-                    <th>Jornales</th>
-                    <th>Tipo</th>
-                    <th>Valor Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="registrosMO"></tbody>
-        </table>
-    </div>
-
-    <div class="form-container">
-        <h3>📋 Insumos Registrados</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Insumo</th>
-                    <th>Unidad</th>
-                    <th>Cantidad</th>
-                    <th>V. Unitario</th>
-                    <th>Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="registrosInsumos"></tbody>
-        </table>
-    </div>
-</div>
 
 <script>
-    // Código JavaScript completo (como se proporcionó anteriormente)
-    // ... [Pega aquí todo el código JavaScript proporcionado anteriormente] ...
+    // JavaScript code (as provided before) - with additions for delete buttons
+    // ... (Your existing JavaScript code) ...
+
+    // Example of adding a delete button to the Lotes table (adapt for other tables)
+    function agregarFilaLote(lote) {
+        // ... (Your existing code to add a row) ...
+
+        let accionesCell = row.insertCell();
+        let deleteButton = document.createElement("button");
+        deleteButton.classList.add("delete-button");
+        deleteButton.textContent = "Eliminar";
+        deleteButton.addEventListener("click", () => {
+            // Add your delete logic here (e.g., remove from array and table)
+            // ...
+            row.remove(); // Remove the row from the table
+        });
+        accionesCell.appendChild(deleteButton);
+    }
+    // ... (Rest of your JavaScript code) ...
+
 </script>
+
 </body>
 </html>
