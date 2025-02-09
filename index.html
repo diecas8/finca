@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema Integral de Cultivo de Café</title>
+    <title>Sistema Integral de Gestión Cafetera</title>
     <style>
         body { font-family: Arial, sans-serif; max-width: 1200px; margin: 20px auto; padding: 20px; background: #f5f5f5; }
         .form-container { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -11,7 +11,7 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
         th { background-color: #2E8B57; color: white; }
-        button { background-color: #2E8B57; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
+        button { background-color: #2E8B57; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background-color: #3CB371; }
         .total-box { background: #e8f5e9; padding: 15px; margin: 15px 0; border-radius: 4px; font-weight: bold; }
         .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
@@ -31,8 +31,12 @@
             <label>Variedad:</label>
             <select id="variedad" required>
                 <option value="">Seleccione</option>
-                <option>Castillo</option><option>Cenicafe</option><option>Colombia</option>
-                <option>Geisha</option><option>Borbon</option><option>Caturra</option>
+                <option>Castillo</option>
+                <option>Cenicafe</option>
+                <option>Colombia</option>
+                <option>Geisha</option>
+                <option>Borbon</option>
+                <option>Caturra</option>
             </select>
         </div>
         <div class="form-group">
@@ -43,7 +47,9 @@
             <label>Tipo Labor:</label>
             <select id="tipoLabor" required>
                 <option value="">Seleccione</option>
-                <option>Siembra nueva</option><option>Renovacion siembra</option><option>Renovacion zoca</option>
+                <option>Siembra nueva</option>
+                <option>Renovacion siembra</option>
+                <option>Renovacion zoca</option>
             </select>
         </div>
         <div class="form-group">
@@ -62,7 +68,7 @@
     </form>
 </div>
 
-<!-- Formulario de Mano de Obra -->
+<!-- Formulario de Actividades -->
 <div class="form-container">
     <h2>👷 Registro de Actividades</h2>
     <form id="manoObraForm">
@@ -74,10 +80,19 @@
             <label>Tipo de Labor:</label>
             <select id="tipoLaborMano" required>
                 <option value="">Seleccione</option>
-                <option>Adecuacion de terreno</option><option>Trazado</option><option>Ahoyado</option>
-                <option>Siembra</option><option>Resiembra</option><option>Fertilizacion</option>
-                <option>Control de arvenses</option><option>Control de plagas</option><option>Plateo</option>
-                <option>Encalado</option><option>Zoqueo</option><option>Recoleccion</option><option>Otro</option>
+                <option>Adecuacion de terreno</option>
+                <option>Trazado</option>
+                <option>Ahoyado</option>
+                <option>Siembra</option>
+                <option>Resiembra</option>
+                <option>Fertilizacion</option>
+                <option>Control de arvenses</option>
+                <option>Control de plagas</option>
+                <option>Plateo</option>
+                <option>Encalado</option>
+                <option>Zoqueo</option>
+                <option>Recoleccion</option>
+                <option>Otro</option>
             </select>
         </div>
         <div class="form-group">
@@ -87,7 +102,8 @@
         <div class="form-group">
             <label>Tipo Jornal:</label>
             <select id="tipoJornal" required>
-                <option>Al día</option><option>Guadaña</option>
+                <option>Al día</option>
+                <option>Guadaña</option>
             </select>
         </div>
         <div class="form-group">
@@ -108,7 +124,13 @@
         <table>
             <thead>
                 <tr>
-                    <th>Lote</th><th>Variedad</th><th>Área</th><th>Labor</th><th>Densidad</th><th>Plantas</th><th>Acciones</th>
+                    <th>Lote</th>
+                    <th>Variedad</th>
+                    <th>Área</th>
+                    <th>Labor</th>
+                    <th>Densidad</th>
+                    <th>Plantas</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="registrosLotes"></tbody>
@@ -120,7 +142,12 @@
         <table>
             <thead>
                 <tr>
-                    <th>Lote</th><th>Actividad</th><th>Jornales</th><th>Tipo</th><th>Valor Total</th><th>Acciones</th>
+                    <th>Lote</th>
+                    <th>Actividad</th>
+                    <th>Jornales</th>
+                    <th>Tipo</th>
+                    <th>Valor Total</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="registrosMO"></tbody>
@@ -131,6 +158,8 @@
 <script>
     let lotes = [];
     let manoObra = [];
+    let editandoMO = false;
+    let indiceEdicionMO = null;
 
     // Funciones para Lotes
     function guardarLote() {
@@ -148,8 +177,11 @@
         lote.totalPlantas = Math.round(lote.densidad * lote.area);
 
         const index = lotes.findIndex(l => l.numero === lote.numero);
-        if (index >= 0) lotes[index] = lote;
-        else lotes.push(lote);
+        if (index >= 0) {
+            lotes[index] = lote;
+        } else {
+            lotes.push(lote);
+        }
 
         actualizarTablaLotes();
         actualizarLotesSelector();
@@ -157,7 +189,8 @@
     }
 
     function actualizarTablaLotes() {
-        document.getElementById('registrosLotes').innerHTML = lotes.map(lote => `
+        const tbody = document.getElementById('registrosLotes');
+        tbody.innerHTML = lotes.map(lote => `
             <tr>
                 <td>${lote.numero}</td>
                 <td>${lote.variedad}</td>
@@ -178,13 +211,20 @@
         actualizarLotesSelector();
     }
 
-    // Funciones para Mano de Obra
+    // Funciones para Actividades
     function actualizarLotesSelector() {
         const selector = document.getElementById('loteManoObra');
+        const valorActual = selector.value;
+        
         selector.innerHTML = '<option value="">Seleccionar Lote</option>';
         lotes.forEach(lote => {
-            selector.innerHTML += `<option value="${lote.numero}">Lote ${lote.numero}</option>`;
+            const option = document.createElement('option');
+            option.value = lote.numero;
+            option.textContent = `Lote ${lote.numero} - ${lote.variedad}`;
+            selector.appendChild(option);
         });
+        
+        selector.value = valorActual;
     }
 
     function calcularTotal() {
@@ -208,14 +248,22 @@
             return;
         }
 
-        manoObra.push(registro);
+        if (editandoMO) {
+            manoObra[indiceEdicionMO] = registro;
+            editandoMO = false;
+            indiceEdicionMO = null;
+        } else {
+            manoObra.push(registro);
+        }
+
         actualizarTablaMO();
         document.getElementById('manoObraForm').reset();
         document.getElementById('valorTotal').textContent = '0';
     }
 
     function actualizarTablaMO() {
-        document.getElementById('registrosMO').innerHTML = manoObra.map((registro, index) => `
+        const tbody = document.getElementById('registrosMO');
+        tbody.innerHTML = manoObra.map((registro, index) => `
             <tr>
                 <td>${registro.lote}</td>
                 <td>${registro.labor}</td>
@@ -238,6 +286,8 @@
         document.getElementById('tipoJornal').value = registro.tipo;
         document.getElementById('valorJornal').value = registro.valor;
         calcularTotal();
+        editandoMO = true;
+        indiceEdicionMO = index;
     }
 
     function eliminarMO(index) {
@@ -248,7 +298,7 @@
     // Event Listeners
     document.getElementById('jornales').addEventListener('input', calcularTotal);
     document.getElementById('valorJornal').addEventListener('input', calcularTotal);
-    setInterval(actualizarLotesSelector, 1000);
+    document.addEventListener('DOMContentLoaded', actualizarLotesSelector);
 </script>
 </body>
 </html>
