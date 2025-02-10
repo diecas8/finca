@@ -101,6 +101,9 @@
             border-bottom: 2px solid #2E8B57;
             padding-bottom: 10px;
         }
+        .export-buttons {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -227,7 +230,7 @@
             <h2>📊 Reportes</h2>
             <div class="report-section">
                 <h3>Resumen de Lotes</h3>
-                <table>
+                <table id="tablaLotes">
                     <thead>
                         <tr>
                             <th>N° Lote</th>
@@ -237,13 +240,17 @@
                             <th>Total Plantas</th>
                         </tr>
                     </thead>
-                    <tbody id="reporteLotes"></tbody>
+                    <tbody></tbody>
                 </table>
+                <div class="export-buttons">
+                    <button onclick="exportarPDF('tablaLotes', 'Reporte_Lotes.pdf')">Exportar a PDF</button>
+                    <button onclick="exportarExcel('tablaLotes', 'Reporte_Lotes.xlsx')">Exportar a Excel</button>
+                </div>
             </div>
 
             <div class="report-section">
                 <h3>Resumen de Actividades</h3>
-                <table>
+                <table id="tablaActividades">
                     <thead>
                         <tr>
                             <th>Lote</th>
@@ -252,13 +259,17 @@
                             <th>Valor Total</th>
                         </tr>
                     </thead>
-                    <tbody id="reporteActividades"></tbody>
+                    <tbody></tbody>
                 </table>
+                <div class="export-buttons">
+                    <button onclick="exportarPDF('tablaActividades', 'Reporte_Actividades.pdf')">Exportar a PDF</button>
+                    <button onclick="exportarExcel('tablaActividades', 'Reporte_Actividades.xlsx')">Exportar a Excel</button>
+                </div>
             </div>
 
             <div class="report-section">
                 <h3>Resumen de Insumos</h3>
-                <table>
+                <table id="tablaInsumos">
                     <thead>
                         <tr>
                             <th>Insumo</th>
@@ -266,13 +277,17 @@
                             <th>Unidad</th>
                         </tr>
                     </thead>
-                    <tbody id="reporteInsumos"></tbody>
+                    <tbody></tbody>
                 </table>
+                <div class="export-buttons">
+                    <button onclick="exportarPDF('tablaInsumos', 'Reporte_Insumos.pdf')">Exportar a PDF</button>
+                    <button onclick="exportarExcel('tablaInsumos', 'Reporte_Insumos.xlsx')">Exportar a Excel</button>
+                </div>
             </div>
 
             <div class="report-section">
                 <h3>Resumen de Uso de Insumos</h3>
-                <table>
+                <table id="tablaUsoInsumos">
                     <thead>
                         <tr>
                             <th>Lote</th>
@@ -280,8 +295,12 @@
                             <th>Cantidad</th>
                         </tr>
                     </thead>
-                    <tbody id="reporteUsoInsumos"></tbody>
+                    <tbody></tbody>
                 </table>
+                <div class="export-buttons">
+                    <button onclick="exportarPDF('tablaUsoInsumos', 'Reporte_Uso_Insumos.pdf')">Exportar a PDF</button>
+                    <button onclick="exportarExcel('tablaUsoInsumos', 'Reporte_Uso_Insumos.xlsx')">Exportar a Excel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -351,7 +370,7 @@
         }
 
         function actualizarTablaLotes() {
-            const tbody = document.getElementById('reporteLotes');
+            const tbody = document.querySelector('#tablaLotes tbody');
             tbody.innerHTML = lotes.map(lote => `
                 <tr>
                     <td>${lote.numero}</td>
@@ -385,7 +404,7 @@
         }
 
         function actualizarTablaActividades() {
-            const tbody = document.getElementById('reporteActividades');
+            const tbody = document.querySelector('#tablaActividades tbody');
             tbody.innerHTML = actividades.map(actividad => `
                 <tr>
                     <td>${actividad.lote}</td>
@@ -417,7 +436,7 @@
         }
 
         function actualizarTablaInsumos() {
-            const tbody = document.getElementById('reporteInsumos');
+            const tbody = document.querySelector('#tablaInsumos tbody');
             tbody.innerHTML = insumos.map(insumo => `
                 <tr>
                     <td>${insumo.nombre}</td>
@@ -461,7 +480,7 @@
         }
 
         function actualizarTablaUsoInsumos() {
-            const tbody = document.getElementById('reporteUsoInsumos');
+            const tbody = document.querySelector('#tablaUsoInsumos tbody');
             tbody.innerHTML = usoInsumos.map(uso => `
                 <tr>
                     <td>${uso.lote}</td>
@@ -503,10 +522,31 @@
             actualizarTablaUsoInsumos();
         }
 
+        // Exportar a PDF
+        function exportarPDF(tableId, filename) {
+            const table = document.getElementById(tableId);
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.autoTable({ html: table });
+            doc.save(filename);
+        }
+
+        // Exportar a Excel
+        function exportarExcel(tableId, filename) {
+            const table = document.getElementById(tableId);
+            const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+            XLSX.writeFile(wb, filename);
+        }
+
         // Cargar datos al iniciar
         actualizarSelectLotes();
         actualizarSelectInsumos();
         actualizarReportes();
     </script>
+    <!-- Librerías para exportar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
