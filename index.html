@@ -93,6 +93,14 @@
             background-color: #2E8B57;
             color: white;
         }
+        .report-section {
+            margin-top: 40px;
+        }
+        .report-section h2 {
+            color: #2E8B57;
+            border-bottom: 2px solid #2E8B57;
+            padding-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -105,6 +113,7 @@
             <button class="tab-button" onclick="mostrarFormulario('actividades')">👷 Actividades</button>
             <button class="tab-button" onclick="mostrarFormulario('insumos')">🛒 Insumos</button>
             <button class="tab-button" onclick="mostrarFormulario('usoInsumos')">📦 Uso de Insumos</button>
+            <button class="tab-button" onclick="mostrarFormulario('reportes')">📊 Reportes</button>
         </div>
 
         <!-- Formulario de Lotes -->
@@ -213,64 +222,67 @@
             </form>
         </div>
 
-        <!-- Tablas de Registros -->
-        <div>
-            <h2>📋 Lotes Registrados</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>N° Lote</th>
-                        <th>Variedad</th>
-                        <th>Área (ha)</th>
-                        <th>Densidad (pl/ha)</th>
-                        <th>Total Plantas</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaLotes"></tbody>
-            </table>
-        </div>
+        <!-- Reportes -->
+        <div id="reportes" class="form-container">
+            <h2>📊 Reportes</h2>
+            <div class="report-section">
+                <h3>Resumen de Lotes</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N° Lote</th>
+                            <th>Variedad</th>
+                            <th>Área (ha)</th>
+                            <th>Densidad (pl/ha)</th>
+                            <th>Total Plantas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reporteLotes"></tbody>
+                </table>
+            </div>
 
-        <div>
-            <h2>📋 Actividades Registradas</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lote</th>
-                        <th>Actividad</th>
-                        <th>Jornales</th>
-                        <th>Valor Total</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaActividades"></tbody>
-            </table>
-        </div>
+            <div class="report-section">
+                <h3>Resumen de Actividades</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lote</th>
+                            <th>Actividad</th>
+                            <th>Jornales</th>
+                            <th>Valor Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reporteActividades"></tbody>
+                </table>
+            </div>
 
-        <div>
-            <h2>📋 Insumos Registrados</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Insumo</th>
-                        <th>Cantidad</th>
-                        <th>Unidad</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaInsumos"></tbody>
-            </table>
-        </div>
+            <div class="report-section">
+                <h3>Resumen de Insumos</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
+                            <th>Unidad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reporteInsumos"></tbody>
+                </table>
+            </div>
 
-        <div>
-            <h2>📋 Insumos Utilizados</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lote</th>
-                        <th>Insumo</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaUsoInsumos"></tbody>
-            </table>
+            <div class="report-section">
+                <h3>Resumen de Uso de Insumos</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Lote</th>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reporteUsoInsumos"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -290,6 +302,11 @@
             const botones = document.querySelectorAll('.tab-button');
             botones.forEach(boton => boton.classList.remove('active'));
             document.querySelector(`[onclick="mostrarFormulario('${id}')"]`).classList.add('active');
+
+            // Actualizar reportes si se muestra la pestaña de reportes
+            if (id === 'reportes') {
+                actualizarReportes();
+            }
         }
 
         // Funciones para Lotes
@@ -334,7 +351,7 @@
         }
 
         function actualizarTablaLotes() {
-            const tbody = document.getElementById('tablaLotes');
+            const tbody = document.getElementById('reporteLotes');
             tbody.innerHTML = lotes.map(lote => `
                 <tr>
                     <td>${lote.numero}</td>
@@ -368,7 +385,7 @@
         }
 
         function actualizarTablaActividades() {
-            const tbody = document.getElementById('tablaActividades');
+            const tbody = document.getElementById('reporteActividades');
             tbody.innerHTML = actividades.map(actividad => `
                 <tr>
                     <td>${actividad.lote}</td>
@@ -400,7 +417,7 @@
         }
 
         function actualizarTablaInsumos() {
-            const tbody = document.getElementById('tablaInsumos');
+            const tbody = document.getElementById('reporteInsumos');
             tbody.innerHTML = insumos.map(insumo => `
                 <tr>
                     <td>${insumo.nombre}</td>
@@ -444,7 +461,7 @@
         }
 
         function actualizarTablaUsoInsumos() {
-            const tbody = document.getElementById('tablaUsoInsumos');
+            const tbody = document.getElementById('reporteUsoInsumos');
             tbody.innerHTML = usoInsumos.map(uso => `
                 <tr>
                     <td>${uso.lote}</td>
@@ -478,13 +495,18 @@
                 `).join('');
         }
 
+        // Actualizar reportes
+        function actualizarReportes() {
+            actualizarTablaLotes();
+            actualizarTablaActividades();
+            actualizarTablaInsumos();
+            actualizarTablaUsoInsumos();
+        }
+
         // Cargar datos al iniciar
-        actualizarTablaLotes();
-        actualizarTablaActividades();
-        actualizarTablaInsumos();
-        actualizarTablaUsoInsumos();
         actualizarSelectLotes();
         actualizarSelectInsumos();
+        actualizarReportes();
     </script>
 </body>
 </html>
