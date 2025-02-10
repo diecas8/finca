@@ -104,6 +104,13 @@
         .export-buttons {
             margin-top: 20px;
         }
+        .detalle-lote {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
     </style>
 </head>
 <body>
@@ -238,6 +245,7 @@
                             <th>Área (ha)</th>
                             <th>Densidad (pl/ha)</th>
                             <th>Total Plantas</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -246,6 +254,12 @@
                     <button onclick="exportarPDF('tablaLotes', 'Reporte_Lotes.pdf')">Exportar a PDF</button>
                     <button onclick="exportarExcel('tablaLotes', 'Reporte_Lotes.xlsx')">Exportar a Excel</button>
                 </div>
+            </div>
+
+            <!-- Detalle del Lote -->
+            <div id="detalleLote" class="detalle-lote" style="display: none;">
+                <h3>Detalle del Lote</h3>
+                <div id="detalleLoteContent"></div>
             </div>
 
             <div class="report-section">
@@ -257,6 +271,7 @@
                             <th>Actividad</th>
                             <th>Jornales</th>
                             <th>Valor Total</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -275,6 +290,7 @@
                             <th>Insumo</th>
                             <th>Cantidad</th>
                             <th>Unidad</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -293,6 +309,7 @@
                             <th>Lote</th>
                             <th>Insumo</th>
                             <th>Cantidad</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -371,15 +388,69 @@
 
         function actualizarTablaLotes() {
             const tbody = document.querySelector('#tablaLotes tbody');
-            tbody.innerHTML = lotes.map(lote => `
+            tbody.innerHTML = lotes.map((lote, index) => `
                 <tr>
                     <td>${lote.numero}</td>
                     <td>${lote.variedad}</td>
                     <td>${lote.area}</td>
                     <td>${lote.densidad.toFixed(2)}</td>
                     <td>${lote.totalPlantas.toLocaleString()}</td>
+                    <td>
+                        <button onclick="verDetalleLote(${index})">Ver Detalle</button>
+                        <button onclick="editarLote(${index})">Editar</button>
+                        <button onclick="eliminarLote(${index})">Eliminar</button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function verDetalleLote(index) {
+            const lote = lotes[index];
+            const actividadesLote = actividades.filter(a => a.lote === lote.numero);
+            const insumosLote = usoInsumos.filter(u => u.lote === lote.numero);
+
+            let contenido = `
+                <p><strong>N° Lote:</strong> ${lote.numero}</p>
+                <p><strong>Variedad:</strong> ${lote.variedad}</p>
+                <p><strong>Área (ha):</strong> ${lote.area}</p>
+                <p><strong>Densidad (pl/ha):</strong> ${lote.densidad.toFixed(2)}</p>
+                <p><strong>Total Plantas:</strong> ${lote.totalPlantas.toLocaleString()}</p>
+                <h4>Actividades:</h4>
+                <ul>
+                    ${actividadesLote.map(a => `
+                        <li>${a.labor} - ${a.jornales} jornales - $${a.valorTotal.toLocaleString()}</li>
+                    `).join('')}
+                </ul>
+                <h4>Insumos Usados:</h4>
+                <ul>
+                    ${insumosLote.map(u => `
+                        <li>${u.insumo} - ${u.cantidad} ${insumos.find(i => i.nombre === u.insumo)?.unidad}</li>
+                    `).join('')}
+                </ul>
+            `;
+
+            document.getElementById('detalleLoteContent').innerHTML = contenido;
+            document.getElementById('detalleLote').style.display = 'block';
+        }
+
+        function editarLote(index) {
+            const lote = lotes[index];
+            document.getElementById('numeroLote').value = lote.numero;
+            document.getElementById('variedad').value = lote.variedad;
+            document.getElementById('area').value = lote.area;
+            document.getElementById('surco').value = lote.surco;
+            document.getElementById('plantas').value = lote.plantas;
+
+            // Eliminar el lote actual para evitar duplicados
+            lotes.splice(index, 1);
+            localStorage.setItem('lotes', JSON.stringify(lotes));
+            actualizarTablaLotes();
+        }
+
+        function eliminarLote(index) {
+            lotes.splice(index, 1);
+            localStorage.setItem('lotes', JSON.stringify(lotes));
+            actualizarTablaLotes();
         }
 
         // Funciones para Actividades
@@ -405,14 +476,37 @@
 
         function actualizarTablaActividades() {
             const tbody = document.querySelector('#tablaActividades tbody');
-            tbody.innerHTML = actividades.map(actividad => `
+            tbody.innerHTML = actividades.map((actividad, index) => `
                 <tr>
                     <td>${actividad.lote}</td>
                     <td>${actividad.labor}</td>
                     <td>${actividad.jornales}</td>
                     <td>$${actividad.valorTotal.toLocaleString()}</td>
+                    <td>
+                        <button onclick="editarActividad(${index})">Editar</button>
+                        <button onclick="eliminarActividad(${index})">Eliminar</button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function editarActividad(index) {
+            const actividad = actividades[index];
+            document.getElementById('loteActividad').value = actividad.lote;
+            document.getElementById('tipoLabor').value = actividad.labor;
+            document.getElementById('jornales').value = actividad.jornales;
+            document.getElementById('valorJornal').value = actividad.valorTotal / actividad.jornales;
+
+            // Eliminar la actividad actual para evitar duplicados
+            actividades.splice(index, 1);
+            localStorage.setItem('actividades', JSON.stringify(actividades));
+            actualizarTablaActividades();
+        }
+
+        function eliminarActividad(index) {
+            actividades.splice(index, 1);
+            localStorage.setItem('actividades', JSON.stringify(actividades));
+            actualizarTablaActividades();
         }
 
         // Funciones para Insumos
@@ -437,13 +531,35 @@
 
         function actualizarTablaInsumos() {
             const tbody = document.querySelector('#tablaInsumos tbody');
-            tbody.innerHTML = insumos.map(insumo => `
+            tbody.innerHTML = insumos.map((insumo, index) => `
                 <tr>
                     <td>${insumo.nombre}</td>
                     <td>${insumo.cantidad}</td>
                     <td>${insumo.unidad}</td>
+                    <td>
+                        <button onclick="editarInsumo(${index})">Editar</button>
+                        <button onclick="eliminarInsumo(${index})">Eliminar</button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function editarInsumo(index) {
+            const insumo = insumos[index];
+            document.getElementById('nombreInsumo').value = insumo.nombre;
+            document.getElementById('cantidadInsumo').value = insumo.cantidad;
+            document.getElementById('unidadMedida').value = insumo.unidad;
+
+            // Eliminar el insumo actual para evitar duplicados
+            insumos.splice(index, 1);
+            localStorage.setItem('insumos', JSON.stringify(insumos));
+            actualizarTablaInsumos();
+        }
+
+        function eliminarInsumo(index) {
+            insumos.splice(index, 1);
+            localStorage.setItem('insumos', JSON.stringify(insumos));
+            actualizarTablaInsumos();
         }
 
         // Funciones para Uso de Insumos
@@ -481,13 +597,35 @@
 
         function actualizarTablaUsoInsumos() {
             const tbody = document.querySelector('#tablaUsoInsumos tbody');
-            tbody.innerHTML = usoInsumos.map(uso => `
+            tbody.innerHTML = usoInsumos.map((uso, index) => `
                 <tr>
                     <td>${uso.lote}</td>
                     <td>${uso.insumo}</td>
                     <td>${uso.cantidad}</td>
+                    <td>
+                        <button onclick="editarUsoInsumo(${index})">Editar</button>
+                        <button onclick="eliminarUsoInsumo(${index})">Eliminar</button>
+                    </td>
                 </tr>
             `).join('');
+        }
+
+        function editarUsoInsumo(index) {
+            const uso = usoInsumos[index];
+            document.getElementById('loteUsoInsumo').value = uso.lote;
+            document.getElementById('insumoDisponible').value = insumos.findIndex(i => i.nombre === uso.insumo);
+            document.getElementById('cantidadUso').value = uso.cantidad;
+
+            // Eliminar el uso actual para evitar duplicados
+            usoInsumos.splice(index, 1);
+            localStorage.setItem('usoInsumos', JSON.stringify(usoInsumos));
+            actualizarTablaUsoInsumos();
+        }
+
+        function eliminarUsoInsumo(index) {
+            usoInsumos.splice(index, 1);
+            localStorage.setItem('usoInsumos', JSON.stringify(usoInsumos));
+            actualizarTablaUsoInsumos();
         }
 
         // Actualizar selects
