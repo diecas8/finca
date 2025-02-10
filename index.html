@@ -3,467 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor Finca Cafetera</title>
+    <title>Sistema de Gestión Cafetera</title>
     <style>
-        /* Estilos generales responsive */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            padding: 10px;
-            background: #f0f4f8;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
         }
-
-        /* Encabezado editable */
-        .header {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2E8B57;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            margin: 0 5px;
             background: #2E8B57;
             color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .nombre-finca {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            border-bottom: 2px dashed rgba(255,255,255,0.3);
-            padding-bottom: 0.3rem;
-            display: inline-block;
-        }
-
-        /* Sistema de pestañas móvil */
-        .tabs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 5px;
-            margin-bottom: 1rem;
-        }
-
-        .tab-button {
-            padding: 0.8rem;
-            background: #38A169;
-            color: white;
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .tab-button.active {
-            background: #2F855A;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        /* Contenedores de formularios */
-        .form-container {
-            display: none;
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
-        }
-
-        .form-container.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        /* Estilos de formularios móviles */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #2D3748;
-            font-weight: 500;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #CBD5E0;
-            border-radius: 6px;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        button {
-            width: 100%;
-            padding: 1rem;
-            background: #38A169;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
+            border-radius: 4px;
             cursor: pointer;
             transition: background 0.3s;
         }
-
+        .tab-button:hover {
+            background: #3CB371;
+        }
+        .tab-button.active {
+            background: #3CB371;
+        }
+        .form-container {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .form-container.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #2E8B57;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
         button:hover {
-            background: #2F855A;
+            background-color: #3CB371;
         }
-
-        /* Tablas responsive */
-        .table-container {
-            overflow-x: auto;
-        }
-
         table {
             width: 100%;
-            min-width: 600px;
             border-collapse: collapse;
-            margin: 1rem 0;
+            margin-top: 20px;
         }
-
         th, td {
-            padding: 0.8rem;
+            border: 1px solid #ddd;
+            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #E2E8F0;
         }
-
         th {
-            background: #2E8B57;
+            background-color: #2E8B57;
             color: white;
-        }
-
-        /* Animaciones */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (min-width: 768px) {
-            body {
-                padding: 2rem;
-                max-width: 1200px;
-                margin: 0 auto;
-            }
-            
-            .tabs {
-                grid-template-columns: repeat(4, 1fr);
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Encabezado editable -->
-    <div class="header">
-        <h1 class="nombre-finca" contenteditable="true" id="nombreFinca">Nombre de la Finca</h1>
-        <h2>Sistema Integral de Gestión</h2>
-    </div>
+    <div class="container">
+        <h1>🌱 Sistema de Gestión Cafetera</h1>
 
-    <!-- Sistema de pestañas -->
-    <div class="tabs">
-        <button class="tab-button active" onclick="mostrarSeccion('lotes')">🌱 Lotes</button>
-        <button class="tab-button" onclick="mostrarSeccion('actividades')">👷 Actividades</button>
-        <button class="tab-button" onclick="mostrarSeccion('insumos')">🛒 Insumos</button>
-        <button class="tab-button" onclick="mostrarSeccion('reportes')">📊 Reportes</button>
-    </div>
+        <!-- Pestañas -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="mostrarFormulario('lotes')">🌱 Lotes</button>
+            <button class="tab-button" onclick="mostrarFormulario('actividades')">👷 Actividades</button>
+            <button class="tab-button" onclick="mostrarFormulario('insumos')">🛒 Insumos</button>
+            <button class="tab-button" onclick="mostrarFormulario('usoInsumos')">📦 Uso de Insumos</button>
+        </div>
 
-    <!-- Formulario de Lotes -->
-    <div id="lotes" class="form-container active">
-        <h2>Registro de Lotes</h2>
-        <div class="form-group">
-            <label>Número de Lote:</label>
-            <input type="number" id="numeroLote" required>
+        <!-- Formulario de Lotes -->
+        <div id="lotes" class="form-container active">
+            <h2>Registro de Lotes</h2>
+            <form id="loteForm">
+                <div class="form-group">
+                    <label>N° Lote:</label>
+                    <input type="number" id="numeroLote" required>
+                </div>
+                <div class="form-group">
+                    <label>Variedad:</label>
+                    <select id="variedad" required>
+                        <option value="">Seleccione</option>
+                        <option>Castillo</option>
+                        <option>Cenicafe</option>
+                        <option>Colombia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Área (ha):</label>
+                    <input type="number" step="0.01" id="area" required>
+                </div>
+                <div class="form-group">
+                    <label>Surco (m):</label>
+                    <input type="number" step="0.01" id="surco" required>
+                </div>
+                <div class="form-group">
+                    <label>Entre plantas (m):</label>
+                    <input type="number" step="0.01" id="plantas" required>
+                </div>
+                <button type="button" onclick="guardarLote()">Guardar Lote</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label>Variedad:</label>
-            <select id="variedad" required>
-                <option value="">Seleccione</option>
-                <option>Castillo</option>
-                <option>Cenicafé</option>
-                <option>Colombia</option>
-                <option>Geisha</option>
-                <option>Borbón</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Área (hectáreas):</label>
-            <input type="number" step="0.01" id="area" required>
-        </div>
-        <div class="form-group">
-            <label>Tipo de Labor:</label>
-            <select id="tipoLabor" required>
-                <option value="">Seleccione</option>
-                <option>Siembra nueva</option>
-                <option>Renovación siembra</option>
-                <option>Renovación zoca</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Fecha de Labor:</label>
-            <input type="date" id="fechaLabor" required>
-        </div>
-        <div class="form-group">
-            <label>Distancia entre surcos (m):</label>
-            <input type="number" step="0.01" id="distanciaSurcos" required>
-        </div>
-        <div class="form-group">
-            <label>Distancia entre plantas (m):</label>
-            <input type="number" step="0.01" id="distanciaPlantas" required>
-        </div>
-        <button onclick="guardarLote()">Guardar Lote</button>
-    </div>
 
-    <!-- Formulario de Actividades -->
-    <div id="actividades" class="form-container">
-        <h2>Registro de Actividades</h2>
-        <div class="form-group">
-            <label>Lote:</label>
-            <select id="loteActividad" required></select>
+        <!-- Formulario de Actividades -->
+        <div id="actividades" class="form-container">
+            <h2>👷 Registro de Actividades</h2>
+            <form id="actividadForm">
+                <div class="form-group">
+                    <label>Lote:</label>
+                    <select id="loteActividad" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Labor:</label>
+                    <select id="tipoLabor" required>
+                        <option value="">Seleccione</option>
+                        <option>Siembra</option>
+                        <option>Fertilización</option>
+                        <option>Poda</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>N° Jornales:</label>
+                    <input type="number" id="jornales" step="0.5" required>
+                </div>
+                <div class="form-group">
+                    <label>Valor por Jornal:</label>
+                    <input type="number" id="valorJornal" step="1000" required>
+                </div>
+                <button type="button" onclick="guardarActividad()">Guardar Actividad</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label>Tipo de Actividad:</label>
-            <select id="tipoActividad" required>
-                <option value="">Seleccione</option>
-                <option>Adecuación de terreno</option>
-                <option>Trazado</option>
-                <option>Ahoyado</option>
-                <option>Siembra</option>
-                <option>Fertilización</option>
-                <option>Control de plagas</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Fecha de Actividad:</label>
-            <input type="date" id="fechaActividad" required>
-        </div>
-        <div class="form-group">
-            <label>Número de Jornales:</label>
-            <input type="number" step="0.5" id="jornales" required>
-        </div>
-        <div class="form-group">
-            <label>Descripción:</label>
-            <textarea id="descripcionActividad" rows="3" required></textarea>
-        </div>
-        <button onclick="guardarActividad()">Guardar Actividad</button>
-    </div>
 
-    <!-- Formulario de Insumos -->
-    <div id="insumos" class="form-container">
-        <h2>Gestión de Insumos</h2>
-        <div class="form-group">
-            <label>Fecha de Compra:</label>
-            <input type="date" id="fechaCompra" required>
+        <!-- Formulario de Insumos -->
+        <div id="insumos" class="form-container">
+            <h2>🛒 Registro de Insumos</h2>
+            <form id="insumoForm">
+                <div class="form-group">
+                    <label>Insumo:</label>
+                    <input type="text" id="nombreInsumo" required>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad:</label>
+                    <input type="number" id="cantidadInsumo" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Unidad de Medida:</label>
+                    <select id="unidadMedida" required>
+                        <option>Kilo</option>
+                        <option>Litro</option>
+                        <option>Bulto</option>
+                    </select>
+                </div>
+                <button type="button" onclick="guardarInsumo()">Guardar Insumo</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label>Nombre del Insumo:</label>
-            <input type="text" id="nombreInsumo" required>
-        </div>
-        <div class="form-group">
-            <label>Cantidad:</label>
-            <input type="number" step="0.01" id="cantidadInsumo" required>
-        </div>
-        <div class="form-group">
-            <label>Unidad de Medida:</label>
-            <select id="unidadMedida" required>
-                <option>Kilogramo</option>
-                <option>Litros</option>
-                <option>Bulto</option>
-                <option>Unidad</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Precio Unitario:</label>
-            <input type="number" step="100" id="precioInsumo" required>
-        </div>
-        <div class="form-group">
-            <label>Proveedor:</label>
-            <input type="text" id="proveedorInsumo">
-        </div>
-        <button onclick="guardarInsumo()">Guardar Insumo</button>
-    </div>
 
-    <!-- Sección de Reportes -->
-    <div id="reportes" class="form-container">
-        <h2>Generador de Reportes</h2>
-        <div class="form-group">
-            <label>Tipo de Reporte:</label>
-            <select id="tipoReporte">
-                <option value="resumen">Resumen General</option>
-                <option value="actividades">Reporte de Actividades</option>
-                <option value="insumos">Reporte de Insumos</option>
-            </select>
+        <!-- Formulario de Uso de Insumos -->
+        <div id="usoInsumos" class="form-container">
+            <h2>📦 Uso de Insumos</h2>
+            <form id="usoInsumoForm">
+                <div class="form-group">
+                    <label>Lote:</label>
+                    <select id="loteUsoInsumo" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Insumo:</label>
+                    <select id="insumoDisponible" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad a usar:</label>
+                    <input type="number" id="cantidadUso" step="0.01" required>
+                </div>
+                <button type="button" onclick="registrarUsoInsumo()">Registrar Uso</button>
+            </form>
         </div>
-        <button onclick="generarReporte()">Generar Reporte</button>
-        <div id="resultadoReporte" class="table-container"></div>
+
+        <!-- Tablas de Registros -->
+        <div>
+            <h2>📋 Lotes Registrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Lote</th>
+                        <th>Variedad</th>
+                        <th>Área (ha)</th>
+                        <th>Densidad (pl/ha)</th>
+                        <th>Total Plantas</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaLotes"></tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2>📋 Actividades Registradas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lote</th>
+                        <th>Actividad</th>
+                        <th>Jornales</th>
+                        <th>Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaActividades"></tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2>📋 Insumos Registrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Insumo</th>
+                        <th>Cantidad</th>
+                        <th>Unidad</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaInsumos"></tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2>📋 Insumos Utilizados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lote</th>
+                        <th>Insumo</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsoInsumos"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        // Datos persistentes
-        let datos = {
-            nombreFinca: localStorage.getItem('nombreFinca') || 'Nombre de la Finca',
-            lotes: JSON.parse(localStorage.getItem('lotes')) || [],
-            actividades: JSON.parse(localStorage.getItem('actividades')) || [],
-            insumos: JSON.parse(localStorage.getItem('insumos')) || []
-        };
+        // Datos almacenados en localStorage
+        let lotes = JSON.parse(localStorage.getItem('lotes')) || [];
+        let actividades = JSON.parse(localStorage.getItem('actividades')) || [];
+        let insumos = JSON.parse(localStorage.getItem('insumos')) || [];
+        let usoInsumos = JSON.parse(localStorage.getItem('usoInsumos')) || [];
 
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('nombreFinca').textContent = datos.nombreFinca;
-            
-            // Guardar nombre de la finca al editar
-            document.getElementById('nombreFinca').addEventListener('input', (e) => {
-                datos.nombreFinca = e.target.textContent;
-                localStorage.setItem('nombreFinca', datos.nombreFinca);
-            });
+        // Función para mostrar/ocultar formularios
+        function mostrarFormulario(id) {
+            const formularios = document.querySelectorAll('.form-container');
+            formularios.forEach(form => form.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
 
-            // Actualizar selectores
-            actualizarSelectores();
-        });
-
-        // Funciones de navegación
-        function mostrarSeccion(seccion) {
-            document.querySelectorAll('.form-container').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(seccion).classList.add('active');
-            event.target.classList.add('active');
+            const botones = document.querySelectorAll('.tab-button');
+            botones.forEach(boton => boton.classList.remove('active'));
+            document.querySelector(`[onclick="mostrarFormulario('${id}')"]`).classList.add('active');
         }
 
-        // Funciones de guardado
+        // Funciones para Lotes
         function guardarLote() {
-            const nuevoLote = {
-                id: Date.now(),
-                numero: document.getElementById('numeroLote').value,
-                variedad: document.getElementById('variedad').value,
-                area: document.getElementById('area').value,
-                tipoLabor: document.getElementById('tipoLabor').value,
-                fechaLabor: document.getElementById('fechaLabor').value,
-                distanciaSurcos: document.getElementById('distanciaSurcos').value,
-                distanciaPlantas: document.getElementById('distanciaPlantas').value
-            };
-            datos.lotes.push(nuevoLote);
-            localStorage.setItem('lotes', JSON.stringify(datos.lotes));
-            alert('Lote guardado correctamente');
-            actualizarSelectores();
-        }
+            const numero = parseInt(document.getElementById('numeroLote').value);
+            const variedad = document.getElementById('variedad').value;
+            const area = parseFloat(document.getElementById('area').value);
+            const surco = parseFloat(document.getElementById('surco').value);
+            const plantas = parseFloat(document.getElementById('plantas').value);
 
-        function guardarActividad() {
-            const nuevaActividad = {
-                id: Date.now(),
-                lote: document.getElementById('loteActividad').value,
-                tipo: document.getElementById('tipoActividad').value,
-                fecha: document.getElementById('fechaActividad').value,
-                jornales: document.getElementById('jornales').value,
-                descripcion: document.getElementById('descripcionActividad').value
-            };
-            datos.actividades.push(nuevaActividad);
-            localStorage.setItem('actividades', JSON.stringify(datos.actividades));
-            alert('Actividad guardada');
-        }
-
-        function guardarInsumo() {
-            const nuevoInsumo = {
-                id: Date.now(),
-                fecha: document.getElementById('fechaCompra').value,
-                nombre: document.getElementById('nombreInsumo').value,
-                cantidad: document.getElementById('cantidadInsumo').value,
-                unidad: document.getElementById('unidadMedida').value,
-                precio: document.getElementById('precioInsumo').value,
-                proveedor: document.getElementById('proveedorInsumo').value
-            };
-            datos.insumos.push(nuevoInsumo);
-            localStorage.setItem('insumos', JSON.stringify(datos.insumos));
-            alert('Insumo registrado');
-        }
-
-        // Generador de reportes
-        function generarReporte() {
-            const tipo = document.getElementById('tipoReporte').value;
-            let contenido = `<h3>${datos.nombreFinca}</h3>`;
-
-            switch(tipo) {
-                case 'resumen':
-                    contenido += `
-                        <h4>Resumen General</h4>
-                        <p>Lotes registrados: ${datos.lotes.length}</p>
-                        <p>Actividades realizadas: ${datos.actividades.length}</p>
-                        <p>Insumos registrados: ${datos.insumos.length}</p>
-                    `;
-                    break;
-
-                case 'actividades':
-                    contenido += `
-                        <h4>Reporte de Actividades</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Lote</th>
-                                    <th>Tipo</th>
-                                    <th>Jornales</th>
-                                    <th>Descripción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${datos.actividades.map(act => `
-                                    <tr>
-                                        <td>${act.fecha}</td>
-                                        <td>${act.lote}</td>
-                                        <td>${act.tipo}</td>
-                                        <td>${act.jornales}</td>
-                                        <td>${act.descripcion}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    `;
-                    break;
-
-                case 'insumos':
-                    contenido += `
-                        <h4>Reporte de Insumos</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Nombre</th>
-                                    <th>Cantidad</th>
-                                    <th>Unidad</th>
-                                    <th>Precio</th>
-                                    <th>Proveedor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${datos.insumos.map(ins => `
-                                    <tr>
-                                        <td>${ins.fecha}</td>
-                                        <td>${ins.nombre}</td>
-                                        <td>${ins.cantidad}</td>
-                                        <td>${ins.unidad}</td>
-                                        <td>${ins.precio}</td>
-                                        <td>${ins.proveedor}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    `;
-                    break;
+            // Validar que el lote no esté duplicado
+            if (lotes.some(lote => lote.numero === numero)) {
+                alert('¡El número de lote ya existe!');
+                return;
             }
 
-            document.getElementById('resultadoReporte').innerHTML = contenido;
+            // Calcular densidad y total de plantas
+            const densidad = 10000 / (surco * plantas);
+            const totalPlantas = Math.round(densidad * area);
+
+            // Crear objeto lote
+            const lote = {
+                numero,
+                variedad,
+                area,
+                surco,
+                plantas,
+                densidad,
+                totalPlantas
+            };
+
+            // Guardar en el array y actualizar localStorage
+            lotes.push(lote);
+            localStorage.setItem('lotes', JSON.stringify(lotes));
+
+            // Actualizar la tabla
+            actualizarTablaLotes();
+            actualizarSelectLotes();
+
+            // Limpiar el formulario
+            document.getElementById('loteForm').reset();
         }
 
-        // Actualizar selectores dinámicos
-        function actualizarSelectores() {
-            const selectLotes = document.getElementById('loteActividad');
-            selectLotes.innerHTML = '<option value="">Seleccione Lote</option>';
-            datos.lotes.forEach(lote => {
-                selectLotes.innerHTML += `<option value="${lote.numero}">Lote ${lote.numero} - ${lote.variedad}</option>`;
-            });
+        function actualizarTablaLotes() {
+            const tbody = document.getElementById('tablaLotes');
+            tbody.innerHTML = lotes.map(lote => `
+                <tr>
+                    <td>${lote.numero}</td>
+                    <td>${lote.variedad}</td>
+                    <td>${lote.area}</td>
+                    <td>${lote.densidad.toFixed(2)}</td>
+                    <td>${lote.totalPlantas.toLocaleString()}</td>
+                </tr>
+            `).join('');
         }
+
+        // Funciones para Actividades
+        function guardarActividad() {
+            const lote = parseInt(document.getElementById('loteActividad').value);
+            const labor = document.getElementById('tipoLabor').value;
+            const jornales = parseFloat(document.getElementById('jornales').value);
+            const valorJornal = parseFloat(document.getElementById('valorJornal').value);
+
+            const actividad = {
+                lote,
+                labor,
+                jornales,
+                valorTotal: jornales * valorJornal
+            };
+
+            actividades.push(actividad);
+            localStorage.setItem('actividades', JSON.stringify(actividades));
+
+            actualizarTablaActividades();
+            document.getElementById('actividadForm').reset();
+        }
+
+        function actualizarTablaActividades() {
+            const tbody = document.getElementById('tablaActividades');
+            tbody.innerHTML = actividades.map(actividad => `
+                <tr>
+                    <td>${actividad.lote}</td>
+                    <td>${actividad.labor}</td>
+                    <td>${actividad.jornales}</td>
+                    <td>$${actividad.valorTotal.toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Funciones para Insumos
+        function guardarInsumo() {
+            const nombre = document.getElementById('nombreInsumo').value;
+            const cantidad = parseFloat(document.getElementById('cantidadInsumo').value);
+            const unidad = document.getElementById('unidadMedida').value;
+
+            const insumo = {
+                nombre,
+                cantidad,
+                unidad
+            };
+
+            insumos.push(insumo);
+            localStorage.setItem('insumos', JSON.stringify(insumos));
+
+            actualizarTablaInsumos();
+            actualizarSelectInsumos();
+            document.getElementById('insumoForm').reset();
+        }
+
+        function actualizarTablaInsumos() {
+            const tbody = document.getElementById('tablaInsumos');
+            tbody.innerHTML = insumos.map(insumo => `
+                <tr>
+                    <td>${insumo.nombre}</td>
+                    <td>${insumo.cantidad}</td>
+                    <td>${insumo.unidad}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Funciones para Uso de Insumos
+        function registrarUsoInsumo() {
+            const lote = parseInt(document.getElementById('loteUsoInsumo').value);
+            const insumoIndex = parseInt(document.getElementById('insumoDisponible').value);
+            const cantidad = parseFloat(document.getElementById('cantidadUso').value);
+
+            const insumo = insumos[insumoIndex];
+
+            // Validar disponibilidad
+            if (cantidad > insumo.cantidad) {
+                alert(`No hay suficiente stock! Disponible: ${insumo.cantidad} ${insumo.unidad}`);
+                return;
+            }
+
+            // Actualizar inventario
+            insumo.cantidad -= cantidad;
+            localStorage.setItem('insumos', JSON.stringify(insumos));
+
+            // Registrar uso
+            const uso = {
+                lote,
+                insumo: insumo.nombre,
+                cantidad
+            };
+
+            usoInsumos.push(uso);
+            localStorage.setItem('usoInsumos', JSON.stringify(usoInsumos));
+
+            actualizarTablaUsoInsumos();
+            actualizarSelectInsumos();
+            document.getElementById('usoInsumoForm').reset();
+        }
+
+        function actualizarTablaUsoInsumos() {
+            const tbody = document.getElementById('tablaUsoInsumos');
+            tbody.innerHTML = usoInsumos.map(uso => `
+                <tr>
+                    <td>${uso.lote}</td>
+                    <td>${uso.insumo}</td>
+                    <td>${uso.cantidad}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Actualizar selects
+        function actualizarSelectLotes() {
+            const selectLotes = document.getElementById('loteActividad');
+            const selectUsoInsumos = document.getElementById('loteUsoInsumo');
+
+            selectLotes.innerHTML = lotes.map(lote => `
+                <option value="${lote.numero}">Lote ${lote.numero}</option>
+            `).join('');
+
+            selectUsoInsumos.innerHTML = lotes.map(lote => `
+                <option value="${lote.numero}">Lote ${lote.numero}</option>
+            `).join('');
+        }
+
+        function actualizarSelectInsumos() {
+            const selectInsumos = document.getElementById('insumoDisponible');
+
+            selectInsumos.innerHTML = insumos
+                .filter(insumo => insumo.cantidad > 0)
+                .map((insumo, index) => `
+                    <option value="${index}">${insumo.nombre} (${insumo.cantidad} ${insumo.unidad})</option>
+                `).join('');
+        }
+
+        // Cargar datos al iniciar
+        actualizarTablaLotes();
+        actualizarTablaActividades();
+        actualizarTablaInsumos();
+        actualizarTablaUsoInsumos();
+        actualizarSelectLotes();
+        actualizarSelectInsumos();
     </script>
 </body>
 </html>
