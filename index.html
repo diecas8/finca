@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             font-family: Arial, sans-serif;
             background: #f5f5f5;
         }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -19,15 +21,18 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             text-align: center;
             color: #2E8B57;
         }
+
         .tabs {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
         }
+
         .tab-button {
             padding: 10px 20px;
             margin: 0 5px;
@@ -38,12 +43,15 @@
             cursor: pointer;
             transition: background 0.3s;
         }
+
         .tab-button:hover {
             background: #3CB371;
         }
+
         .tab-button.active {
             background: #3CB371;
         }
+
         .form-container {
             display: none;
             padding: 20px;
@@ -51,20 +59,25 @@
             border-radius: 8px;
             background: #f9f9f9;
         }
+
         .form-container.active {
             display: block;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .form-group input, .form-group select {
+
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+
         button {
             background-color: #2E8B57;
             color: white;
@@ -73,26 +86,33 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #3CB371;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
         }
+
         th {
             background-color: #2E8B57;
             color: white;
         }
+
         .report-section {
             margin-top: 40px;
         }
+
         .report-section h2 {
             color: #2E8B57;
             border-bottom: 2px solid #2E8B57;
@@ -100,6 +120,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Sistema de Gestión Cafetera</h1>
@@ -175,8 +196,7 @@
         <div id="insumos" class="form-container">
             <h2>Registro de Insumos</h2>
             <form id="insumoForm">
-                <div class="form
-                    <div class="form-group">
+                <div class="form-group">
                     <label>Insumo:</label>
                     <input type="text" id="nombreInsumo" required>
                 </div>
@@ -209,6 +229,9 @@
                 </div>
                 <div class="form-group">
                     <label>Cantidad a usar:</label>
+                    <input type="number" id="cantidadUso" step="0.01" required>
+                </div>
+                <button type="button" onclick="registrarUsoIn
                     <input type="number" id="cantidadUso" step="0.01" required>
                 </div>
                 <button type="button" onclick="registrarUsoInsumo()">Registrar Uso</button>
@@ -396,8 +419,7 @@
                 document.getElementById('loteForm').reset();
 
                 // Restablecer el botón "Guardar Lote"
-                const botonGuardar = document.querySelector('#loteForm button[type="button"]
-                                                            ');
+                const botonGuardar = document.querySelector('#loteForm button[type="button"]');
                 botonGuardar.textContent = "Guardar Lote";
                 botonGuardar.onclick = guardarLote;
             }
@@ -437,7 +459,8 @@
             const tbody = document.getElementById('reporteActividades');
             tbody.innerHTML = actividades.map(actividad => `
                 <tr>
-                    <td>${actividad.lote}</td>
+                    <td>${
+                        ${actividad.lote}</td>
                     <td>${actividad.labor}</td>
                     <td>${actividad.jornales}</td>
                     <td>$${actividad.valorTotal.toLocaleString()}</td>
