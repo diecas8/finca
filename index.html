@@ -1,314 +1,150 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Integral Finca Cafetera</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>Sistema de Gestión Finca Cafetera</title>
     <style>
-        :root {
-            --primary: #2c5f2d;
-            --secondary: #97bc62;
-            --background: #f0f7da;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        /* Estilos CSS básicos para mejorar la presentación */
         body {
-            font-family: 'Segoe UI', sans-serif;
-            padding: 20px;
-            background: var(--background);
+            font-family: sans-serif;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .grid-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .form-group {
-            margin-bottom: 10px;
-        }
-
-        .form-group label {
+        label {
             display: block;
             margin-bottom: 5px;
-            color: var(--primary);
-            font-weight: 500;
         }
-
-        input, select, button {
+        input[type="text"], input[type="number"], input[type="date"], select {
             width: 100%;
             padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 3px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
         }
-
         button {
-            background: var(--primary);
+            padding: 10px 15px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 10px 20px;
             cursor: pointer;
-            transition: background 0.3s;
         }
-
-        button:hover {
-            background: var(--secondary);
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
         }
-
         th, td {
-            padding: 12px;
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background: var(--primary);
-            color: white;
-        }
-
-        .chart-container {
-            margin: 20px 0;
-            max-width: 600px;
-        }
-
-        @media (max-width: 768px) {
-            .grid-form {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Encabezado -->
-        <div class="section">
-            <h2>Información General</h2>
-            <div class="grid-form">
-                <div class="form-group">
-                    <label>Nombre Finca</label>
-                    <input type="text" id="nombreFinca" required>
-                </div>
-                <div class="form-group">
-                    <label>Área Total (ha)</label>
-                    <input type="number" id="areaTotal" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Propietario</label>
-                    <input type="text" id="propietario" required>
-                </div>
-            </div>
-        </div>
 
-        <!-- Gestión de Lotes -->
-        <div class="section">
-            <h2>Gestión de Lotes</h2>
-            <form class="grid-form" id="formLote">
-                <div class="form-group">
-                    <label>Número Lote</label>
-                    <input type="text" id="numLote" required>
-                </div>
-                <div class="form-group">
-                    <label>Variedad</label>
-                    <input type="text" id="variedad" required>
-                </div>
-                <div class="form-group">
-                    <label>Área (ha)</label>
-                    <input type="number" id="areaLote" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Distancia Calles (m)</label>
-                    <input type="number" id="distCalles" step="0.1" required>
-                </div>
-                <div class="form-group">
-                    <label>Distancia Plantas (m)</label>
-                    <input type="number" id="distPlantas" step="0.1" required>
-                </div>
-            </form>
-            <button onclick="calcularDensidad()">Calcular</button>
-            <button onclick="guardarLote()">Guardar Lote</button>
-            <div id="resultadosLote">
-                <p>Densidad: <span id="densidad">0</span> plantas/ha</p>
-                <p>Número Plantas: <span id="numPlantas">0</span></p>
-            </div>
-            <table id="tablaLotes"></table>
-        </div>
+    <h1>Sistema de Gestión Finca Cafetera</h1>
 
-        <!-- Bodega y Compras -->
-        <div class="section">
-            <h2>Bodega de Insumos</h2>
-            <div class="grid-form">
-                <div class="form-group">
-                    <label>Insumo</label>
-                    <input type="text" id="insumo" required>
-                </div>
-                <div class="form-group">
-                    <label>Cantidad</label>
-                    <input type="number" id="cantidad" step="0.1" required>
-                </div>
-                <div class="form-group">
-                    <label>Precio Unitario</label>
-                    <input type="number" id="precio" step="0.01" required>
-                </div>
-            </div>
-            <button onclick="agregarInsumo()">Registrar Insumo</button>
-            <table id="tablaInsumos"></table>
-        </div>
-
-        <!-- Gráficos y Reportes -->
-        <div class="section">
-            <h2>Análisis y Reportes</h2>
-            <select id="selectLote" onchange="actualizarGraficos()"></select>
-            <div class="chart-container">
-                <canvas id="chartProduccion"></canvas>
-            </div>
-            <button onclick="generarPDF()">PDF</button>
-            <button onclick="generarExcel()">Excel</button>
-        </div>
+    <div id="encabezado">
+        <label for="nombre_finca">Nombre de la Finca:</label>
+        <input type="text" id="nombre_finca" name="nombre_finca">
+        <label for="area_total">Área Total (ha):</label>
+        <input type="number" id="area_total" name="area_total">
+        <label for="area_cafe">Área en Café (ha):</label>
+        <span id="area_cafe">0</span> <span>ha</span>
     </div>
 
-<script>
-// Sistema de persistencia
-const DB = {
-    get: key => JSON.parse(localStorage.getItem(key)) || {},
-    set: (key, val) => localStorage.setItem(key, JSON.stringify(val))
-};
+    <hr>
 
-// Estado inicial
-let state = {
-    lotes: DB.get('lotes') || [],
-    insumos: DB.get('insumos') || {},
-    actividades: DB.get('actividades') || [],
-    cosechas: DB.get('cosechas') || []
-};
+    <div id="informacion_general">
+        <h2>Información General</h2>
+        <label for="propietario">Propietario:</label>
+        <input type="text" id="propietario" name="propietario">
+        <label for="vereda">Vereda:</label>
+        <input type="text" id="vereda" name="vereda">
+        <label for="municipio">Municipio:</label>
+        <input type="text" id="municipio" name="municipio">
+        <button onclick="guardarInformacionGeneral()">Guardar</button>
+    </div>
 
-// Funciones principales
-function calcularDensidad() {
-    const area = parseFloat(document.getElementById('areaLote').value);
-    const calles = parseFloat(document.getElementById('distCalles').value);
-    const plantas = parseFloat(document.getElementById('distPlantas').value);
-    
-    const densidad = 10000 / (calles * plantas);
-    document.getElementById('densidad').textContent = densidad.toFixed(2);
-    document.getElementById('numPlantas').textContent = Math.round(area * densidad);
-}
+    <hr>
 
-function guardarLote() {
-    const lote = {
-        id: document.getElementById('numLote').value,
-        variedad: document.getElementById('variedad').value,
-        area: parseFloat(document.getElementById('areaLote').value),
-        densidad: parseFloat(document.getElementById('densidad').textContent),
-        plantas: parseInt(document.getElementById('numPlantas').textContent),
-        cosechas: []
-    };
-    
-    state.lotes.push(lote);
-    DB.set('lotes', state.lotes);
-    actualizarUI();
-}
+    <div id="compra_insumos">
+        <h2>Compra de Insumos</h2>
+        <label for="fecha_compra">Fecha:</label>
+        <input type="date" id="fecha_compra" name="fecha_compra">
+        <div id="insumos_container">
+            <div class="insumo">
+                <label for="insumo">Insumo:</label>
+                <input type="text" id="insumo" name="insumo">
+                <label for="unidad_medida">Unidad de Medida:</label>
+                <input type="text" id="unidad_medida" name="unidad_medida">
+                <label for="cantidad">Cantidad:</label>
+                <input type="number" id="cantidad" name="cantidad">
+                <label for="valor_unitario">Valor Unitario:</label>
+                <input type="number" id="valor_unitario" name="valor_unitario">
+                <label for="valor_total">Valor Total:</label>
+                <span id="valor_total">0</span>
+            </div>
+        </div>
+        <button onclick="agregarInsumo()">Agregar Insumo</button>
+        <button onclick="guardarCompra()">Guardar Compra</button>
+    </div>
 
-function agregarInsumo() {
-    const insumo = document.getElementById('insumo').value;
-    state.insumos[insumo] = {
-        cantidad: parseFloat(document.getElementById('cantidad').value),
-        precio: parseFloat(document.getElementById('precio').value)
-    };
-    DB.set('insumos', state.insumos);
-    actualizarUI();
-}
+    <hr>
 
-// Generación de reportes
-function generarPDF() {
-    const doc = new jspdf.jsPDF();
-    doc.text('Reporte de Lotes', 20, 20);
-    state.lotes.forEach((lote, i) => {
-        doc.text(`${lote.id}: ${lote.variedad} - ${lote.area}ha`, 20, 30 + (i * 10));
-    });
-    doc.save('reporte.pdf');
-}
+    <div id="bodega_insumos">
+        <h2>Bodega de Insumos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Insumo</th>
+                    <th>Existencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
 
-function generarExcel() {
-    const ws = XLSX.utils.json_to_sheet(state.lotes);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Lotes");
-    XLSX.writeFile(wb, "lotes.xlsx");
-}
+    <hr>
 
-// Actualización de UI
-function actualizarUI() {
-    // Actualizar tablas
-    actualizarTabla('tablaLotes', state.lotes, ['id', 'variedad', 'area', 'densidad', 'plantas']);
-    actualizarTabla('tablaInsumos', Object.entries(state.insumos).map(([k,v]) => 
-        ({insumo: k, ...v})), ['insumo', 'cantidad', 'precio']);
-    
-    // Actualizar selectores
-    const selectLote = document.getElementById('selectLote');
-    selectLote.innerHTML = state.lotes.map(l => 
-        `<option value="${l.id}">Lote ${l.id}</option>`);
-}
+    <div id="lotes">
+        <h2>Lotes</h2>
+        <label for="numero_lote">Número de Lote:</label>
+        <input type="text" id="numero_lote" name="numero_lote">
+        <label for="variedad_cafe">Variedad de Café:</label>
+        <input type="text" id="variedad_cafe" name="variedad_cafe">
+        <label for="area_lote">Área (ha):</label>
+        <input type="number" id="area_lote" name="area_lote">
+        <label for="tipo_labor">Tipo de Labor:</label>
+        <input type="text" id="tipo_labor" name="tipo_labor">
+        <label for="fecha_labor">Fecha de Labor:</label>
+        <input type="date" id="fecha_labor" name="fecha_labor">
+        <label for="distancia_calles">Distancia entre Calles (m):</label>
+        <input type="number" id="distancia_calles" name="distancia_calles">
+        <label for="distancia_plantas">Distancia entre Plantas (m):</label>
+        <input type="number" id="distancia_plantas" name="distancia_plantas">
+        <label for="densidad">Densidad:</label>
+        <span id="densidad">0</span>
+        <label for="numero_plantas">Número de Plantas:</label>
+        <span id="numero_plantas">0</span>
+        <button onclick="guardarLote()">Guardar</button>
+    </div>
 
-function actualizarTabla(id, datos, campos) {
-    const tabla = document.getElementById(id);
-    tabla.innerHTML = `
-        <thead><tr>${campos.map(c => `<th>${c}</th>`).join('')}</tr></thead>
-        <tbody>
-            ${datos.map(d => `
-                <tr>${campos.map(c => `<td>${d[c]}</td>`).join('')}</tr>
-            `).join('')}
-        </tbody>
-    `;
-}
+    <hr>
 
-// Gráficos
-let chartInstance;
-function actualizarGraficos() {
-    if(chartInstance) chartInstance.destroy();
-    
-    const ctx = document.getElementById('chartProduccion').getContext('2d');
-    chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: state.lotes.map(l => l.id),
-            datasets: [{
-                label: 'Producción por Lote',
-                data: state.lotes.map(l => l.cosechas.reduce((a,b) => a + b.cantidad, 0)),
-                backgroundColor: '#2c5f2d'
-            }]
+    <script>
+        // Funciones JavaScript para calcular valores, agregar elementos, etc.
+
+        function calcularValorTotal() {
+            // Calcula el valor total del insumo
         }
-    });
-}
 
-// Inicialización
-document.addEventListener('DOMContentLoaded', actualizarUI);
-</script>
+        function agregarInsumo() {
+            // Agrega un nuevo formulario de insumo
+        }
+
+        function guardarInformacionGeneral() {
+            // Guarda la información general de la finca
+        }
+
+        // ... (resto de funciones para guardar, editar, eliminar, etc.) ...
+    </script>
+
 </body>
 </html>
