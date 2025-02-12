@@ -49,7 +49,132 @@
     <input type="text" id="numPlantas" placeholder="Plantas totales" readonly>
     <button onclick="guardarLote()">💾 Guardar</button>
 </div>
+<!-- Agrega esto en el BODY después de la sección de Lotes -->
+<div class="seccion">
+    <h2>👷 Actividades en Lotes</h2>
+    <select id="loteActividad" onchange="cargarInsumos()">
+        <option>Elige un lote</option>
+    </select>
+    <input type="date" id="fechaActividad">
+    <input type="text" id="nombreActividad" placeholder="Nombre actividad">
+    <input type="number" id="jornales" placeholder="Número de jornales" oninput="calcularTotal()">
+    <input type="number" step="0.01" id="valorJornal" placeholder="Valor por jornal" oninput="calcularTotal()">
+    <input type="number" id="totalActividad" placeholder="Total" readonly>
+    <button onclick="guardarActividad()">💾 Guardar</button>
+    
+    <table id="tablaActividades">
+        <tr><th>Lote</th><th>Actividad</th><th>Total</th><th>Acciones</th></tr>
+    </table>
+</div>
 
+<div class="seccion">
+    <h2>📦 Usar Insumos en Lotes</h2>
+    <select id="loteUso">
+        <option>Elige un lote</option>
+    </select>
+    <select id="insumoUso">
+        <option>Elige insumo</option>
+    </select>
+    <input type="number" step="0.01" id="cantidadUso" placeholder="Cantidad a usar">
+    <button onclick="usarInsumo()">➖ Usar</button>
+</div>
+
+<script>
+// 🧙♂️ VARIABLES MÁGICAS
+let actividades = [];
+let usandoInsumoEditIndex = -1;
+
+// 🎠 FUNCIONES NUEVAS
+function calcularTotal() {
+    let jornales = parseFloat(document.getElementById('jornales').value) || 0;
+    let valor = parseFloat(document.getElementById('valorJornal').value) || 0;
+    document.getElementById('totalActividad').value = (jornales * valor).toFixed(2);
+}
+
+function guardarActividad() {
+    let nuevaActividad = {
+        lote: document.getElementById('loteActividad').value,
+        fecha: document.getElementById('fechaActividad').value,
+        nombre: document.getElementById('nombreActividad').value,
+        jornales: document.getElementById('jornales').value,
+        valor: document.getElementById('valorJornal').value,
+        total: document.getElementById('totalActividad').value
+    };
+    
+    if(usandoInsumoEditIndex > -1) {
+        actividades[usandoInsumoEditIndex] = nuevaActividad; // ✏️ Editar
+        usandoInsumoEditIndex = -1;
+    } else {
+        actividades.push(nuevaActividad); // 🆕 Nueva
+    }
+    
+    actualizarActividades();
+}
+
+function actualizarActividades() {
+    let tabla = document.getElementById('tablaActividades');
+    tabla.innerHTML = '<tr><th>Lote</th><th>Actividad</th><th>Total</th><th>Acciones</th></tr>';
+    
+    actividades.forEach((act, index) => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${act.lote}</td>
+                <td>${act.nombre}</td>
+                <td>$${act.total}</td>
+                <td>
+                    <button onclick="editarActividad(${index})">✏️</button>
+                    <button onclick="eliminarActividad(${index})">🗑️</button>
+                </td>
+            </tr>`;
+    });
+}
+
+function editarActividad(index) {
+    let act = actividades[index];
+    document.getElementById('loteActividad').value = act.lote;
+    document.getElementById('fechaActividad').value = act.fecha;
+    document.getElementById('nombreActividad').value = act.nombre;
+    document.getElementById('jornales').value = act.jornales;
+    document.getElementById('valorJornal').value = act.valor;
+    usandoInsumoEditIndex = index;
+}
+
+function eliminarActividad(index) {
+    if(confirm("¿Borrar esta actividad?")) {
+        actividades.splice(index, 1);
+        actualizarActividades();
+    }
+}
+
+// 🧪 FUNCIÓN PARA USAR INSUMOS
+function usarInsumo() {
+    let insumo = document.getElementById('insumoUso').value;
+    let cantidad = parseFloat(document.getElementById('cantidadUso').value);
+    
+    if(bodega[insumo] >= cantidad) {
+        bodega[insumo] -= cantidad;
+        alert(`✅ Usaste ${cantidad} de ${insumo}`);
+        actualizarBodega();
+    } else {
+        alert("🚨 ¡No hay suficiente en bodega!");
+    }
+}
+
+// 🎡 ACTUALIZAR LISTAS MÁGICAS
+function cargarInsumos() {
+    let select = document.getElementById('insumoUso');
+    select.innerHTML = '<option>Elige insumo</option>';
+    
+    for(let insumo in bodega) {
+        select.innerHTML += `<option>${insumo}</option>`;
+    }
+}
+
+// 🏁 INICIAR EL JUEGO
+window.onload = function() {
+    actualizarBodega();
+    cargarInsumos();
+};
 <script>
 // 🎉 NUESTRAS VARIABLES MÁGICAS
 let bodega = {};
