@@ -3,61 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor Finca Cafetera</title>
+    <title>Gestor Finca Cafetera Completo</title>
     <style>
-        /* Estilos básicos para responsividad */
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        .section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
-        .form-group { margin-bottom: 10px; }
-        .form-group label { display: block; margin-bottom: 5px; }
-        .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        /* Estilos mejorados */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
+        .section { background: #f5f5f5; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #34495e; }
+        input, select { padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px; width: 100%; box-sizing: border-box; }
+        button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #2980b9; }
+        table { width: 100%; margin-top: 15px; background: white; }
+        th { background: #3498db; color: white; padding: 12px; }
+        td { padding: 10px; border-bottom: 1px solid #ecf0f1; }
+        .alert { padding: 10px; background: #e74c3c; color: white; margin-bottom: 15px; border-radius: 4px; }
         @media (max-width: 768px) {
             .form-row { flex-direction: column; }
+            .section { padding: 15px; }
         }
     </style>
 </head>
 <body>
-    <!-- Encabezado -->
-    <div class="section">
-        <h2>Información General de la Finca</h2>
-        <div class="form-row">
-            <div class="form-group">
-                <label>Nombre de la finca: <input type="text" id="nombreFinca"></label>
-            </div>
-            <div class="form-group">
-                <label>Área total (ha): <input type="number" id="areaTotal"></label>
-            </div>
-            <div class="form-group">
-                <label>Área en café: <span id="areaCafe">0</span> ha</label>
-            </div>
-        </div>
-    </div>
+    <!-- Sección anterior... -->
 
-    <!-- Lotes -->
+    <!-- Aplicación de Insumos por Lote -->
     <div class="section">
-        <h2>Gestión de Lotes</h2>
-        <form id="formLote" class="form-row">
-            <input type="hidden" id="loteId">
-            <div class="form-group">
-                <label>Número de lote: <input type="text" id="numLote" required></label>
+        <h2>Aplicación de Insumos</h2>
+        <form id="formAplicacion" class="form-row">
+            <div class="form-group" style="flex: 1;">
+                <label>Lote:
+                    <select id="loteAplicacion" required></select>
+                </label>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>Insumo:
+                    <select id="insumoAplicacion" required>
+                        <option value="">Seleccionar...</option>
+                    </select>
+                </label>
             </div>
             <div class="form-group">
-                <label>Área (ha): <input type="number" id="areaLote" required></label>
+                <label>Cantidad:
+                    <input type="number" id="cantidadAplicacion" required>
+                </label>
             </div>
-            <div class="form-group">
-                <label>Variedad: <input type="text" id="variedad"></label>
-            </div>
-            <button type="submit">Guardar</button>
-            <button type="button" onclick="cancelarEdicion()">Cancelar</button>
+            <button type="submit">Aplicar Insumo</button>
         </form>
-        <table id="tablaLotes">
+        <table id="tablaAplicaciones">
             <thead>
                 <tr>
                     <th>Lote</th>
-                    <th>Área (ha)</th>
-                    <th>Variedad</th>
+                    <th>Insumo</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -65,156 +64,189 @@
         </table>
     </div>
 
-    <!-- Bodega de Insumos -->
+    <!-- Actividades y Recolección -->
     <div class="section">
-        <h2>Bodega de Insumos</h2>
-        <table id="tablaInsumos">
-            <thead>
-                <tr>
-                    <th>Insumo</th>
-                    <th>Unidad</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- Compra de Insumos -->
-    <div class="section">
-        <h2>Compra de Insumos</h2>
-        <form id="formCompra" class="form-row">
-            <div class="form-group">
-                <label>Insumo: <input type="text" id="insumo" required></label>
+        <h2>Actividades por Lote</h2>
+        <form id="formActividad">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Lote:
+                        <select id="loteActividad" required></select>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Actividad:
+                        <input type="text" id="nombreActividad" required>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Jornales:
+                        <input type="number" id="jornales" required>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Valor por jornal:
+                        <input type="number" id="valorJornal" required>
+                    </label>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Unidad: <input type="text" id="unidad" required></label>
-            </div>
-            <div class="form-group">
-                <label>Cantidad: <input type="number" id="cantidad" required></label>
-            </div>
-            <button type="submit">Registrar Compra</button>
+            <button type="submit">Registrar Actividad</button>
         </form>
     </div>
 
+    <!-- Recolección -->
+    <div class="section">
+        <h2>Recolección de Café</h2>
+        <form id="formRecoleccion">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Lote:
+                        <select id="loteRecoleccion" required></select>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad (kg):
+                        <input type="number" id="cantidadCafe" required>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>Fecha:
+                        <input type="date" id="fechaRecoleccion" required>
+                    </label>
+                </div>
+            </div>
+            <button type="submit">Registrar Recolección</button>
+        </form>
+    </div>
+
+    <!-- Reportes -->
+    <div class="section">
+        <h2>Reportes</h2>
+        <button onclick="generarPDF()">Generar PDF</button>
+        <button onclick="generarExcel()">Exportar Excel</button>
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+
 <script>
-// Sistema de almacenamiento
-let lotes = JSON.parse(localStorage.getItem('lotes')) || [];
-let insumos = JSON.parse(localStorage.getItem('insumos')) || [];
+// Datos ampliados
+let aplicaciones = JSON.parse(localStorage.getItem('aplicaciones')) || [];
+let actividades = JSON.parse(localStorage.getItem('actividades')) || [];
+let recolecciones = JSON.parse(localStorage.getItem('recolecciones')) || [];
 
-// Actualizar área en café
-function actualizarAreaCafe() {
-    const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
-    document.getElementById('areaCafe').textContent = total;
+// Actualizar selects de lotes
+function actualizarSelectLotes() {
+    const selects = document.querySelectorAll('select[id^="lote"]');
+    selects.forEach(select => {
+        select.innerHTML = lotes.map(lote => 
+            `<option value="${lote.id}">${lote.numero}</option>`
+        ).join('');
+    });
 }
 
-// Guardar en localStorage
-function guardarDatos() {
-    localStorage.setItem('lotes', JSON.stringify(lotes));
-    localStorage.setItem('insumos', JSON.stringify(insumos));
-    actualizarAreaCafe();
+// Cálculos de densidad y plantas
+function calcularDensidad(lote) {
+    return lote.area / (lote.distanciaCalles * lote.distanciaPlantas);
 }
 
-// CRUD Lotes
-function renderLotes() {
-    const tbody = document.querySelector('#tablaLotes tbody');
-    tbody.innerHTML = '';
+function calcularPlantas(lote) {
+    return lote.area * calcularDensidad(lote);
+}
+
+// Aplicación de insumos
+document.getElementById('formAplicacion').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const aplicacion = {
+        loteId: document.getElementById('loteAplicacion').value,
+        insumo: document.getElementById('insumoAplicacion').value,
+        cantidad: parseFloat(document.getElementById('cantidadAplicacion').value),
+        fecha: new Date().toISOString().split('T')[0]
+    };
+
+    const insumo = insumos.find(i => i.nombre === aplicacion.insumo);
+    if (insumo.cantidad < aplicacion.cantidad) {
+        alert('No hay suficiente insumo en bodega');
+        return;
+    }
+
+    insumo.cantidad -= aplicacion.cantidad;
+    aplicaciones.push(aplicacion);
     
+    guardarDatos();
+    renderInsumos();
+    renderAplicaciones();
+    e.target.reset();
+});
+
+// Actividades
+document.getElementById('formActividad').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const actividad = {
+        loteId: document.getElementById('loteActividad').value,
+        nombre: document.getElementById('nombreActividad').value,
+        jornales: parseInt(document.getElementById('jornales').value),
+        valorJornal: parseFloat(document.getElementById('valorJornal').value),
+        fecha: new Date().toISOString().split('T')[0]
+    };
+    
+    actividades.push(actividad);
+    guardarDatos();
+    e.target.reset();
+});
+
+// Recolección
+document.getElementById('formRecoleccion').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const recoleccion = {
+        loteId: document.getElementById('loteRecoleccion').value,
+        cantidad: parseFloat(document.getElementById('cantidadCafe').value),
+        fecha: document.getElementById('fechaRecoleccion').value
+    };
+    
+    recolecciones.push(recoleccion);
+    guardarDatos();
+    e.target.reset();
+});
+
+// Reportes
+function generarPDF() {
+    const doc = new jspdf.jsPDF();
+    
+    // Reporte de lotes
+    doc.text("Reporte de Lotes", 10, 10);
     lotes.forEach((lote, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${lote.numero}</td>
-            <td>${lote.area}</td>
-            <td>${lote.variedad}</td>
-            <td>
-                <button onclick="editarLote(${index})">Editar</button>
-                <button onclick="eliminarLote(${index})">Eliminar</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
+        const y = 20 + (index * 10);
+        doc.text(`${lote.numero} - ${lote.area} ha - ${lote.variedad}`, 10, y);
     });
+    
+    doc.save('reporte-finca.pdf');
 }
 
-document.getElementById('formLote').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const lote = {
-        id: document.getElementById('loteId').value || Date.now(),
-        numero: document.getElementById('numLote').value,
-        area: parseFloat(document.getElementById('areaLote').value),
-        variedad: document.getElementById('variedad').value
-    };
+function generarExcel() {
+    const wb = XLSX.utils.book_new();
     
-    const index = lotes.findIndex(l => l.id == lote.id);
-    if(index > -1) {
-        lotes[index] = lote;
-    } else {
-        lotes.push(lote);
-    }
+    // Hoja de lotes
+    const wsLotes = XLSX.utils.json_to_sheet(lotes);
+    XLSX.utils.book_append_sheet(wb, wsLotes, "Lotes");
     
-    guardarDatos();
-    renderLotes();
-    e.target.reset();
-});
-
-function editarLote(index) {
-    const lote = lotes[index];
-    document.getElementById('loteId').value = lote.id;
-    document.getElementById('numLote').value = lote.numero;
-    document.getElementById('areaLote').value = lote.area;
-    document.getElementById('variedad').value = lote.variedad;
+    // Hoja de insumos
+    const wsInsumos = XLSX.utils.json_to_sheet(insumos);
+    XLSX.utils.book_append_sheet(wb, wsInsumos, "Insumos");
+    
+    XLSX.writeFile(wb, "reporte-finca.xlsx");
 }
 
-function eliminarLote(index) {
-    if(confirm('¿Eliminar este lote?')) {
-        lotes.splice(index, 1);
-        guardarDatos();
-        renderLotes();
-    }
-}
-
-// Gestión de Insumos
-document.getElementById('formCompra').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const insumo = {
-        nombre: document.getElementById('insumo').value,
-        unidad: document.getElementById('unidad').value,
-        cantidad: parseFloat(document.getElementById('cantidad').value)
-    };
-    
-    const existente = insumos.find(i => i.nombre === insumo.nombre);
-    if(existente) {
-        existente.cantidad += insumo.cantidad;
-    } else {
-        insumos.push(insumo);
-    }
-    
-    guardarDatos();
-    renderInsumos();
-    e.target.reset();
-});
-
-function renderInsumos() {
-    const tbody = document.querySelector('#tablaInsumos tbody');
-    tbody.innerHTML = '';
-    
-    insumos.forEach(insumo => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${insumo.nombre}</td>
-            <td>${insumo.unidad}</td>
-            <td>${insumo.cantidad}</td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-// Inicialización
+// Inicialización mejorada
 function init() {
-    renderLotes();
+    actualizarSelectLotes();
     renderInsumos();
+    renderLotes();
+    renderAplicaciones();
     actualizarAreaCafe();
 }
 
+// Ejecutar
 init();
 </script>
 </body>
