@@ -13,13 +13,37 @@
 </head>
 <body>
 
-<!-- ▼▼▼ En la sección de Información General ▼▼▼ -->
+<!-- ▼▼▼ PEGA ESTE BLOQUE AL PRINCIPIO ▼▼▼ -->
 <div class="seccion">
-    <h2>📝 Información de la Finca</h2> <!-- Cambiado el título -->
-    <!-- ... otros campos ... -->
-    <input type="number" step="0.01" id="totalCafe" placeholder="Área total en café" readonly>
+    <h2>📋 Información de la Finca</h2>
+    <form onsubmit="guardarFinca(event)">
+        <div class="columnas-magicas">
+            <div>
+                <label>Nombre de la finca:</label>
+                <input type="text" id="nombreFinca" required>
+                
+                <label>Área total (hectáreas):</label>
+                <input type="number" step="0.01" id="areaTotal" required>
+                
+                <label>Propietario:</label>
+                <input type="text" id="propietario" required>
+            </div>
+            
+            <div>
+                <label>Vereda:</label>
+                <input type="text" id="vereda" required>
+                
+                <label>Municipio:</label>
+                <input type="text" id="municipio" required>
+                
+                <label>Área en café (auto):</label>
+                <input type="number" step="0.01" id="areaCafe" readonly>
+            </div>
+        </div>
+        <button type="submit">💾 Guardar</button>
+    </form>
 </div>
-
+<!-- ▲▲▲ HASTA AQUÍ ▲▲▲ -->
 <!-- TIENDA DE JUGUETES: Insumos -->
 <div class="seccion">
     <h2>🛒 Compras de Insumos</h2>
