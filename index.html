@@ -3,117 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor Finca Cafetera Completo</title>
+    <title>Gestor Finca Cafetera - Formularios Completos</title>
     <style>
-        /* Estilos mejorados */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
-        .section { background: #f5f5f5; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h2 { color: #2c3e50; margin-top: 0; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #34495e; }
-        input, select { padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px; width: 100%; box-sizing: border-box; }
-        button { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; transition: background 0.3s; }
-        button:hover { background: #2980b9; }
-        table { width: 100%; margin-top: 15px; background: white; }
-        th { background: #3498db; color: white; padding: 12px; }
-        td { padding: 10px; border-bottom: 1px solid #ecf0f1; }
-        .alert { padding: 10px; background: #e74c3c; color: white; margin-bottom: 15px; border-radius: 4px; }
-        @media (max-width: 768px) {
-            .form-row { flex-direction: column; }
-            .section { padding: 15px; }
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        input, select, button { width: 100%; padding: 8px; margin-bottom: 10px; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background: #218838; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
     </style>
 </head>
 <body>
-    <!-- Sección anterior... -->
+
+    <!-- Encabezado -->
+    <div class="section">
+        <h2>Información General de la Finca</h2>
+        <form id="formFinca">
+            <div class="form-group">
+                <label>Nombre de la finca:</label>
+                <input type="text" id="nombreFinca" required>
+            </div>
+            <div class="form-group">
+                <label>Área total (ha):</label>
+                <input type="number" id="areaTotal" required>
+            </div>
+            <div class="form-group">
+                <label>Propietario:</label>
+                <input type="text" id="propietario" required>
+            </div>
+            <div class="form-group">
+                <label>Vereda:</label>
+                <input type="text" id="vereda" required>
+            </div>
+            <div class="form-group">
+                <label>Municipio:</label>
+                <input type="text" id="municipio" required>
+            </div>
+            <button type="submit">Guardar Información</button>
+        </form>
+    </div>
+
+    <!-- Compra de Insumos -->
+    <div class="section">
+        <h2>Compra de Insumos</h2>
+        <form id="formCompra">
+            <div class="form-group">
+                <label>Fecha:</label>
+                <input type="date" id="fechaCompra" required>
+            </div>
+            <div class="form-group">
+                <label>Insumo:</label>
+                <input type="text" id="insumoCompra" required>
+            </div>
+            <div class="form-group">
+                <label>Unidad de medida:</label>
+                <input type="text" id="unidadCompra" required>
+            </div>
+            <div class="form-group">
+                <label>Cantidad:</label>
+                <input type="number" id="cantidadCompra" required>
+            </div>
+            <div class="form-group">
+                <label>Valor unitario:</label>
+                <input type="number" id="valorUnitario" required>
+            </div>
+            <button type="submit">Registrar Compra</button>
+        </form>
+    </div>
+
+    <!-- Lotes -->
+    <div class="section">
+        <h2>Gestión de Lotes</h2>
+        <form id="formLote">
+            <div class="form-group">
+                <label>Número de lote:</label>
+                <input type="text" id="numLote" required>
+            </div>
+            <div class="form-group">
+                <label>Variedad de café:</label>
+                <input type="text" id="variedadLote" required>
+            </div>
+            <div class="form-group">
+                <label>Área (ha):</label>
+                <input type="number" id="areaLote" required>
+            </div>
+            <div class="form-group">
+                <label>Tipo de labor:</label>
+                <input type="text" id="tipoLabor" required>
+            </div>
+            <div class="form-group">
+                <label>Fecha de labor:</label>
+                <input type="date" id="fechaLabor" required>
+            </div>
+            <div class="form-group">
+                <label>Distancia entre calles (m):</label>
+                <input type="number" id="distanciaCalles" required>
+            </div>
+            <div class="form-group">
+                <label>Distancia entre plantas (m):</label>
+                <input type="number" id="distanciaPlantas" required>
+            </div>
+            <button type="submit">Guardar Lote</button>
+        </form>
+    </div>
 
     <!-- Aplicación de Insumos por Lote -->
     <div class="section">
-        <h2>Aplicación de Insumos</h2>
-        <form id="formAplicacion" class="form-row">
-            <div class="form-group" style="flex: 1;">
-                <label>Lote:
-                    <select id="loteAplicacion" required></select>
-                </label>
-            </div>
-            <div class="form-group" style="flex: 1;">
-                <label>Insumo:
-                    <select id="insumoAplicacion" required>
-                        <option value="">Seleccionar...</option>
-                    </select>
-                </label>
+        <h2>Aplicación de Insumos por Lote</h2>
+        <form id="formAplicacion">
+            <div class="form-group">
+                <label>Lote:</label>
+                <select id="loteAplicacion" required></select>
             </div>
             <div class="form-group">
-                <label>Cantidad:
-                    <input type="number" id="cantidadAplicacion" required>
-                </label>
+                <label>Fecha:</label>
+                <input type="date" id="fechaAplicacion" required>
+            </div>
+            <div class="form-group">
+                <label>Insumo:</label>
+                <select id="insumoAplicacion" required></select>
+            </div>
+            <div class="form-group">
+                <label>Unidad de medida:</label>
+                <input type="text" id="unidadAplicacion" required>
+            </div>
+            <div class="form-group">
+                <label>Cantidad:</label>
+                <input type="number" id="cantidadAplicacion" required>
             </div>
             <button type="submit">Aplicar Insumo</button>
         </form>
-        <table id="tablaAplicaciones">
-            <thead>
-                <tr>
-                    <th>Lote</th>
-                    <th>Insumo</th>
-                    <th>Cantidad</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
     </div>
 
-    <!-- Actividades y Recolección -->
+    <!-- Relación de Actividades por Lote -->
     <div class="section">
         <h2>Actividades por Lote</h2>
         <form id="formActividad">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Lote:
-                        <select id="loteActividad" required></select>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Actividad:
-                        <input type="text" id="nombreActividad" required>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Jornales:
-                        <input type="number" id="jornales" required>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Valor por jornal:
-                        <input type="number" id="valorJornal" required>
-                    </label>
-                </div>
+            <div class="form-group">
+                <label>Lote:</label>
+                <select id="loteActividad" required></select>
+            </div>
+            <div class="form-group">
+                <label>Fecha:</label>
+                <input type="date" id="fechaActividad" required>
+            </div>
+            <div class="form-group">
+                <label>Actividad:</label>
+                <input type="text" id="nombreActividad" required>
+            </div>
+            <div class="form-group">
+                <label>Cantidad de jornales:</label>
+                <input type="number" id="jornales" required>
+            </div>
+            <div class="form-group">
+                <label>Valor por jornal:</label>
+                <input type="number" id="valorJornal" required>
             </div>
             <button type="submit">Registrar Actividad</button>
         </form>
     </div>
 
-    <!-- Recolección -->
+    <!-- Recolección de Café por Lote -->
     <div class="section">
         <h2>Recolección de Café</h2>
         <form id="formRecoleccion">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Lote:
-                        <select id="loteRecoleccion" required></select>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Cantidad (kg):
-                        <input type="number" id="cantidadCafe" required>
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Fecha:
-                        <input type="date" id="fechaRecoleccion" required>
-                    </label>
-                </div>
+            <div class="form-group">
+                <label>Lote:</label>
+                <select id="loteRecoleccion" required></select>
+            </div>
+            <div class="form-group">
+                <label>Fecha:</label>
+                <input type="date" id="fechaRecoleccion" required>
+            </div>
+            <div class="form-group">
+                <label>Cantidad de café (kg):</label>
+                <input type="number" id="cantidadCafe" required>
+            </div>
+            <div class="form-group">
+                <label>Unidad de medida:</label>
+                <input type="text" id="unidadRecoleccion" required>
             </div>
             <button type="submit">Registrar Recolección</button>
         </form>
@@ -126,128 +197,9 @@
         <button onclick="generarExcel()">Exportar Excel</button>
     </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-
 <script>
-// Datos ampliados
-let aplicaciones = JSON.parse(localStorage.getItem('aplicaciones')) || [];
-let actividades = JSON.parse(localStorage.getItem('actividades')) || [];
-let recolecciones = JSON.parse(localStorage.getItem('recolecciones')) || [];
 
-// Actualizar selects de lotes
-function actualizarSelectLotes() {
-    const selects = document.querySelectorAll('select[id^="lote"]');
-    selects.forEach(select => {
-        select.innerHTML = lotes.map(lote => 
-            `<option value="${lote.id}">${lote.numero}</option>`
-        ).join('');
-    });
-}
 
-// Cálculos de densidad y plantas
-function calcularDensidad(lote) {
-    return lote.area / (lote.distanciaCalles * lote.distanciaPlantas);
-}
-
-function calcularPlantas(lote) {
-    return lote.area * calcularDensidad(lote);
-}
-
-// Aplicación de insumos
-document.getElementById('formAplicacion').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const aplicacion = {
-        loteId: document.getElementById('loteAplicacion').value,
-        insumo: document.getElementById('insumoAplicacion').value,
-        cantidad: parseFloat(document.getElementById('cantidadAplicacion').value),
-        fecha: new Date().toISOString().split('T')[0]
-    };
-
-    const insumo = insumos.find(i => i.nombre === aplicacion.insumo);
-    if (insumo.cantidad < aplicacion.cantidad) {
-        alert('No hay suficiente insumo en bodega');
-        return;
-    }
-
-    insumo.cantidad -= aplicacion.cantidad;
-    aplicaciones.push(aplicacion);
-    
-    guardarDatos();
-    renderInsumos();
-    renderAplicaciones();
-    e.target.reset();
-});
-
-// Actividades
-document.getElementById('formActividad').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const actividad = {
-        loteId: document.getElementById('loteActividad').value,
-        nombre: document.getElementById('nombreActividad').value,
-        jornales: parseInt(document.getElementById('jornales').value),
-        valorJornal: parseFloat(document.getElementById('valorJornal').value),
-        fecha: new Date().toISOString().split('T')[0]
-    };
-    
-    actividades.push(actividad);
-    guardarDatos();
-    e.target.reset();
-});
-
-// Recolección
-document.getElementById('formRecoleccion').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const recoleccion = {
-        loteId: document.getElementById('loteRecoleccion').value,
-        cantidad: parseFloat(document.getElementById('cantidadCafe').value),
-        fecha: document.getElementById('fechaRecoleccion').value
-    };
-    
-    recolecciones.push(recoleccion);
-    guardarDatos();
-    e.target.reset();
-});
-
-// Reportes
-function generarPDF() {
-    const doc = new jspdf.jsPDF();
-    
-    // Reporte de lotes
-    doc.text("Reporte de Lotes", 10, 10);
-    lotes.forEach((lote, index) => {
-        const y = 20 + (index * 10);
-        doc.text(`${lote.numero} - ${lote.area} ha - ${lote.variedad}`, 10, y);
-    });
-    
-    doc.save('reporte-finca.pdf');
-}
-
-function generarExcel() {
-    const wb = XLSX.utils.book_new();
-    
-    // Hoja de lotes
-    const wsLotes = XLSX.utils.json_to_sheet(lotes);
-    XLSX.utils.book_append_sheet(wb, wsLotes, "Lotes");
-    
-    // Hoja de insumos
-    const wsInsumos = XLSX.utils.json_to_sheet(insumos);
-    XLSX.utils.book_append_sheet(wb, wsInsumos, "Insumos");
-    
-    XLSX.writeFile(wb, "reporte-finca.xlsx");
-}
-
-// Inicialización mejorada
-function init() {
-    actualizarSelectLotes();
-    renderInsumos();
-    renderLotes();
-    renderAplicaciones();
-    actualizarAreaCafe();
-}
-
-// Ejecutar
-init();
 </script>
 </body>
 </html>
