@@ -13,12 +13,11 @@
 </head>
 <body>
 
-<!-- PRIMERA PÁGINA: Info General -->
+<!-- ▼▼▼ En la sección de Información General ▼▼▼ -->
 <div class="seccion">
-    <h2>🏠 Casa de la Finca</h2>
-    <input type="text" id="nombre" placeholder="Nombre de la finca">
-    <input type="number" step="0.01" id="area" placeholder="Área total (ha)">
-    <!-- Más campos aquí... -->
+    <h2>📝 Información de la Finca</h2> <!-- Cambiado el título -->
+    <!-- ... otros campos ... -->
+    <input type="number" step="0.01" id="totalCafe" placeholder="Área total en café" readonly>
 </div>
 
 <!-- TIENDA DE JUGUETES: Insumos -->
@@ -261,21 +260,30 @@ function usarInsumo() {
         alert("🚨 ¡No hay suficiente en bodega!");
     }
 }
-// 🌱 CALCULAR PLANTITAS (¡Aquí está la magia!)
+// 🌟 FUNCIÓN MEJORADA PARA LOTES
 function calcularPlantas() {
-    const area = parseFloat(document.getElementById('areaLote').value) || 0;
-    const calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
-    const plantas = parseFloat(document.getElementById('distanciaPlantas').value) || 0;
+    let area = parseFloat(document.getElementById('areaLote').value) || 0;
+    let calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
+    let plantas = parseFloat(document.getElementById('distanciaPlantas').value) || 0;
     
     if(calles > 0 && plantas > 0) {
-        const densidad = 10000 / (calles * plantas); // ¡Convertimos ha a m²!
+        let densidad = 10000 / (calles * plantas); // ¡Mágia matemática!
         document.getElementById('densidad').value = densidad.toFixed(2);
         document.getElementById('numPlantas').value = (area * densidad).toFixed(0);
     }
 }
 
-// 💾 GUARDAR LOTES (como guardar tus dibujos)
+// 🚀 ACTUALIZAR ÁREA TOTAL DE CAFÉ
+function actualizarAreaTotal() {
+    let total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
+    document.getElementById('totalCafe').value = total.toFixed(2);
+}
+
+// 🎉 MODIFICAR LA FUNCIÓN GUARDAR LOTE
 function guardarLote() {
+    // ... (código anterior) ...
+    actualizarAreaTotal(); // ◄¡Nueva línea mágica!
+}
     const nuevoLote = {
         numero: document.getElementById('numLote').value,
         area: document.getElementById('areaLote').value,
