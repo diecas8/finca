@@ -30,13 +30,21 @@
     <button onclick="comprarInsumo()">🛒 Agregar</button>
 </div>
 
-<!-- BODEGA MÁGICA -->
+<!-- ▼▼▼ PEGA ESTE BLOQUE EN VEZ DE LA VIEJA BODEGA ▼▼▼ -->
 <div class="seccion">
-    <h2>📦 Bodega de Insumos</h2>
+    <h2>📦 Bodega de Insumos (Mejorada)</h2>
     <table id="tablaBodega">
-        <tr><th>Insumo</th><th>Cantidad</th></tr>
+        <tr>
+            <th>Insumo</th>
+            <th>Unidad</th>
+            <th>En Stock</th>
+            <th>Última Compra</th>
+            <th>Total Usado</th>
+            <th>Disponible</th>
+        </tr>
     </table>
 </div>
+<!-- ▲▲▲ HASTA AQUÍ ▲▲▲ -->
 
 <!-- LOTES DE JUEGO -->
 <div class="seccion">
@@ -194,16 +202,65 @@ function comprarInsumo() {
     actualizarBodega();
 }
 
-// 📦 ACTUALIZAR BODEGA (como limpiar y ordenar juguetes)
+// 🧹 FUNCIÓN MEJORADA PARA BODEGA
 function actualizarBodega() {
     const tabla = document.getElementById('tablaBodega');
-    tabla.innerHTML = '<tr><th>Insumo</th><th>Cantidad</th></tr>';
+    tabla.innerHTML = `
+        <tr>
+            <th>Insumo</th>
+            <th>Unidad</th>
+            <th>En Stock</th>
+            <th>Última Compra</th>
+            <th>Total Usado</th>
+            <th>Disponible</th>
+        </tr>`;
     
-    for(let juguete in bodega) {
-        tabla.innerHTML += `<tr><td>${juguete}</td><td>${bodega[juguete].toFixed(2)}</td></tr>`;
+    for(let insumo in bodega) {
+        tabla.innerHTML += `
+            <tr>
+                <td>${insumo}</td>
+                <td>${bodega[insumo].unidad}</td>
+                <td>${bodega[insumo].existencia.toFixed(2)}</td>
+                <td>${bodega[insumo].ultimaCompra || 'N/A'}</td>
+                <td>${(bodega[insumo].usado || 0).toFixed(2)}</td>
+                <td>${(bodega[insumo].existencia - (bodega[insumo].usado || 0)).toFixed(2)}</td>
+            </tr>`;
     }
 }
 
+// 🛒 MODIFICAR LA FUNCIÓN DE COMPRA (para guardar fecha)
+function comprarInsumo() {
+    const insumo = document.getElementById('insumo').value;
+    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+    
+    if(!bodega[insumo]) {
+        bodega[insumo] = {
+            existencia: 0,
+            unidad: 'kg', // ◄ Puedes cambiar la unidad si quieres
+            usado: 0
+        };
+    }
+    
+    bodega[insumo].existencia += cantidad;
+    bodega[insumo].ultimaCompra = new Date().toLocaleDateString(); // 📅 Fecha actual
+    
+    actualizarBodega();
+}
+
+// ➖ MODIFICAR LA FUNCIÓN DE USAR INSUMOS (para restar)
+function usarInsumo() {
+    const insumo = document.getElementById('insumoUso').value;
+    const cantidad = parseFloat(document.getElementById('cantidadUso').value);
+    
+    if(bodega[insumo] && bodega[insumo].existencia >= cantidad) {
+        bodega[insumo].existencia -= cantidad;
+        bodega[insumo].usado = (bodega[insumo].usado || 0) + cantidad;
+        actualizarBodega();
+        alert(`✅ Usaste ${cantidad}${bodega[insumo].unidad} de ${insumo}`);
+    } else {
+        alert("🚨 ¡No hay suficiente en bodega!");
+    }
+}
 // 🌱 CALCULAR PLANTITAS (¡Aquí está la magia!)
 function calcularPlantas() {
     const area = parseFloat(document.getElementById('areaLote').value) || 0;
