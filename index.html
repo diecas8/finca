@@ -134,215 +134,40 @@
     <button onclick="usarInsumo()">➖ Usar</button>
 </div>
 
-<script>
-// 🧙♂️ VARIABLES MÁGICAS
-let actividades = [];
-let usandoInsumoEditIndex = -1;
-
-// 🎠 FUNCIONES NUEVAS
-function calcularTotal() {
-    let jornales = parseFloat(document.getElementById('jornales').value) || 0;
-    let valor = parseFloat(document.getElementById('valorJornal').value) || 0;
-    document.getElementById('totalActividad').value = (jornales * valor).toFixed(2);
-}
-
-function guardarActividad() {
-    let nuevaActividad = {
-        lote: document.getElementById('loteActividad').value,
-        fecha: document.getElementById('fechaActividad').value,
-        nombre: document.getElementById('nombreActividad').value,
-        jornales: document.getElementById('jornales').value,
-        valor: document.getElementById('valorJornal').value,
-        total: document.getElementById('totalActividad').value
-    };
-    
-    if(usandoInsumoEditIndex > -1) {
-        actividades[usandoInsumoEditIndex] = nuevaActividad; // ✏️ Editar
-        usandoInsumoEditIndex = -1;
-    } else {
-        actividades.push(nuevaActividad); // 🆕 Nueva
-    }
-    
-    actualizarActividades();
-}
-
-function actualizarActividades() {
-    let tabla = document.getElementById('tablaActividades');
-    tabla.innerHTML = '<tr><th>Lote</th><th>Actividad</th><th>Total</th><th>Acciones</th></tr>';
-    
-    actividades.forEach((act, index) => {
-        tabla.innerHTML += `
-            <tr>
-                <td>${act.lote}</td>
-                <td>${act.nombre}</td>
-                <td>$${act.total}</td>
-                <td>
-                    <button onclick="editarActividad(${index})">✏️</button>
-                    <button onclick="eliminarActividad(${index})">🗑️</button>
-                </td>
-            </tr>`;
-    });
-}
-
-function editarActividad(index) {
-    let act = actividades[index];
-    document.getElementById('loteActividad').value = act.lote;
-    document.getElementById('fechaActividad').value = act.fecha;
-    document.getElementById('nombreActividad').value = act.nombre;
-    document.getElementById('jornales').value = act.jornales;
-    document.getElementById('valorJornal').value = act.valor;
-    usandoInsumoEditIndex = index;
-}
-
-function eliminarActividad(index) {
-    if(confirm("¿Borrar esta actividad?")) {
-        actividades.splice(index, 1);
-        actualizarActividades();
-    }
-}
-
-// 🧪 FUNCIÓN PARA USAR INSUMOS
-function usarInsumo() {
-    let insumo = document.getElementById('insumoUso').value;
-    let cantidad = parseFloat(document.getElementById('cantidadUso').value);
-    
-    if(bodega[insumo] >= cantidad) {
-        bodega[insumo] -= cantidad;
-        alert(`✅ Usaste ${cantidad} de ${insumo}`);
-        actualizarBodega();
-    } else {
-        alert("🚨 ¡No hay suficiente en bodega!");
-    }
-}
-
-// 🎡 ACTUALIZAR LISTAS MÁGICAS
-function cargarInsumos() {
-    let select = document.getElementById('insumoUso');
-    select.innerHTML = '<option>Elige insumo</option>';
-    
-    for(let insumo in bodega) {
-        select.innerHTML += `<option>${insumo}</option>`;
-    }
-}
-
-// 🏁 INICIAR EL JUEGO
-window.onload = function() {
-    actualizarBodega();
-    cargarInsumos();
-};
-<script>
-// 🎉 NUESTRAS VARIABLES MÁGICAS
-let bodega = {};
-let lotes = [];
-
-// 🛒 FUNCIÓN PARA COMPRAR JUGUETES (INSUMOS)
-function comprarInsumo() {
-    const insumo = document.getElementById('insumo').value;
-    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
-    
-    if(bodega[insumo]) {
-        bodega[insumo] += cantidad; // Si ya tenemos, sumamos
-    } else {
-        bodega[insumo] = cantidad;  // Si no, creamos nuevo
-    }
-    
-    actualizarBodega();
-}
-
-// 🧹 FUNCIÓN MEJORADA PARA BODEGA
-function actualizarBodega() {
-    const tabla = document.getElementById('tablaBodega');
-    tabla.innerHTML = `
-        <tr>
-            <th>Insumo</th>
-            <th>Unidad</th>
-            <th>En Stock</th>
-            <th>Última Compra</th>
-            <th>Total Usado</th>
-            <th>Disponible</th>
-        </tr>`;
-    
-    for(let insumo in bodega) {
-        tabla.innerHTML += `
-            <tr>
-                <td>${insumo}</td>
-                <td>${bodega[insumo].unidad}</td>
-                <td>${bodega[insumo].existencia.toFixed(2)}</td>
-                <td>${bodega[insumo].ultimaCompra || 'N/A'}</td>
-                <td>${(bodega[insumo].usado || 0).toFixed(2)}</td>
-                <td>${(bodega[insumo].existencia - (bodega[insumo].usado || 0)).toFixed(2)}</td>
-            </tr>`;
-    }
-}
-
-// 🛒 MODIFICAR LA FUNCIÓN DE COMPRA (para guardar fecha)
-function comprarInsumo() {
-    const insumo = document.getElementById('insumo').value;
-    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
-    
-    if(!bodega[insumo]) {
-        bodega[insumo] = {
-            existencia: 0,
-            unidad: 'kg', // ◄ Puedes cambiar la unidad si quieres
-            usado: 0
+ <!-- ▼▼▼ PEGA AQUÍ EL NUEVO SCRIPT ▼▼▼ -->
+    <script>
+        // ▼▼▼ Variables Mágicas ▼▼▼
+        let datosFinca = {
+            nombre: "",
+            areaTotal: 0,
+            propietario: "",
+            vereda: "",
+            municipio: ""
         };
-    }
-    
-    bodega[insumo].existencia += cantidad;
-    bodega[insumo].ultimaCompra = new Date().toLocaleDateString(); // 📅 Fecha actual
-    
-    actualizarBodega();
-}
 
-// ➖ MODIFICAR LA FUNCIÓN DE USAR INSUMOS (para restar)
-function usarInsumo() {
-    const insumo = document.getElementById('insumoUso').value;
-    const cantidad = parseFloat(document.getElementById('cantidadUso').value);
-    
-    if(bodega[insumo] && bodega[insumo].existencia >= cantidad) {
-        bodega[insumo].existencia -= cantidad;
-        bodega[insumo].usado = (bodega[insumo].usado || 0) + cantidad;
-        actualizarBodega();
-        alert(`✅ Usaste ${cantidad}${bodega[insumo].unidad} de ${insumo}`);
-    } else {
-        alert("🚨 ¡No hay suficiente en bodega!");
-    }
-}
-// 🌟 FUNCIÓN MEJORADA PARA LOTES
-function calcularPlantas() {
-    let area = parseFloat(document.getElementById('areaLote').value) || 0;
-    let calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
-    let plantas = parseFloat(document.getElementById('distanciaPlantas').value) || 0;
-    
-    if(calles > 0 && plantas > 0) {
-        let densidad = 10000 / (calles * plantas); // ¡Mágia matemática!
-        document.getElementById('densidad').value = densidad.toFixed(2);
-        document.getElementById('numPlantas').value = (area * densidad).toFixed(0);
-    }
-}
+        // ▼▼▼ Función para Guardar ▼▼▼
+        function guardarFinca(event) {
+            event.preventDefault();
+            
+            datosFinca = {
+                nombre: document.getElementById('nombreFinca').value,
+                areaTotal: parseFloat(document.getElementById('areaTotal').value),
+                propietario: document.getElementById('propietario').value,
+                vereda: document.getElementById('vereda').value,
+                municipio: document.getElementById('municipio').value
+            };
+            
+            localStorage.setItem('datosFinca', JSON.stringify(datosFinca));
+            alert("✅ ¡Información guardada!");
+        }
 
-// 🚀 ACTUALIZAR ÁREA TOTAL DE CAFÉ
-function actualizarAreaTotal() {
-    let total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
-    document.getElementById('totalCafe').value = total.toFixed(2);
-}
-
-// 🎉 MODIFICAR LA FUNCIÓN GUARDAR LOTE
-function guardarLote() {
-    // ... (código anterior) ...
-    actualizarAreaTotal(); // ◄¡Nueva línea mágica!
-}
-    const nuevoLote = {
-        numero: document.getElementById('numLote').value,
-        area: document.getElementById('areaLote').value,
-        densidad: document.getElementById('densidad').value,
-        plantas: document.getElementById('numPlantas').value
-    };
-    
-    lotes.push(nuevoLote);
-    alert('✅ ¡Lote guardado!');
-}
-</script>
+        // ▼▼▼ Función Automática ▼▼▼
+        function actualizarAreaCafe() {
+            const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
+            document.getElementById('areaCafe').value = total.toFixed(2);
+        }
+    </script>
+    <!-- ▲▲▲ Fin del nuevo script ▲▲▲ -->
 
 </body>
 </html>
