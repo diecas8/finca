@@ -180,21 +180,27 @@ let usandoInsumoEditIndex = -1;
             document.getElementById('numPlantas').value = '';
         }
     }
-            // ▼▼▼ Guardar Lotes ▼▼▼
-    function guardarLote() {
-        const nuevoLote = {
-            numero: document.getElementById('numLote').value,
-            area: parseFloat(document.getElementById('areaLote').value),
-            distanciaCalles: parseFloat(document.getElementById('distanciaCalles').value),
-            distanciaPlantas: parseFloat(document.getElementById('distanciaPlantas').value),
-            densidad: document.getElementById('densidad').value,
-            numPlantas: document.getElementById('numPlantas').value
-        };
+           function guardarLote() {
+    // 🧙‍♂️ Capturamos los datos del lote
+    const nuevoLote = {
+        numero: document.getElementById('numLote').value,
+        area: parseFloat(document.getElementById('areaLote').value),
+        distanciaCalles: parseFloat(document.getElementById('distanciaCalles').value),
+        distanciaPlantas: parseFloat(document.getElementById('distanciaPlantas').value),
+        densidad: document.getElementById('densidad').value,
+        numPlantas: document.getElementById('numPlantas').value
+    };
 
-        lotes.push(nuevoLote);
-        actualizarAreaCafe(); // Actualiza el área total en café
-        alert("✅ ¡Lote guardado!");
-    }
+    // 🗄️ Guardamos en el "cofre del tesoro" (localStorage)
+    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || []; // Si no hay, crea uno vacío
+    lotesGuardados.push(nuevoLote); // Agregamos el nuevo lote
+    localStorage.setItem('lotes', JSON.stringify(lotesGuardados)); // Guardamos en el cofre
+
+    // 🎉 Mostramos mensaje y limpiamos el formulario
+    alert("✅ ¡Lote guardado!");
+    document.getElementById('loteForm').reset(); // Limpia los campos
+    actualizarAreaCafe(); // Actualiza el área total
+}
             // ▼▼▼ Comprar Insumos ▼▼▼
     function comprarInsumo() {
         const insumo = document.getElementById('insumo').value;
@@ -248,10 +254,15 @@ let usandoInsumoEditIndex = -1;
         }
     }
         // ▼▼▼ Cargar al Iniciar ▼▼▼
-    window.onload = function () {
-        actualizarBodega();
-        actualizarAreaCafe();
-    };
+   window.onload = function () {
+    // 🗄️ Cargamos los lotes del "cofre del tesoro"
+    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
+    lotes = lotesGuardados; // Los ponemos en la memoria
+
+    // 🎨 Actualizamos la interfaz
+    actualizarBodega();
+    actualizarAreaCafe();
+};
 </script>
 
 </body>
