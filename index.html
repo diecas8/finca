@@ -135,6 +135,9 @@
 </div>
 
     <script>
+        let bodega = {};
+let lotes = [];
+let usandoInsumoEditIndex = -1;
         let datosFinca = {
             nombre: "",
             areaTotal: 0,
@@ -162,7 +165,94 @@
             const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
             document.getElementById('areaCafe').value = total.toFixed(2);
         }
-    </script>
+            // ▼▼▼ Función Mágica de Cálculo ▼▼▼
+    function calcularPlantas() {
+        const area = parseFloat(document.getElementById('areaLote').value) || 0;
+        const calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
+        const plantas = parseFloat(document.getElementById('distanciaPlantas').value) || 0;
+        
+        if (calles > 0 && plantas > 0) {
+            const densidadCalculada = 10000 / (calles * plantas); // ✨ Fórmula mágica
+            document.getElementById('densidad').value = densidadCalculada.toFixed(2);
+            document.getElementById('numPlantas').value = (area * densidadCalculada).toFixed(0);
+        } else {
+            document.getElementById('densidad').value = '';
+            document.getElementById('numPlantas').value = '';
+        }
+    }
+            // ▼▼▼ Guardar Lotes ▼▼▼
+    function guardarLote() {
+        const nuevoLote = {
+            numero: document.getElementById('numLote').value,
+            area: parseFloat(document.getElementById('areaLote').value),
+            distanciaCalles: parseFloat(document.getElementById('distanciaCalles').value),
+            distanciaPlantas: parseFloat(document.getElementById('distanciaPlantas').value),
+            densidad: document.getElementById('densidad').value,
+            numPlantas: document.getElementById('numPlantas').value
+        };
+
+        lotes.push(nuevoLote);
+        actualizarAreaCafe(); // Actualiza el área total en café
+        alert("✅ ¡Lote guardado!");
+    }
+            // ▼▼▼ Comprar Insumos ▼▼▼
+    function comprarInsumo() {
+        const insumo = document.getElementById('insumo').value;
+        const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+
+        if (bodega[insumo]) {
+            bodega[insumo].existencia += cantidad; // Si ya existe, suma
+        } else {
+            bodega[insumo] = { existencia: cantidad, unidad: 'kg' }; // Si no, crea nuevo
+        }
+
+        actualizarBodega();
+        alert(`✅ ¡Agregados ${cantidad} kg de ${insumo}!`);
+    }
+            // ▼▼▼ Actualizar Bodega ▼▼▼
+    function actualizarBodega() {
+        const tabla = document.getElementById('tablaBodega');
+        tabla.innerHTML = `
+            <tr>
+                <th>Insumo</th>
+                <th>Unidad</th>
+                <th>En Stock</th>
+                <th>Última Compra</th>
+                <th>Total Usado</th>
+                <th>Disponible</th>
+            </tr>`;
+
+        for (let insumo in bodega) {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${insumo}</td>
+                    <td>${bodega[insumo].unidad}</td>
+                    <td>${bodega[insumo].existencia.toFixed(2)}</td>
+                    <td>${new Date().toLocaleDateString()}</td>
+                    <td>0.00</td>
+                    <td>${bodega[insumo].existencia.toFixed(2)}</td>
+                </tr>`;
+        }
+    }
+            // ▼▼▼ Usar Insumos ▼▼▼
+    function usarInsumo() {
+        const insumo = document.getElementById('insumoUso').value;
+        const cantidad = parseFloat(document.getElementById('cantidadUso').value);
+
+        if (bodega[insumo] && bodega[insumo].existencia >= cantidad) {
+            bodega[insumo].existencia -= cantidad;
+            actualizarBodega();
+            alert(`✅ ¡Usados ${cantidad} kg de ${insumo}!`);
+        } else {
+            alert("🚨 ¡No hay suficiente en bodega!");
+        }
+    }
+        // ▼▼▼ Cargar al Iniciar ▼▼▼
+    window.onload = function () {
+        actualizarBodega();
+        actualizarAreaCafe();
+    };
+</script>
 
 </body>
 </html>
