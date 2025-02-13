@@ -92,18 +92,18 @@
         <div class="columnas-magicas">
             <div>
                 <label>Número de lote:</label>
-                <input type="text" id="numLote" placeholder="Ej: Lote 1">
+                <input type="text" id="numLote" placeholder="Ej: Lote 1" required>
                 
                 <label>Área (hectáreas):</label>
-                <input type="number" step="0.01" id="areaLote" oninput="calcularPlantas()" placeholder="Ej: 1.50">
+                <input type="number" step="0.01" id="areaLote" oninput="calcularPlantas()" placeholder="Ej: 1.50" required>
                 
                 <label>Distancia entre calles (metros):</label>
-                <input type="number" step="0.01" id="distanciaCalles" oninput="calcularPlantas()" placeholder="Ej: 2.50">
+                <input type="number" step="0.01" id="distanciaCalles" oninput="calcularPlantas()" placeholder="Ej: 2.50" required>
             </div>
             
             <div>
                 <label>Distancia entre plantas (metros):</label>
-                <input type="number" step="0.01" id="distanciaPlantas" oninput="calcularPlantas()" placeholder="Ej: 1.20">
+                <input type="number" step="0.01" id="distanciaPlantas" oninput="calcularPlantas()" placeholder="Ej: 1.20" required>
                 
                 <label>Densidad (plantas/ha):</label>
                 <input type="text" id="densidad" readonly style="background: #e0f7fa;">
@@ -114,9 +114,8 @@
         </div>
         <button type="submit">💾 Guardar Lote</button>
     </form>
-</div>>
-
-<div class="seccion">
+</div>
+    <div class="seccion">
     <h2>📦 Usar Insumos en Lotes</h2>
     <select id="loteUso">
         <option>Elige un lote</option>
@@ -210,28 +209,23 @@ let usandoInsumoEditIndex = -1;
             const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
             document.getElementById('areaCafe').value = total.toFixed(2);
         }
-   function calcularPlantas() {
-    // 🧙‍♂️ Capturamos los valores del formulario
+ function calcularPlantas() {
     const area = parseFloat(document.getElementById('areaLote').value) || 0;
     const calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
     const plantas = parseFloat(document.getElementById('distanciaPlantas').value) || 0;
 
-    // 🚨 Validamos que las distancias no sean cero
     if (calles > 0 && plantas > 0) {
-        // ✨ Fórmula mágica de densidad (plantas por hectárea)
         const densidad = 10000 / (calles * plantas); // 10,000 m² = 1 hectárea
         document.getElementById('densidad').value = densidad.toFixed(2); // Mostrar con 2 decimales
 
-        // 🌱 Cálculo de plantas totales
         const totalPlantas = area * densidad;
         document.getElementById('numPlantas').value = Math.round(totalPlantas); // Redondeamos
     } else {
-        // 🧹 Si hay errores, limpiamos los campos
         document.getElementById('densidad').value = '';
         document.getElementById('numPlantas').value = '';
     }
 }
-        function guardarLote() {
+     function guardarLote() {
     // 🧙‍♂️ Capturamos los datos del lote
     const nuevoLote = {
         numero: document.getElementById('numLote').value,
@@ -252,7 +246,6 @@ let usandoInsumoEditIndex = -1;
     document.getElementById('loteForm').reset(); // Limpia los campos
     actualizarAreaCafe(); // Actualiza el área total
 }
-
     // 🗄️ Guardamos en el "cofre del tesoro" (localStorage)
     let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || []; // Si no hay, crea uno vacío
     lotesGuardados.push(nuevoLote); // Agregamos el nuevo lote
