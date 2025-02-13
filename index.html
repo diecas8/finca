@@ -208,7 +208,7 @@ let usandoInsumoEditIndex = -1;
             const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
             document.getElementById('areaCafe').value = total.toFixed(2);
         }
-           function calcularPlantas() {
+   function calcularPlantas() {
     // 🧙‍♂️ Capturamos los valores del formulario
     const area = parseFloat(document.getElementById('areaLote').value) || 0;
     const calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
@@ -218,7 +218,7 @@ let usandoInsumoEditIndex = -1;
     if (calles > 0 && plantas > 0) {
         // ✨ Fórmula mágica de densidad (plantas por hectárea)
         const densidad = 10000 / (calles * plantas); // 10,000 m² = 1 hectárea
-        document.getElementById('densidad').value = densidad.toFixed(2); // Mostramos con 2 decimales
+        document.getElementById('densidad').value = densidad.toFixed(2); // Mostrar con 2 decimales
 
         // 🌱 Cálculo de plantas totales
         const totalPlantas = area * densidad;
