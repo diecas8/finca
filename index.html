@@ -229,7 +229,7 @@ let usandoInsumoEditIndex = -1;
         document.getElementById('numPlantas').value = '';
     }
 }
-           function guardarLote() {
+          function guardarLote() {
     // 🧙‍♂️ Capturamos los datos del lote
     const nuevoLote = {
         numero: document.getElementById('numLote').value,
@@ -239,6 +239,17 @@ let usandoInsumoEditIndex = -1;
         densidad: document.getElementById('densidad').value,
         numPlantas: document.getElementById('numPlantas').value
     };
+
+    // 🗄️ Guardamos en el "cofre del tesoro" (localStorage)
+    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || []; // Si no hay, crea uno vacío
+    lotesGuardados.push(nuevoLote); // Agregamos el nuevo lote
+    localStorage.setItem('lotes', JSON.stringify(lotesGuardados)); // Guardamos en el cofre
+
+    // 🎉 Mostramos mensaje y limpiamos el formulario
+    alert("✅ ¡Lote guardado!");
+    document.getElementById('loteForm').reset(); // Limpia los campos
+    actualizarAreaCafe(); // Actualiza el área total
+}
 
     // 🗄️ Guardamos en el "cofre del tesoro" (localStorage)
     let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || []; // Si no hay, crea uno vacío
