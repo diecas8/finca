@@ -125,6 +125,57 @@
     <input type="number" step="0.01" id="cantidadUso" placeholder="Cantidad a usar">
     <button onclick="usarInsumo()">➖ Usar</button>
 </div>
+    <div class="seccion">
+    <h2>📊 Reporte de Lotes de Café</h2>
+    <button onclick="generarReporteLotes()">🖨️ Generar Reporte</button>
+    <table id="reporteLotes">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Área (ha)</th>
+                <th>Densidad (plantas/ha)</th>
+                <th>Total Plantas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenarán los datos -->
+        </tbody>
+    </table>
+</div>
+    <div class="seccion">
+    <h2>📊 Reporte de Insumos</h2>
+    <button onclick="generarReporteInsumos()">🖨️ Generar Reporte</button>
+    <table id="reporteInsumos">
+        <thead>
+            <tr>
+                <th>Insumo</th>
+                <th>Unidad</th>
+                <th>En Stock</th>
+                <th>Disponible</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenarán los datos -->
+        </tbody>
+    </table>
+</div>
+    <div class="seccion">
+    <h2>📊 Reporte de Actividades</h2>
+    <button onclick="generarReporteActividades()">🖨️ Generar Reporte</button>
+    <table id="reporteActividades">
+        <thead>
+            <tr>
+                <th>Lote</th>
+                <th>Actividad</th>
+                <th>Jornales</th>
+                <th>Costo Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se llenarán los datos -->
+        </tbody>
+    </table>
+</div>
 
     <script>
         let bodega = {};
@@ -261,6 +312,60 @@ let usandoInsumoEditIndex = -1;
     actualizarBodega();
     actualizarAreaCafe();
 };
+        function generarReporteLotes() {
+    const lotes = JSON.parse(localStorage.getItem('lotes')) || [];
+    const tbody = document.getElementById('reporteLotes').querySelector('tbody');
+    tbody.innerHTML = ''; // Limpiamos la tabla
+
+    lotes.forEach(lote => {
+        const fila = `
+            <tr>
+                <td>${lote.numero}</td>
+                <td>${lote.area}</td>
+                <td>${lote.densidad}</td>
+                <td>${lote.numPlantas}</td>
+            </tr>`;
+        tbody.innerHTML += fila;
+    });
+
+    alert("✅ Reporte generado");
+}
+        function generarReporteInsumos() {
+    const bodega = JSON.parse(localStorage.getItem('bodega')) || {};
+    const tbody = document.getElementById('reporteInsumos').querySelector('tbody');
+    tbody.innerHTML = ''; // Limpiamos la tabla
+
+    for (let insumo in bodega) {
+        const fila = `
+            <tr>
+                <td>${insumo}</td>
+                <td>${bodega[insumo].unidad}</td>
+                <td>${bodega[insumo].existencia.toFixed(2)}</td>
+                <td>${bodega[insumo].existencia.toFixed(2)}</td>
+            </tr>`;
+        tbody.innerHTML += fila;
+    }
+
+    alert("✅ Reporte generado");
+}
+        function generarReporteActividades() {
+    const actividades = JSON.parse(localStorage.getItem('actividades')) || [];
+    const tbody = document.getElementById('reporteActividades').querySelector('tbody');
+    tbody.innerHTML = ''; // Limpiamos la tabla
+
+    actividades.forEach(act => {
+        const fila = `
+            <tr>
+                <td>${act.lote}</td>
+                <td>${act.nombre}</td>
+                <td>${act.jornales}</td>
+                <td>${act.total}</td>
+            </tr>`;
+        tbody.innerHTML += fila;
+    });
+
+    alert("✅ Reporte generado");
+}
 </script>
 
 </body>
