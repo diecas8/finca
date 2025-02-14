@@ -328,7 +328,7 @@ function calcularPlantas() {
                 </tr>`;
         }
     }
-        function cargarDatos() {
+       function cargarDatos() {
     // 🗄️ Cargamos los lotes guardados
     const lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
     const selectLote = document.getElementById('loteUso');
@@ -353,7 +353,7 @@ function calcularPlantas() {
         selectInsumo.appendChild(option);
     }
 }
-          <div class="seccion">
+         <div class="seccion">
     <h2>📦 Usar Insumos en Lotes</h2>
     <form id="usoInsumoForm" onsubmit="usarInsumo(event)">
         <div class="columnas-magicas">
@@ -475,7 +475,7 @@ function calcularPlantas() {
         alert("🚨 ¡No hay suficiente en bodega!");
     }
 }
-        window.onload = function () {
+       window.onload = function () {
     cargarDatos(); // Cargamos los datos al iniciar
     actualizarBodega(); // Actualizamos la tabla de bodega
     actualizarAreaCafe(); // Actualizamos el área total en café
