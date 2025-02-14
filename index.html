@@ -328,7 +328,32 @@ function calcularPlantas() {
                 </tr>`;
         }
     }
-           <div class="seccion">
+        function cargarDatos() {
+    // 🗄️ Cargamos los lotes guardados
+    const lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
+    const selectLote = document.getElementById('loteUso');
+    selectLote.innerHTML = '<option value="">Elige un lote</option>'; // Limpiamos el selector
+    
+    lotesGuardados.forEach(lote => {
+        const option = document.createElement('option');
+        option.value = lote.numero;
+        option.textContent = `Lote ${lote.numero}`;
+        selectLote.appendChild(option);
+    });
+
+    // 🗄️ Cargamos los insumos guardados
+    const bodegaGuardada = JSON.parse(localStorage.getItem('bodega')) || {};
+    const selectInsumo = document.getElementById('insumoUso');
+    selectInsumo.innerHTML = '<option value="">Elige insumo</option>'; // Limpiamos el selector
+    
+    for (let insumo in bodegaGuardada) {
+        const option = document.createElement('option');
+        option.value = insumo;
+        option.textContent = `${insumo} (${bodegaGuardada[insumo].existencia} ${bodegaGuardada[insumo].unidad})`;
+        selectInsumo.appendChild(option);
+    }
+}
+          <div class="seccion">
     <h2>📦 Usar Insumos en Lotes</h2>
     <form id="usoInsumoForm" onsubmit="usarInsumo(event)">
         <div class="columnas-magicas">
@@ -450,6 +475,11 @@ function calcularPlantas() {
         alert("🚨 ¡No hay suficiente en bodega!");
     }
 }
+        window.onload = function () {
+    cargarDatos(); // Cargamos los datos al iniciar
+    actualizarBodega(); // Actualizamos la tabla de bodega
+    actualizarAreaCafe(); // Actualizamos el área total en café
+};
 </script>
 
 </body>
