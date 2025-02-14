@@ -225,7 +225,7 @@ let usandoInsumoEditIndex = -1;
         document.getElementById('numPlantas').value = '';
     }
 }
-     function guardarLote() {
+    function guardarLote() {
     // 🧙‍♂️ Capturamos los datos del lote
     const nuevoLote = {
         numero: document.getElementById('numLote').value,
@@ -246,6 +246,11 @@ let usandoInsumoEditIndex = -1;
     document.getElementById('loteForm').reset(); // Limpia los campos
     actualizarAreaCafe(); // Actualiza el área total
 }
+    // 🎉 Mostramos mensaje y limpiamos el formulario
+    alert("✅ ¡Lote guardado!");
+    document.getElementById('loteForm').reset(); // Limpia los campos
+    actualizarAreaCafe(); // Actualiza el área total
+}
     // 🗄️ Guardamos en el "cofre del tesoro" (localStorage)
     let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || []; // Si no hay, crea uno vacío
     lotesGuardados.push(nuevoLote); // Agregamos el nuevo lote
@@ -256,20 +261,20 @@ let usandoInsumoEditIndex = -1;
     document.getElementById('loteForm').reset(); // Limpia los campos
     actualizarAreaCafe(); // Actualiza el área total
 }
-            // ▼▼▼ Comprar Insumos ▼▼▼
-    function comprarInsumo() {
-        const insumo = document.getElementById('insumo').value;
-        const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+            function comprarInsumo() {
+    const insumo = document.getElementById('insumo').value;
+    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
 
-        if (bodega[insumo]) {
-            bodega[insumo].existencia += cantidad; // Si ya existe, suma
-        } else {
-            bodega[insumo] = { existencia: cantidad, unidad: 'kg' }; // Si no, crea nuevo
-        }
-
-        actualizarBodega();
-        alert(`✅ ¡Agregados ${cantidad} kg de ${insumo}!`);
+    if (bodega[insumo]) {
+        bodega[insumo].existencia += cantidad; // Si ya existe, suma
+    } else {
+        bodega[insumo] = { existencia: cantidad, unidad: 'kg' }; // Si no, crea nuevo
     }
+
+    localStorage.setItem('bodega', JSON.stringify(bodega)); // Guardamos en el cofre
+    actualizarBodega(); // Actualizamos la tabla
+    alert(`✅ ¡Agregados ${cantidad} kg de ${insumo}!`);
+}
             // ▼▼▼ Actualizar Bodega ▼▼▼
     function actualizarBodega() {
         const tabla = document.getElementById('tablaBodega');
@@ -308,6 +313,22 @@ let usandoInsumoEditIndex = -1;
             alert("🚨 ¡No hay suficiente en bodega!");
         }
     }
+        function guardarActividad() {
+    const nuevaActividad = {
+        lote: document.getElementById('loteActividad').value,
+        fecha: document.getElementById('fechaActividad').value,
+        nombre: document.getElementById('nombreActividad').value,
+        jornales: document.getElementById('jornales').value,
+        valor: document.getElementById('valorJornal').value,
+        total: document.getElementById('totalActividad').value
+    };
+
+    let actividadesGuardadas = JSON.parse(localStorage.getItem('actividades')) || [];
+    actividadesGuardadas.push(nuevaActividad);
+    localStorage.setItem('actividades', JSON.stringify(actividadesGuardadas));
+
+    alert("✅ ¡Actividad guardada!");
+}
         // ▼▼▼ Cargar al Iniciar ▼▼▼
    window.onload = function () {
     // 🗄️ Cargamos los lotes del "cofre del tesoro"
