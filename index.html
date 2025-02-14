@@ -119,7 +119,7 @@
         </div>
         <button type="submit">💾 Guardar Lote</button>
     </form>
-</div>   
+</div>
     <div class="seccion">
     <h2>📦 Usar Insumos en Lotes</h2>
     <select id="loteUso">
@@ -245,7 +245,7 @@ let usandoInsumoEditIndex = -1;
             const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
             document.getElementById('areaCafe').value = total.toFixed(2);
         }
- function calcularPlantas() {
+function calcularPlantas() {
     const area = parseFloat(document.getElementById('areaLote').value) || 0;
     const calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
     const plantas = parseFloat(document.getElementById('distanciaPlantas').value) || 0;
@@ -261,9 +261,10 @@ let usandoInsumoEditIndex = -1;
         document.getElementById('numPlantas').value = '';
     }
 }
-    function guardarLote(event) {
-    event.preventDefault();
+   function guardarLote(event) {
+    event.preventDefault(); // Evita que el formulario se recargue
     
+    // 🧙‍♂️ Capturamos los datos del lote
     const nuevoLote = {
         numero: document.getElementById('numLote').value,
         area: parseFloat(document.getElementById('areaLote').value),
@@ -273,13 +274,15 @@ let usandoInsumoEditIndex = -1;
         numPlantas: document.getElementById('numPlantas').value
     };
 
-    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
-    lotesGuardados.push(nuevoLote);
-    localStorage.setItem('lotes', JSON.stringify(lotesGuardados));
+    // 🗄️ Guardamos en el "cofre del tesoro" (localStorage)
+    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || []; // Si no hay, crea uno vacío
+    lotesGuardados.push(nuevoLote); // Agregamos el nuevo lote
+    localStorage.setItem('lotes', JSON.stringify(lotesGuardados)); // Guardamos en el cofre
 
+    // 🎉 Mostramos mensaje y limpiamos el formulario
     alert("✅ ¡Lote guardado!");
-    document.getElementById('loteForm').reset();
-    actualizarAreaCafe();
+    document.getElementById('loteForm').reset(); // Limpia los campos
+    actualizarAreaCafe(); // Actualiza el área total
 }
            function comprarInsumo(event) {
     event.preventDefault();
@@ -325,19 +328,30 @@ let usandoInsumoEditIndex = -1;
                 </tr>`;
         }
     }
-            // ▼▼▼ Usar Insumos ▼▼▼
-    function usarInsumo() {
-        const insumo = document.getElementById('insumoUso').value;
-        const cantidad = parseFloat(document.getElementById('cantidadUso').value);
-
-        if (bodega[insumo] && bodega[insumo].existencia >= cantidad) {
-            bodega[insumo].existencia -= cantidad;
-            actualizarBodega();
-            alert(`✅ ¡Usados ${cantidad} kg de ${insumo}!`);
-        } else {
-            alert("🚨 ¡No hay suficiente en bodega!");
-        }
-    }
+           <div class="seccion">
+    <h2>📦 Usar Insumos en Lotes</h2>
+    <form id="usoInsumoForm" onsubmit="usarInsumo(event)">
+        <div class="columnas-magicas">
+            <div>
+                <label>Lote:</label>
+                <select id="loteUso" required>
+                    <option value="">Elige un lote</option>
+                </select>
+                
+                <label>Insumo:</label>
+                <select id="insumoUso" required>
+                    <option value="">Elige insumo</option>
+                </select>
+            </div>
+            
+            <div>
+                <label>Cantidad a usar:</label>
+                <input type="number" step="0.01" id="cantidadUso" required>
+            </div>
+        </div>
+        <button type="submit">➖ Usar</button>
+    </form>
+</div>
        function guardarActividad(event) {
     event.preventDefault();
     
@@ -420,6 +434,21 @@ let usandoInsumoEditIndex = -1;
     });
 
     alert("✅ Reporte generado");
+}
+        function usarInsumo(event) {
+    event.preventDefault();
+    
+    const lote = document.getElementById('loteUso').value;
+    const insumo = document.getElementById('insumoUso').value;
+    const cantidad = parseFloat(document.getElementById('cantidadUso').value);
+
+    if (bodega[insumo] && bodega[insumo].existencia >= cantidad) {
+        bodega[insumo].existencia -= cantidad;
+        localStorage.setItem('bodega', JSON.stringify(bodega)); // Actualizamos la bodega
+        alert(`✅ ¡Usados ${cantidad} kg de ${insumo} en el lote ${lote}!`);
+    } else {
+        alert("🚨 ¡No hay suficiente en bodega!");
+    }
 }
 </script>
 
