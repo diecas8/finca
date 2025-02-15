@@ -195,75 +195,106 @@
         });
     }
 
-    // Función para comprar insumos
-    function comprarInsumo() {
-        const insumo = document.getElementById('insumo').value;
-        const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
-        const unidad = document.getElementById('unidadInsumo').value;
+  function comprarInsumo() {
+    const insumo = document.getElementById('insumo').value;
+    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+    const unidad = document.getElementById('unidadInsumo').value;
 
-        if (!insumo || cantidad <= 0 || !unidad) {
-            alert("🚨 ¡Por favor completa todos los campos!");
-            return;
-        }
-
-        if (bodega[insumo]) {
-            bodega[insumo].existencia += cantidad;
-        } else {
-            bodega[insumo] = { existencia: cantidad, unidad: unidad };
-        }
-
-        localStorage.setItem('bodega', JSON.stringify(bodega));
-        actualizarBodega();
-        alert(`✅ ¡${cantidad} ${unidad} de ${insumo} agregados a la bodega!`);
+    // Verificamos que todos los campos sean válidos
+    if (!insumo || cantidad <= 0 || !unidad) {
+        alert("🚨 ¡Por favor completa todos los campos!");
+        return;
     }
 
-    // Función para actualizar la bodega
+    // Si el insumo ya existe, actualizamos la cantidad
+    if (bodega[insumo]) {
+        bodega[insumo].existencia += cantidad;
+    } else {
+        // Si no existe, lo agregamos a la bodega
+        bodega[insumo] = { existencia: cantidad, unidad: unidad };
+    }
+
+    // Guardamos la bodega actualizada en localStorage
+    localStorage.setItem('bodega', JSON.stringify(bodega));
+
+    // Actualizamos la tabla de la bodega
+    actualizarBodega();
+
+    // Actualizamos el desplegable de insumos
+    actualizarListaInsumos();
+
+    // Confirmación
+    alert(`✅ ¡${cantidad} ${unidad} de ${insumo} agregados a la bodega!`);
+}
     function actualizarBodega() {
-        const tabla = document.getElementById('tablaBodega');
-        tabla.innerHTML = `
+    const tabla = document.getElementById('tablaBodega');
+    tabla.innerHTML = `
+        <tr>
+            <th>Insumo</th>
+            <th>Unidad</th>
+            <th>En Stock</th>
+            <th>Última Compra</th>
+        </tr>`;  // Encabezado de la tabla
+
+    // Mostrar los insumos en la bodega
+    for (let insumo in bodega) {
+        tabla.innerHTML += `
             <tr>
-                <th>Insumo</th>
-                <th>Unidad</th>
-                <th>En Stock</th>
-                <th>Última Compra</th>
+                <td>${insumo}</td>
+                <td>${bodega[insumo].unidad}</td>
+                <td>${bodega[insumo].existencia.toFixed(2)}</td>
+                <td>${new Date().toLocaleDateString()}</td>
             </tr>`;
-        
-        for (let insumo in bodega) {
-            tabla.innerHTML += `
-                <tr>
-                    <td>${insumo}</td>
-                    <td>${bodega[insumo].unidad}</td>
-                    <td>${bodega[insumo].existencia}</td>
-                    <td>${new Date().toLocaleDateString()}</td>
-                </tr>`;
-        }
     }
+}
+
+function actualizarListaInsumos() {
+    const selectInsumos = document.getElementById('insumoUso');
+    selectInsumos.innerHTML = `<option>Elige un insumo</option>`;  // Opción predeterminada
+
+    // Recuperamos los insumos desde la bodega
+    for (let insumo in bodega) {
+        const option = document.createElement('option');
+        option.value = insumo;
+        option.textContent = insumo;  // Mostramos el nombre del insumo
+        selectInsumos.appendChild(option);  // Agregamos la opción al select
+    }
+}
 
     // Función para usar insumo
     function usarInsumo() {
-        const loteSeleccionado = document.getElementById('loteUso').value;
-        const insumoSeleccionado = document.getElementById('insumoUso').value;
-        const cantidad = parseFloat(document.getElementById('cantidadUso').value);
+    const loteSeleccionado = document.getElementById('loteUso').value;
+    const insumoSeleccionado = document.getElementById('insumoUso').value;
+    const cantidad = parseFloat(document.getElementById('cantidadUso').value);
 
-        if (!loteSeleccionado || !insumoSeleccionado || cantidad <= 0) {
-            alert("🚨 ¡Por favor selecciona un lote, insumo y cantidad válida!");
-            return;
-        }
-
-        if (bodega[insumoSeleccionado] && bodega[insumoSeleccionado].existencia >= cantidad) {
-            bodega[insumoSeleccionado].existencia -= cantidad;
-            localStorage.setItem('bodega', JSON.stringify(bodega));
-            actualizarBodega();
-            alert(`✅ ¡${cantidad} de ${insumoSeleccionado} usados en el Lote ${loteSeleccionado}!`);
-        } else {
-            alert("🚨 ¡No hay suficiente cantidad de este insumo en la bodega!");
-        }
+    // Verificamos que todo esté correcto
+    if (!loteSeleccionado || !insumoSeleccionado || cantidad <= 0) {
+        alert("🚨 ¡Por favor, selecciona un lote, un insumo y una cantidad válida!");
+        return;
     }
+
+    // Verificamos si el insumo existe y si hay suficiente cantidad
+    if (bodega[insumoSeleccionado] && bodega[insumoSeleccionado].existencia >= cantidad) {
+        // Restamos la cantidad usada de la bodega
+        bodega[insumoSeleccionado].existencia -= cantidad;
+
+        // Guardamos la bodega actualizada
+        localStorage.setItem('bodega', JSON.stringify(bodega));
+
+        // Actualizamos la bodega y la tabla
+        actualizarBodega();
+        alert(`✅ ¡${cantidad} de ${insumoSeleccionado} usados en el Lote ${loteSeleccionado}!`);
+    } else {
+        alert("🚨 ¡No tienes suficiente cantidad de este insumo en la bodega!");
+    }
+}
+
 
     // Cargar la información al inicio
     window.onload = function() {
         actualizarListaLotes();
-        actualizarBodega();
+        actualizarBodega();       // Cargar la bodega con los insumos
+    actualizarListaInsumos(); // Cargar los insumos al desplegable
     };
 </script>
 
