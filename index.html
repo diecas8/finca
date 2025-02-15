@@ -105,6 +105,15 @@
         <button type="button" onclick="guardarLote()">💾 Guardar Lote</button>
     </form>
 </div>
+<div class="seccion">
+    <h2>🛒 Comprar Insumos</h2>
+    <input type="text" id="insumo" placeholder="Nombre del insumo" required>
+    <input type="number" step="0.01" id="cantidadCompra" placeholder="Cantidad" required>
+    <input type="number" step="0.01" id="valorUnitario" placeholder="Valor Unitario (por unidad)" required>
+    <input type="text" id="valorTotal" placeholder="Valor Total" readonly>
+
+    <button onclick="comprarInsumo()">🛒 Agregar</button>
+</div>
 
 <div class="seccion">
     <h2>📦 Usar Insumos en Lotes</h2>
@@ -120,13 +129,6 @@
     <button onclick="usarInsumo()">➖ Usar</button>
 </div>
 
-<div class="seccion">
-    <h2>🛒 Comprar Insumos</h2>
-    <input type="text" id="insumo" placeholder="Nombre del insumo" required>
-    <input type="number" step="0.01" id="cantidadCompra" placeholder="Cantidad" required>
-    <input type="text" id="unidadInsumo" placeholder="Unidad (ej. kg)" required>
-    <button onclick="comprarInsumo()">🛒 Agregar</button>
-</div>
 
 <div class="seccion">
     <h2>📦 Bodega de Insumos</h2>
@@ -141,161 +143,108 @@
 </div>
 
 <script>
-    // Inicialización de variables
+   <script>
     let bodega = JSON.parse(localStorage.getItem('bodega')) || {};
     let lotes = JSON.parse(localStorage.getItem('lotes')) || [];
 
-    // Función para guardar la finca
-    document.getElementById('fincaForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const finca = {
-            nombre: document.getElementById('nombreFinca').value,
-            areaTotal: parseFloat(document.getElementById('areaTotal').value),
-            propietario: document.getElementById('propietario').value,
-            vereda: document.getElementById('vereda').value,
-            municipio: document.getElementById('municipio').value
-        };
-        localStorage.setItem('finca', JSON.stringify(finca));
-        alert('✅ ¡Finca guardada!');
-    });
+    // Función para calcular el valor total
+    document.getElementById('cantidadCompra').addEventListener('input', calcularValorTotal);
+    document.getElementById('valorUnitario').addEventListener('input', calcularValorTotal);
 
-    // Función para guardar el lote
-    function guardarLote() {
-        const numeroLote = document.getElementById('numLote').value;
-        const area = parseFloat(document.getElementById('areaLote').value);
-        const distanciaCalles = parseFloat(document.getElementById('distanciaCalles').value);
-        const distanciaPlantas = parseFloat(document.getElementById('distanciaPlantas').value);
-        const densidad = (10000 / (distanciaCalles * distanciaPlantas)).toFixed(2); // Cálculo de densidad
-        const numPlantas = Math.round(area * densidad);
+    function calcularValorTotal() {
+        const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+        const valorUnitario = parseFloat(document.getElementById('valorUnitario').value);
 
-        const nuevoLote = { numero: numeroLote, area, distanciaCalles, distanciaPlantas, densidad, numPlantas };
-        
-        // Asegurarnos de que lotes sea un array
-        if (!Array.isArray(lotes)) {
-            lotes = [];
+        if (!isNaN(cantidad) && !isNaN(valorUnitario)) {
+            const valorTotal = cantidad * valorUnitario;
+            document.getElementById('valorTotal').value = valorTotal.toFixed(2); // Mostrar el valor total con 2 decimales
+        } else {
+            document.getElementById('valorTotal').value = ''; // Limpiar el campo si falta algún valor
+        }
+    }
+
+    // Función para comprar insumo
+    function comprarInsumo() {
+        const insumo = document.getElementById('insumo').value;
+        const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+        const valorUnitario = parseFloat(document.getElementById('valorUnitario').value);
+        const valorTotal = parseFloat(document.getElementById('valorTotal').value);
+        const unidad = document.getElementById('unidadInsumo').value;
+
+        // Verificamos que todos los campos sean válidos
+        if (!insumo || cantidad <= 0 || !unidad || valorUnitario <= 0 || isNaN(valorTotal)) {
+            alert("🚨 ¡Por favor completa todos los campos!");
+            return;
         }
 
-        lotes.push(nuevoLote);
-        localStorage.setItem('lotes', JSON.stringify(lotes));
-        actualizarListaLotes();
-        alert("✅ ¡Lote guardado!");
-        document.getElementById('loteForm').reset();
-    }
+        // Si el insumo ya existe, actualizamos la cantidad y el valor total
+        if (bodega[insumo]) {
+            bodega[insumo].existencia += cantidad;
+            bodega[insumo].valorTotal += valorTotal;
+        } else {
+            // Si no existe, lo agregamos a la bodega
+            bodega[insumo] = { existencia: cantidad, unidad: unidad, valorTotal: valorTotal };
+        }
 
-    // Función para actualizar la lista de lotes en el select
-    function actualizarListaLotes() {
-        const selectLotes = document.getElementById('loteUso');
-        selectLotes.innerHTML = `<option>Elige un lote</option>`;
-        
-        lotes.forEach(lote => {
-            const option = document.createElement('option');
-            option.value = lote.numero;
-            option.textContent = `Lote ${lote.numero}`;
-            selectLotes.appendChild(option);
-        });
-    }
-
-  function comprarInsumo() {
-    const insumo = document.getElementById('insumo').value;
-    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
-    const unidad = document.getElementById('unidadInsumo').value;
-
-    // Verificamos que todos los campos sean válidos
-    if (!insumo || cantidad <= 0 || !unidad) {
-        alert("🚨 ¡Por favor completa todos los campos!");
-        return;
-    }
-
-    // Si el insumo ya existe, actualizamos la cantidad
-    if (bodega[insumo]) {
-        bodega[insumo].existencia += cantidad;
-    } else {
-        // Si no existe, lo agregamos a la bodega
-        bodega[insumo] = { existencia: cantidad, unidad: unidad };
-    }
-
-    // Guardamos la bodega actualizada en localStorage
-    localStorage.setItem('bodega', JSON.stringify(bodega));
-
-    // Actualizamos la tabla de la bodega
-    actualizarBodega();
-
-    // Actualizamos el desplegable de insumos
-    actualizarListaInsumos();
-
-    // Confirmación
-    alert(`✅ ¡${cantidad} ${unidad} de ${insumo} agregados a la bodega!`);
-}
-    function actualizarBodega() {
-    const tabla = document.getElementById('tablaBodega');
-    tabla.innerHTML = `
-        <tr>
-            <th>Insumo</th>
-            <th>Unidad</th>
-            <th>En Stock</th>
-            <th>Última Compra</th>
-        </tr>`;  // Encabezado de la tabla
-
-    // Mostrar los insumos en la bodega
-    for (let insumo in bodega) {
-        tabla.innerHTML += `
-            <tr>
-                <td>${insumo}</td>
-                <td>${bodega[insumo].unidad}</td>
-                <td>${bodega[insumo].existencia.toFixed(2)}</td>
-                <td>${new Date().toLocaleDateString()}</td>
-            </tr>`;
-    }
-}
-
-function actualizarListaInsumos() {
-    const selectInsumos = document.getElementById('insumoUso');
-    selectInsumos.innerHTML = `<option>Elige un insumo</option>`;  // Opción predeterminada
-
-    // Recuperamos los insumos desde la bodega
-    for (let insumo in bodega) {
-        const option = document.createElement('option');
-        option.value = insumo;
-        option.textContent = insumo;  // Mostramos el nombre del insumo
-        selectInsumos.appendChild(option);  // Agregamos la opción al select
-    }
-}
-
-    // Función para usar insumo
-    function usarInsumo() {
-    const loteSeleccionado = document.getElementById('loteUso').value;
-    const insumoSeleccionado = document.getElementById('insumoUso').value;
-    const cantidad = parseFloat(document.getElementById('cantidadUso').value);
-
-    // Verificamos que todo esté correcto
-    if (!loteSeleccionado || !insumoSeleccionado || cantidad <= 0) {
-        alert("🚨 ¡Por favor, selecciona un lote, un insumo y una cantidad válida!");
-        return;
-    }
-
-    // Verificamos si el insumo existe y si hay suficiente cantidad
-    if (bodega[insumoSeleccionado] && bodega[insumoSeleccionado].existencia >= cantidad) {
-        // Restamos la cantidad usada de la bodega
-        bodega[insumoSeleccionado].existencia -= cantidad;
-
-        // Guardamos la bodega actualizada
+        // Guardamos la bodega actualizada en localStorage
         localStorage.setItem('bodega', JSON.stringify(bodega));
 
-        // Actualizamos la bodega y la tabla
+        // Actualizamos la tabla de la bodega
         actualizarBodega();
-        alert(`✅ ¡${cantidad} de ${insumoSeleccionado} usados en el Lote ${loteSeleccionado}!`);
-    } else {
-        alert("🚨 ¡No tienes suficiente cantidad de este insumo en la bodega!");
-    }
-}
 
+        // Actualizamos el desplegable de insumos
+        actualizarListaInsumos();
+
+        // Confirmación
+        alert(`✅ ¡${cantidad} ${unidad} de ${insumo} agregados a la bodega! Valor Total: ${valorTotal.toFixed(2)}`);
+    }
+
+    // Función para actualizar la tabla de la bodega
+    function actualizarBodega() {
+        const tabla = document.getElementById('tablaBodega');
+        tabla.innerHTML = `
+            <tr>
+                <th>Insumo</th>
+                <th>Unidad</th>
+                <th>En Stock</th>
+                <th>Última Compra</th>
+                <th>Valor Total</th>
+            </tr>`;  // Encabezado de la tabla
+
+        // Mostrar los insumos en la bodega
+        for (let insumo in bodega) {
+            tabla.innerHTML += `
+                <tr>
+                    <td>${insumo}</td>
+                    <td>${bodega[insumo].unidad}</td>
+                    <td>${bodega[insumo].existencia.toFixed(2)}</td>
+                    <td>${new Date().toLocaleDateString()}</td>
+                    <td>${bodega[insumo].valorTotal.toFixed(2)}</td>
+                </tr>`;
+        }
+    }
+
+    // Función para actualizar la lista de insumos
+    function actualizarListaInsumos() {
+        const selectInsumos = document.getElementById('insumoUso');
+        selectInsumos.innerHTML = `<option>Elige un insumo</option>`;  // Opción predeterminada
+
+        // Recuperamos los insumos desde la bodega
+        for (let insumo in bodega) {
+            const option = document.createElement('option');
+            option.value = insumo;
+            option.textContent = insumo;  // Mostramos el nombre del insumo
+            selectInsumos.appendChild(option);  // Agregamos la opción al select
+        }
+    }
 
     // Cargar la información al inicio
     window.onload = function() {
-        actualizarListaLotes();
+        actualizarListaLotes();   // Cargar los lotes al cargar la página
         actualizarBodega();       // Cargar la bodega con los insumos
-    actualizarListaInsumos(); // Cargar los insumos al desplegable
+        actualizarListaInsumos(); // Cargar los insumos al desplegable
     };
+
 </script>
 
 </body>
