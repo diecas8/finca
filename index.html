@@ -254,8 +254,8 @@ let usandoInsumoEditIndex = -1;
         document.getElementById('numPlantas').value = '';
     }
 }
-           function guardarLote() {
-    // Obtenemos los valores del formulario
+function guardarLote() {
+    // Obtener los datos del formulario
     const numeroLote = document.getElementById('numLote').value;
     const area = parseFloat(document.getElementById('areaLote').value);
     const distanciaCalles = parseFloat(document.getElementById('distanciaCalles').value);
@@ -263,13 +263,13 @@ let usandoInsumoEditIndex = -1;
     const densidad = document.getElementById('densidad').value;
     const numPlantas = document.getElementById('numPlantas').value;
 
-    // Validamos si los campos son válidos
+    // Verificar si todos los campos son válidos
     if (!numeroLote || isNaN(area) || isNaN(distanciaCalles) || isNaN(distanciaPlantas) || isNaN(densidad) || isNaN(numPlantas)) {
         alert("🚨 ¡Por favor, completa todos los campos correctamente!");
         return;
     }
 
-    // Creamos un objeto con los datos del lote
+    // Crear el nuevo lote con los datos del formulario
     const nuevoLote = {
         numero: numeroLote,
         area: area,
@@ -279,24 +279,23 @@ let usandoInsumoEditIndex = -1;
         numPlantas: numPlantas
     };
 
-    // Recuperamos los lotes ya guardados en el localStorage
-    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
+    // Obtener los lotes guardados en localStorage, asegurándonos que sea un array
+    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];  // Si no hay lotes, usamos un array vacío
 
-    // Añadimos el nuevo lote a la lista
+    // Añadir el nuevo lote a la lista
     lotesGuardados.push(nuevoLote);
 
-    // Guardamos la lista actualizada de lotes
+    // Guardar los lotes actualizados de nuevo en localStorage
     localStorage.setItem('lotes', JSON.stringify(lotesGuardados));
 
-    // Actualizamos la lista de lotes en la página
+    // Actualizar la lista de lotes en la página
     actualizarListaLotes();
 
-    // Mostramos mensaje de éxito
-    alert("✅ ¡Lote guardado exitosamente!");
-
-    // Limpiamos el formulario
-    document.getElementById('loteForm').reset();
+    // Mostrar mensaje de éxito y limpiar el formulario
+    alert("✅ ¡Lote guardado correctamente!");
+    document.getElementById('loteForm').reset();  // Limpiar formulario
 }
+
 
             // ▼▼▼ Comprar Insumos ▼▼▼
    function comprarInsumo() {
@@ -343,22 +342,24 @@ let usandoInsumoEditIndex = -1;
                 </tr>`;
         }
     }
-      function actualizarListaLotes() {
-    // Obtenemos el elemento select donde se van a mostrar los lotes
+    function actualizarListaLotes() {
     const selectLotes = document.getElementById('loteUso');
-    
-    // Limpiamos el select para evitar duplicados
-    selectLotes.innerHTML = `<option>Elige un lote</option>`;  // Esta opción es por defecto
-    
-    // Recuperamos los lotes guardados desde localStorage
-    const lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
+    selectLotes.innerHTML = `<option>Elige un lote</option>`;  // Añadir opción por defecto
 
-    // Añadimos cada lote al select
+    // Recuperar los lotes guardados, si no hay, devolver un array vacío
+    let lotesGuardados = JSON.parse(localStorage.getItem('lotes'));
+    
+    // Verificamos si lotesGuardados es un array, si no es, inicializamos uno vacío
+    if (!Array.isArray(lotesGuardados)) {
+        lotesGuardados = [];
+    }
+
+    // Recorrer los lotes y añadirlos al select
     lotesGuardados.forEach(lote => {
         const option = document.createElement('option');
-        option.value = lote.numero;  // Número del lote
-        option.textContent = `Lote ${lote.numero}`;  // Mostramos "Lote 1", "Lote 2", etc.
-        selectLotes.appendChild(option);  // Agregamos la opción al select
+        option.value = lote.numero;  // Asignar el número del lote como valor
+        option.textContent = `Lote ${lote.numero}`;  // Mostrar como "Lote 1", "Lote 2", etc.
+        selectLotes.appendChild(option);  // Añadir la opción al select
     });
 }
 
