@@ -255,26 +255,44 @@ let usandoInsumoEditIndex = -1;
     }
 }
            function guardarLote() {
-    // 🧙‍♂️ Capturamos los datos del lote
+    // Capturamos los datos del lote
+    const numeroLote = document.getElementById('numLote').value;
+    const area = parseFloat(document.getElementById('areaLote').value);
+    const distanciaCalles = parseFloat(document.getElementById('distanciaCalles').value);
+    const distanciaPlantas = parseFloat(document.getElementById('distanciaPlantas').value);
+    const densidad = document.getElementById('densidad').value;
+    const numPlantas = document.getElementById('numPlantas').value;
+
+    if (!numeroLote || area <= 0 || distanciaCalles <= 0 || distanciaPlantas <= 0) {
+        alert("🚨 ¡Todos los campos deben ser completos y con valores válidos!");
+        return;
+    }
+
+    // Creamos el nuevo lote
     const nuevoLote = {
-        numero: document.getElementById('numLote').value,
-        area: parseFloat(document.getElementById('areaLote').value),
-        distanciaCalles: parseFloat(document.getElementById('distanciaCalles').value),
-        distanciaPlantas: parseFloat(document.getElementById('distanciaPlantas').value),
-        densidad: document.getElementById('densidad').value,
-        numPlantas: document.getElementById('numPlantas').value
+        numero: numeroLote,
+        area: area,
+        distanciaCalles: distanciaCalles,
+        distanciaPlantas: distanciaPlantas,
+        densidad: densidad,
+        numPlantas: numPlantas
     };
 
-    // 🗄️ Guardamos en el "cofre del tesoro" (localStorage)
-    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || []; // Si no hay, crea uno vacío
-    lotesGuardados.push(nuevoLote); // Agregamos el nuevo lote
-    localStorage.setItem('lotes', JSON.stringify(lotesGuardados)); // Guardamos en el cofre
+    // Recuperamos los lotes guardados y agregamos el nuevo lote
+    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
+    lotesGuardados.push(nuevoLote);
 
-    // 🎉 Mostramos mensaje y limpiamos el formulario
+    // Guardamos los lotes en localStorage
+    localStorage.setItem('lotes', JSON.stringify(lotesGuardados));
+
+    // Actualizamos la lista de lotes para seleccionarlos más tarde
+    actualizarListaLotes();
+
+    // Mensaje de éxito y limpieza de los campos
     alert("✅ ¡Lote guardado!");
-    document.getElementById('loteForm').reset(); // Limpia los campos
-    actualizarAreaCafe(); // Actualiza el área total
+    document.getElementById('loteForm').reset();  // Limpia el formulario
 }
+
             // ▼▼▼ Comprar Insumos ▼▼▼
    function comprarInsumo() {
     const insumo = document.getElementById('insumo').value;
@@ -320,26 +338,42 @@ let usandoInsumoEditIndex = -1;
                 </tr>`;
         }
     }
-            // ▼▼▼ Usar Insumos ▼▼▼
-    function usarInsumo() {
-    const insumo = document.getElementById('insumoUso').value;
+        function actualizarListaLotes() {
+    const selectLotes = document.getElementById('loteUso');
+    selectLotes.innerHTML = `<option>Elige un lote</option>`;  // Agrega una opción por defecto
+
+    // Recuperamos los lotes del localStorage
+    const lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
+
+    // Agregamos los lotes al select
+    lotesGuardados.forEach(lote => {
+        const option = document.createElement('option');
+        option.value = lote.numero;  // Número del lote
+        option.textContent = `Lote ${lote.numero}`;  // Muestra como "Lote 1", "Lote 2", etc.
+        selectLotes.appendChild(option);
+    });
+}
+
+   function usarInsumo() {
+    const loteSeleccionado = document.getElementById('loteUso').value;
+    const insumoSeleccionado = document.getElementById('insumoUso').value;
     const cantidad = parseFloat(document.getElementById('cantidadUso').value);
 
-    if (!insumo || cantidad <= 0) {
-        alert("🚨 ¡Debes ingresar un insumo y una cantidad válida!");
+    if (!loteSeleccionado || !insumoSeleccionado || cantidad <= 0) {
+        alert("🚨 ¡Por favor selecciona un lote, insumo y una cantidad válida!");
         return;
     }
 
-    if (bodega[insumo] && bodega[insumo].existencia >= cantidad) {
-        bodega[insumo].existencia -= cantidad;
+    // Verificar si hay suficiente insumo
+    if (bodega[insumoSeleccionado] && bodega[insumoSeleccionado].existencia >= cantidad) {
+        bodega[insumoSeleccionado].existencia -= cantidad;
         actualizarBodega();
-        alert(`✅ ¡Usados ${cantidad} kg de ${insumo}!`);
+        alert(`✅ ¡${cantidad} kg de ${insumoSeleccionado} usados en el Lote ${loteSeleccionado}!`);
     } else {
         alert("🚨 ¡No tienes suficiente cantidad de este insumo en bodega!");
     }
 }
 
-        // ▼▼▼ Cargar al Iniciar ▼▼▼
    window.onload = function () {
     // 🗄️ Cargamos los lotes del "cofre del tesoro"
     let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
@@ -415,6 +449,11 @@ let usandoInsumoEditIndex = -1;
 
     alert("✅ Reporte generado");
 }
+        window.onload = function () {
+    actualizarListaLotes();  // Actualizamos la lista de lotes
+    actualizarBodega();  // Aseguramos que los insumos también se actualicen
+};
+
 </script>
 
 </body>
