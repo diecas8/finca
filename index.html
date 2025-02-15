@@ -8,29 +8,48 @@
         .seccion { background: #e0f7fa; padding: 20px; margin: 10px; border-radius: 10px; }
         input, button { margin: 5px; padding: 8px; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #4CAF50; padding: 8px; }
-    </style>
 <head>
     <title>Finca Café Mágico 🌱</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        .seccion { background: #e0f7fa; padding: 20px; margin: 10px; border-radius: 10px; }
-        
-        .columnas-magicas {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            color: #333;
         }
 
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            color: #2e7d32;
-            font-weight: bold;
+        .seccion {
+            background-color: #e0f7fa;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        
-        input, button { margin: 5px; padding: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        input:focus, select:focus {
+            border-color: #4CAF50;
+        }
     </style>
 </head>
 
@@ -190,19 +209,25 @@ let usandoInsumoEditIndex = -1;
         };
 
         function guardarFinca(event) {
-            event.preventDefault();
-            
-            datosFinca = {
-                nombre: document.getElementById('nombreFinca').value,
-                areaTotal: parseFloat(document.getElementById('areaTotal').value),
-                propietario: document.getElementById('propietario').value,
-                vereda: document.getElementById('vereda').value,
-                municipio: document.getElementById('municipio').value
-            };
-            
-            localStorage.setItem('datosFinca', JSON.stringify(datosFinca));
-            alert("✅ ¡Información guardada!");
-        }
+    event.preventDefault();
+    
+    const nombre = document.getElementById('nombreFinca').value;
+    const areaTotal = parseFloat(document.getElementById('areaTotal').value);
+    const propietario = document.getElementById('propietario').value;
+    const vereda = document.getElementById('vereda').value;
+    const municipio = document.getElementById('municipio').value;
+
+    if (!nombre || !areaTotal || !propietario || !vereda || !municipio) {
+        alert("🚨 ¡Todos los campos deben ser llenados!");
+        return; // Detenemos la función si falta algo
+    }
+
+    // Guardamos la finca
+    datosFinca = { nombre, areaTotal, propietario, vereda, municipio };
+    localStorage.setItem('datosFinca', JSON.stringify(datosFinca));
+    alert("✅ ¡Información de la finca guardada!");
+}
+
 
         function actualizarAreaCafe() {
             const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
@@ -251,19 +276,25 @@ let usandoInsumoEditIndex = -1;
     actualizarAreaCafe(); // Actualiza el área total
 }
             // ▼▼▼ Comprar Insumos ▼▼▼
-    function comprarInsumo() {
-        const insumo = document.getElementById('insumo').value;
-        const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+   function comprarInsumo() {
+    const insumo = document.getElementById('insumo').value;
+    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
 
-        if (bodega[insumo]) {
-            bodega[insumo].existencia += cantidad; // Si ya existe, suma
-        } else {
-            bodega[insumo] = { existencia: cantidad, unidad: 'kg' }; // Si no, crea nuevo
-        }
-
-        actualizarBodega();
-        alert(`✅ ¡Agregados ${cantidad} kg de ${insumo}!`);
+    if (!insumo || cantidad <= 0) {
+        alert("🚨 ¡Debes ingresar un insumo y una cantidad válida!");
+        return;
     }
+
+    if (bodega[insumo]) {
+        bodega[insumo].existencia += cantidad;
+    } else {
+        bodega[insumo] = { existencia: cantidad, unidad: 'kg' };
+    }
+
+    actualizarBodega();
+    alert(`✅ ¡Agregados ${cantidad} kg de ${insumo}!`);
+}
+
             // ▼▼▼ Actualizar Bodega ▼▼▼
     function actualizarBodega() {
         const tabla = document.getElementById('tablaBodega');
@@ -291,17 +322,23 @@ let usandoInsumoEditIndex = -1;
     }
             // ▼▼▼ Usar Insumos ▼▼▼
     function usarInsumo() {
-        const insumo = document.getElementById('insumoUso').value;
-        const cantidad = parseFloat(document.getElementById('cantidadUso').value);
+    const insumo = document.getElementById('insumoUso').value;
+    const cantidad = parseFloat(document.getElementById('cantidadUso').value);
 
-        if (bodega[insumo] && bodega[insumo].existencia >= cantidad) {
-            bodega[insumo].existencia -= cantidad;
-            actualizarBodega();
-            alert(`✅ ¡Usados ${cantidad} kg de ${insumo}!`);
-        } else {
-            alert("🚨 ¡No hay suficiente en bodega!");
-        }
+    if (!insumo || cantidad <= 0) {
+        alert("🚨 ¡Debes ingresar un insumo y una cantidad válida!");
+        return;
     }
+
+    if (bodega[insumo] && bodega[insumo].existencia >= cantidad) {
+        bodega[insumo].existencia -= cantidad;
+        actualizarBodega();
+        alert(`✅ ¡Usados ${cantidad} kg de ${insumo}!`);
+    } else {
+        alert("🚨 ¡No tienes suficiente cantidad de este insumo en bodega!");
+    }
+}
+
         // ▼▼▼ Cargar al Iniciar ▼▼▼
    window.onload = function () {
     // 🗄️ Cargamos los lotes del "cofre del tesoro"
@@ -312,10 +349,15 @@ let usandoInsumoEditIndex = -1;
     actualizarBodega();
     actualizarAreaCafe();
 };
-        function generarReporteLotes() {
+      function generarReporteLotes() {
     const lotes = JSON.parse(localStorage.getItem('lotes')) || [];
     const tbody = document.getElementById('reporteLotes').querySelector('tbody');
     tbody.innerHTML = ''; // Limpiamos la tabla
+
+    if (lotes.length === 0) {
+        alert("🚨 No hay lotes guardados para mostrar.");
+        return;
+    }
 
     lotes.forEach(lote => {
         const fila = `
@@ -328,12 +370,18 @@ let usandoInsumoEditIndex = -1;
         tbody.innerHTML += fila;
     });
 
-    alert("✅ Reporte generado");
+    alert("✅ ¡Reporte de lotes generado!");
 }
-        function generarReporteInsumos() {
+
+       function generarReporteInsumos() {
     const bodega = JSON.parse(localStorage.getItem('bodega')) || {};
     const tbody = document.getElementById('reporteInsumos').querySelector('tbody');
     tbody.innerHTML = ''; // Limpiamos la tabla
+
+    if (Object.keys(bodega).length === 0) {
+        alert("🚨 No hay insumos guardados para mostrar.");
+        return;
+    }
 
     for (let insumo in bodega) {
         const fila = `
@@ -346,8 +394,9 @@ let usandoInsumoEditIndex = -1;
         tbody.innerHTML += fila;
     }
 
-    alert("✅ Reporte generado");
+    alert("✅ ¡Reporte de insumos generado!");
 }
+
         function generarReporteActividades() {
     const actividades = JSON.parse(localStorage.getItem('actividades')) || [];
     const tbody = document.getElementById('reporteActividades').querySelector('tbody');
