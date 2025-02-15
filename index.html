@@ -1,14 +1,8 @@
-<!-- Esto es como tu cuaderno mágico ✨ -->
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Finca Café Mágico 🌱</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        .seccion { background: #e0f7fa; padding: 20px; margin: 10px; border-radius: 10px; }
-        input, button { margin: 5px; padding: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finca Café Mágico 🌱</title>
     <style>
         body {
@@ -50,87 +44,66 @@
         input:focus, select:focus {
             border-color: #4CAF50;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #4CAF50;
+        }
     </style>
 </head>
+<body>
 
 <div class="seccion">
     <h2>📋 Información de la Finca</h2>
-    <form onsubmit="guardarFinca(event)">
-        <div class="columnas-magicas">
-            <div>
-                <label>Nombre de la finca:</label>
-                <input type="text" id="nombreFinca" required>
-                
-                <label>Área total (hectáreas):</label>
-                <input type="number" step="0.01" id="areaTotal" required>
-                
-                <label>Propietario:</label>
-                <input type="text" id="propietario" required>
-            </div>
-            
-            <div>
-                <label>Vereda:</label>
-                <input type="text" id="vereda" required>
-                
-                <label>Municipio:</label>
-                <input type="text" id="municipio" required>
-                
-                <label>Área en café (auto):</label>
-                <input type="number" step="0.01" id="areaCafe" readonly>
-            </div>
-        </div>
-        <button type="submit">💾 Guardar</button>
+    <form id="fincaForm">
+        <label for="nombreFinca">Nombre de la finca:</label>
+        <input type="text" id="nombreFinca" required>
+
+        <label for="areaTotal">Área total (hectáreas):</label>
+        <input type="number" step="0.01" id="areaTotal" required>
+
+        <label for="propietario">Propietario:</label>
+        <input type="text" id="propietario" required>
+
+        <label for="vereda">Vereda:</label>
+        <input type="text" id="vereda" required>
+
+        <label for="municipio">Municipio:</label>
+        <input type="text" id="municipio" required>
+
+        <button type="submit">💾 Guardar Finca</button>
     </form>
 </div>
 
 <div class="seccion">
-    <h2>🛒 Compras de Insumos</h2>
-    <input type="date" id="fechaCompra">
-    <input type="text" id="insumo" placeholder="Nombre del insumo">
-    <input type="number" step="0.01" id="cantidadCompra" placeholder="Cantidad">
-    <button onclick="comprarInsumo()">🛒 Agregar</button>
-</div>
-
-<div class="seccion">
-    <h2>📦 Bodega de Insumos (Mejorada)</h2>
-    <table id="tablaBodega">
-        <tr>
-            <th>Insumo</th>
-            <th>Unidad</th>
-            <th>En Stock</th>
-            <th>Última Compra</th>
-            <th>Total Usado</th>
-            <th>Disponible</th>
-        </tr>
-    </table>
-</div>
-
-<div class="seccion">
     <h2>🌱 Lotes de Café</h2>
-    <div class="columnas-magicas">
-        <div>
-            <label>Número de lote:</label>
-            <input type="text" id="numLote" placeholder="Ej: Lote 1">
-            
-            <label>Área (hectáreas):</label>
-            <input type="number" step="0.01" id="areaLote" oninput="calcularPlantas()" placeholder="Ej: 1.50">
-            
-            <label>Distancia entre calles (metros):</label>
-            <input type="number" step="0.01" id="distanciaCalles" oninput="calcularPlantas()" placeholder="Ej: 2.50">
-        </div>
-        
-        <div>
-            <label>Distancia entre plantas (metros):</label>
-            <input type="number" step="0.01" id="distanciaPlantas" oninput="calcularPlantas()" placeholder="Ej: 1.20">
-            
-            <label>Densidad (plantas/ha):</label>
-            <input type="text" id="densidad" readonly style="background: #e0f7fa;">
-            
-            <label>Total de plantas:</label>
-            <input type="text" id="numPlantas" readonly style="background: #e0f7fa;">
-        </div>
-    </div>
-    <button onclick="guardarLote()">💾 Guardar Lote</button>
+    <form id="loteForm">
+        <label for="numLote">Número de lote:</label>
+        <input type="text" id="numLote" required>
+
+        <label for="areaLote">Área (hectáreas):</label>
+        <input type="number" step="0.01" id="areaLote" required>
+
+        <label for="distanciaCalles">Distancia entre calles (metros):</label>
+        <input type="number" step="0.01" id="distanciaCalles" required>
+
+        <label for="distanciaPlantas">Distancia entre plantas (metros):</label>
+        <input type="number" step="0.01" id="distanciaPlantas" required>
+
+        <label for="densidad">Densidad (plantas/ha):</label>
+        <input type="text" id="densidad" readonly>
+
+        <label for="numPlantas">Total de plantas:</label>
+        <input type="text" id="numPlantas" readonly>
+
+        <button type="button" onclick="guardarLote()">💾 Guardar Lote</button>
+    </form>
 </div>
 
 <div class="seccion">
@@ -138,186 +111,113 @@
     <select id="loteUso">
         <option>Elige un lote</option>
     </select>
+
     <select id="insumoUso">
-        <option>Elige insumo</option>
+        <option>Elige un insumo</option>
     </select>
+
     <input type="number" step="0.01" id="cantidadUso" placeholder="Cantidad a usar">
     <button onclick="usarInsumo()">➖ Usar</button>
 </div>
-    <div class="seccion">
-    <h2>📊 Reporte de Lotes de Café</h2>
-    <button onclick="generarReporteLotes()">🖨️ Generar Reporte</button>
-    <table id="reporteLotes">
-        <thead>
-            <tr>
-                <th>Número</th>
-                <th>Área (ha)</th>
-                <th>Densidad (plantas/ha)</th>
-                <th>Total Plantas</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Aquí se llenarán los datos -->
-        </tbody>
-    </table>
+
+<div class="seccion">
+    <h2>🛒 Comprar Insumos</h2>
+    <input type="text" id="insumo" placeholder="Nombre del insumo" required>
+    <input type="number" step="0.01" id="cantidadCompra" placeholder="Cantidad" required>
+    <input type="text" id="unidadInsumo" placeholder="Unidad (ej. kg)" required>
+    <button onclick="comprarInsumo()">🛒 Agregar</button>
 </div>
-    <div class="seccion">
-    <h2>📊 Reporte de Insumos</h2>
-    <button onclick="generarReporteInsumos()">🖨️ Generar Reporte</button>
-    <table id="reporteInsumos">
-        <thead>
-            <tr>
-                <th>Insumo</th>
-                <th>Unidad</th>
-                <th>En Stock</th>
-                <th>Disponible</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Aquí se llenarán los datos -->
-        </tbody>
-    </table>
-</div>
-    <div class="seccion">
-    <h2>📊 Reporte de Actividades</h2>
-    <button onclick="generarReporteActividades()">🖨️ Generar Reporte</button>
-    <table id="reporteActividades">
-        <thead>
-            <tr>
-                <th>Lote</th>
-                <th>Actividad</th>
-                <th>Jornales</th>
-                <th>Costo Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Aquí se llenarán los datos -->
-        </tbody>
+
+<div class="seccion">
+    <h2>📦 Bodega de Insumos</h2>
+    <table id="tablaBodega">
+        <tr>
+            <th>Insumo</th>
+            <th>Unidad</th>
+            <th>En Stock</th>
+            <th>Última Compra</th>
+        </tr>
     </table>
 </div>
 
-    <script>
-        let bodega = {};
-let lotes = [];
-let usandoInsumoEditIndex = -1;
-        let datosFinca = {
-            nombre: "",
-            areaTotal: 0,
-            propietario: "",
-            vereda: "",
-            municipio: ""
+<script>
+    // Inicialización de variables
+    let bodega = JSON.parse(localStorage.getItem('bodega')) || {};
+    let lotes = JSON.parse(localStorage.getItem('lotes')) || [];
+
+    // Función para guardar la finca
+    document.getElementById('fincaForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const finca = {
+            nombre: document.getElementById('nombreFinca').value,
+            areaTotal: parseFloat(document.getElementById('areaTotal').value),
+            propietario: document.getElementById('propietario').value,
+            vereda: document.getElementById('vereda').value,
+            municipio: document.getElementById('municipio').value
         };
+        localStorage.setItem('finca', JSON.stringify(finca));
+        alert('✅ ¡Finca guardada!');
+    });
 
-        function guardarFinca(event) {
-    event.preventDefault();
-    
-    const nombre = document.getElementById('nombreFinca').value;
-    const areaTotal = parseFloat(document.getElementById('areaTotal').value);
-    const propietario = document.getElementById('propietario').value;
-    const vereda = document.getElementById('vereda').value;
-    const municipio = document.getElementById('municipio').value;
+    // Función para guardar el lote
+    function guardarLote() {
+        const numeroLote = document.getElementById('numLote').value;
+        const area = parseFloat(document.getElementById('areaLote').value);
+        const distanciaCalles = parseFloat(document.getElementById('distanciaCalles').value);
+        const distanciaPlantas = parseFloat(document.getElementById('distanciaPlantas').value);
+        const densidad = (10000 / (distanciaCalles * distanciaPlantas)).toFixed(2); // Cálculo de densidad
+        const numPlantas = Math.round(area * densidad);
 
-    if (!nombre || !areaTotal || !propietario || !vereda || !municipio) {
-        alert("🚨 ¡Todos los campos deben ser llenados!");
-        return; // Detenemos la función si falta algo
-    }
-
-    // Guardamos la finca
-    datosFinca = { nombre, areaTotal, propietario, vereda, municipio };
-    localStorage.setItem('datosFinca', JSON.stringify(datosFinca));
-    alert("✅ ¡Información de la finca guardada!");
-}
-
-
-        function actualizarAreaCafe() {
-            const total = lotes.reduce((sum, lote) => sum + parseFloat(lote.area), 0);
-            document.getElementById('areaCafe').value = total.toFixed(2);
+        const nuevoLote = { numero: numeroLote, area, distanciaCalles, distanciaPlantas, densidad, numPlantas };
+        
+        // Asegurarnos de que lotes sea un array
+        if (!Array.isArray(lotes)) {
+            lotes = [];
         }
-           function calcularPlantas() {
-    // 🧙‍♂️ Capturamos los valores del formulario
-    const area = parseFloat(document.getElementById('areaLote').value) || 0;
-    const calles = parseFloat(document.getElementById('distanciaCalles').value) || 0;
-    const plantas = parseFloat(document.getElementById('distanciaPlantas').value) || 0;
 
-    // 🚨 Validamos que las distancias no sean cero
-    if (calles > 0 && plantas > 0) {
-        // ✨ Fórmula mágica de densidad (plantas por hectárea)
-        const densidad = 10000 / (calles * plantas); // 10,000 m² = 1 hectárea
-        document.getElementById('densidad').value = densidad.toFixed(2); // Mostramos con 2 decimales
-
-        // 🌱 Cálculo de plantas totales
-        const totalPlantas = area * densidad;
-        document.getElementById('numPlantas').value = Math.round(totalPlantas); // Redondeamos
-    } else {
-        // 🧹 Si hay errores, limpiamos los campos
-        document.getElementById('densidad').value = '';
-        document.getElementById('numPlantas').value = '';
-    }
-}
-function guardarLote() {
-    // Obtener los datos del formulario
-    const numeroLote = document.getElementById('numLote').value;
-    const area = parseFloat(document.getElementById('areaLote').value);
-    const distanciaCalles = parseFloat(document.getElementById('distanciaCalles').value);
-    const distanciaPlantas = parseFloat(document.getElementById('distanciaPlantas').value);
-    const densidad = document.getElementById('densidad').value;
-    const numPlantas = document.getElementById('numPlantas').value;
-
-    // Verificar si todos los campos son válidos
-    if (!numeroLote || isNaN(area) || isNaN(distanciaCalles) || isNaN(distanciaPlantas) || isNaN(densidad) || isNaN(numPlantas)) {
-        alert("🚨 ¡Por favor, completa todos los campos correctamente!");
-        return;
+        lotes.push(nuevoLote);
+        localStorage.setItem('lotes', JSON.stringify(lotes));
+        actualizarListaLotes();
+        alert("✅ ¡Lote guardado!");
+        document.getElementById('loteForm').reset();
     }
 
-    // Crear el nuevo lote con los datos del formulario
-    const nuevoLote = {
-        numero: numeroLote,
-        area: area,
-        distanciaCalles: distanciaCalles,
-        distanciaPlantas: distanciaPlantas,
-        densidad: densidad,
-        numPlantas: numPlantas
-    };
-
-    // Obtener los lotes guardados en localStorage, asegurándonos que sea un array
-    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];  // Si no hay lotes, usamos un array vacío
-
-    // Añadir el nuevo lote a la lista
-    lotesGuardados.push(nuevoLote);
-
-    // Guardar los lotes actualizados de nuevo en localStorage
-    localStorage.setItem('lotes', JSON.stringify(lotesGuardados));
-
-    // Actualizar la lista de lotes en la página
-    actualizarListaLotes();
-
-    // Mostrar mensaje de éxito y limpiar el formulario
-    alert("✅ ¡Lote guardado correctamente!");
-    document.getElementById('loteForm').reset();  // Limpiar formulario
-}
-
-
-            // ▼▼▼ Comprar Insumos ▼▼▼
-   function comprarInsumo() {
-    const insumo = document.getElementById('insumo').value;
-    const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
-
-    if (!insumo || cantidad <= 0) {
-        alert("🚨 ¡Debes ingresar un insumo y una cantidad válida!");
-        return;
+    // Función para actualizar la lista de lotes en el select
+    function actualizarListaLotes() {
+        const selectLotes = document.getElementById('loteUso');
+        selectLotes.innerHTML = `<option>Elige un lote</option>`;
+        
+        lotes.forEach(lote => {
+            const option = document.createElement('option');
+            option.value = lote.numero;
+            option.textContent = `Lote ${lote.numero}`;
+            selectLotes.appendChild(option);
+        });
     }
 
-    if (bodega[insumo]) {
-        bodega[insumo].existencia += cantidad;
-    } else {
-        bodega[insumo] = { existencia: cantidad, unidad: 'kg' };
+    // Función para comprar insumos
+    function comprarInsumo() {
+        const insumo = document.getElementById('insumo').value;
+        const cantidad = parseFloat(document.getElementById('cantidadCompra').value);
+        const unidad = document.getElementById('unidadInsumo').value;
+
+        if (!insumo || cantidad <= 0 || !unidad) {
+            alert("🚨 ¡Por favor completa todos los campos!");
+            return;
+        }
+
+        if (bodega[insumo]) {
+            bodega[insumo].existencia += cantidad;
+        } else {
+            bodega[insumo] = { existencia: cantidad, unidad: unidad };
+        }
+
+        localStorage.setItem('bodega', JSON.stringify(bodega));
+        actualizarBodega();
+        alert(`✅ ¡${cantidad} ${unidad} de ${insumo} agregados a la bodega!`);
     }
 
-    actualizarBodega();
-    alert(`✅ ¡Agregados ${cantidad} kg de ${insumo}!`);
-}
-
-            // ▼▼▼ Actualizar Bodega ▼▼▼
+    // Función para actualizar la bodega
     function actualizarBodega() {
         const tabla = document.getElementById('tablaBodega');
         tabla.innerHTML = `
@@ -326,144 +226,45 @@ function guardarLote() {
                 <th>Unidad</th>
                 <th>En Stock</th>
                 <th>Última Compra</th>
-                <th>Total Usado</th>
-                <th>Disponible</th>
             </tr>`;
-
+        
         for (let insumo in bodega) {
             tabla.innerHTML += `
                 <tr>
                     <td>${insumo}</td>
                     <td>${bodega[insumo].unidad}</td>
-                    <td>${bodega[insumo].existencia.toFixed(2)}</td>
+                    <td>${bodega[insumo].existencia}</td>
                     <td>${new Date().toLocaleDateString()}</td>
-                    <td>0.00</td>
-                    <td>${bodega[insumo].existencia.toFixed(2)}</td>
                 </tr>`;
         }
     }
-    function actualizarListaLotes() {
-    const selectLotes = document.getElementById('loteUso');
-    selectLotes.innerHTML = `<option>Elige un lote</option>`;  // Añadir opción por defecto
 
-    // Recuperar los lotes guardados, si no hay, devolver un array vacío
-    let lotesGuardados = JSON.parse(localStorage.getItem('lotes'));
-    
-    // Verificamos si lotesGuardados es un array, si no es, inicializamos uno vacío
-    if (!Array.isArray(lotesGuardados)) {
-        lotesGuardados = [];
+    // Función para usar insumo
+    function usarInsumo() {
+        const loteSeleccionado = document.getElementById('loteUso').value;
+        const insumoSeleccionado = document.getElementById('insumoUso').value;
+        const cantidad = parseFloat(document.getElementById('cantidadUso').value);
+
+        if (!loteSeleccionado || !insumoSeleccionado || cantidad <= 0) {
+            alert("🚨 ¡Por favor selecciona un lote, insumo y cantidad válida!");
+            return;
+        }
+
+        if (bodega[insumoSeleccionado] && bodega[insumoSeleccionado].existencia >= cantidad) {
+            bodega[insumoSeleccionado].existencia -= cantidad;
+            localStorage.setItem('bodega', JSON.stringify(bodega));
+            actualizarBodega();
+            alert(`✅ ¡${cantidad} de ${insumoSeleccionado} usados en el Lote ${loteSeleccionado}!`);
+        } else {
+            alert("🚨 ¡No hay suficiente cantidad de este insumo en la bodega!");
+        }
     }
 
-    // Recorrer los lotes y añadirlos al select
-    lotesGuardados.forEach(lote => {
-        const option = document.createElement('option');
-        option.value = lote.numero;  // Asignar el número del lote como valor
-        option.textContent = `Lote ${lote.numero}`;  // Mostrar como "Lote 1", "Lote 2", etc.
-        selectLotes.appendChild(option);  // Añadir la opción al select
-    });
-}
-
-
-  function usarInsumo() {
-    const loteSeleccionado = document.getElementById('loteUso').value;
-    const insumoSeleccionado = document.getElementById('insumoUso').value;
-    const cantidad = parseFloat(document.getElementById('cantidadUso').value);
-
-    // Validamos que el lote, el insumo y la cantidad sean correctos
-    if (!loteSeleccionado || !insumoSeleccionado || cantidad <= 0) {
-        alert("🚨 ¡Por favor, selecciona un lote, un insumo y una cantidad válida!");
-        return;
-    }
-
-    // Verificamos si hay suficiente cantidad de insumo
-    if (bodega[insumoSeleccionado] && bodega[insumoSeleccionado].existencia >= cantidad) {
-        bodega[insumoSeleccionado].existencia -= cantidad;
-        actualizarBodega();  // Actualizamos la bodega con el nuevo stock
-        alert(`✅ ¡${cantidad} kg de ${insumoSeleccionado} usados en el Lote ${loteSeleccionado}!`);
-    } else {
-        alert("🚨 ¡No tienes suficiente cantidad de este insumo en la bodega!");
-    }
-}
-   window.onload = function () {
-    // 🗄️ Cargamos los lotes del "cofre del tesoro"
-    let lotesGuardados = JSON.parse(localStorage.getItem('lotes')) || [];
-    lotes = lotesGuardados; // Los ponemos en la memoria
-
-    // 🎨 Actualizamos la interfaz
-    actualizarBodega();
-    actualizarAreaCafe();
-};
-      function generarReporteLotes() {
-    const lotes = JSON.parse(localStorage.getItem('lotes')) || [];
-    const tbody = document.getElementById('reporteLotes').querySelector('tbody');
-    tbody.innerHTML = ''; // Limpiamos la tabla
-
-    if (lotes.length === 0) {
-        alert("🚨 No hay lotes guardados para mostrar.");
-        return;
-    }
-
-    lotes.forEach(lote => {
-        const fila = `
-            <tr>
-                <td>${lote.numero}</td>
-                <td>${lote.area}</td>
-                <td>${lote.densidad}</td>
-                <td>${lote.numPlantas}</td>
-            </tr>`;
-        tbody.innerHTML += fila;
-    });
-
-    alert("✅ ¡Reporte de lotes generado!");
-}
-
-       function generarReporteInsumos() {
-    const bodega = JSON.parse(localStorage.getItem('bodega')) || {};
-    const tbody = document.getElementById('reporteInsumos').querySelector('tbody');
-    tbody.innerHTML = ''; // Limpiamos la tabla
-
-    if (Object.keys(bodega).length === 0) {
-        alert("🚨 No hay insumos guardados para mostrar.");
-        return;
-    }
-
-    for (let insumo in bodega) {
-        const fila = `
-            <tr>
-                <td>${insumo}</td>
-                <td>${bodega[insumo].unidad}</td>
-                <td>${bodega[insumo].existencia.toFixed(2)}</td>
-                <td>${bodega[insumo].existencia.toFixed(2)}</td>
-            </tr>`;
-        tbody.innerHTML += fila;
-    }
-
-    alert("✅ ¡Reporte de insumos generado!");
-}
-
-        function generarReporteActividades() {
-    const actividades = JSON.parse(localStorage.getItem('actividades')) || [];
-    const tbody = document.getElementById('reporteActividades').querySelector('tbody');
-    tbody.innerHTML = ''; // Limpiamos la tabla
-
-    actividades.forEach(act => {
-        const fila = `
-            <tr>
-                <td>${act.lote}</td>
-                <td>${act.nombre}</td>
-                <td>${act.jornales}</td>
-                <td>${act.total}</td>
-            </tr>`;
-        tbody.innerHTML += fila;
-    });
-
-    alert("✅ Reporte generado");
-}
-        window.onload = function () {
-   actualizarListaLotes();  // Actualizamos la lista de lotes al cargar la página
-    actualizarBodega();  // Aseguramos que los insumos también se actualicen
-};
-
+    // Cargar la información al inicio
+    window.onload = function() {
+        actualizarListaLotes();
+        actualizarBodega();
+    };
 </script>
 
 </body>
